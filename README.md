@@ -21,6 +21,7 @@ ZenPRM - Healthcare CRM extends beyond your four walls to include public dataset
 
 ## Front End
 CD into the FrontEnd Directory and Run the following commands to load the application:
+
 ```
 npm install npm@2.7.4 -g
 npm install --force
@@ -30,8 +31,18 @@ npm install gulp -g
 gulp
 ```
 
+## Database
+
+1.    Create new MS-SQL Database
+2.    Execute all scripts from the repository against the new database, in the following order
+ a.    Tables
+ b.    Views
+ c.    Triggers
+ d.    User Defined Types
+ e.    User Defined Functions – GetIdent
+ f.    User Defined Functions
+ g.    Stored Procedures
+
 ## Web.API
 
 Load the Web.API project in Visual Studio, setup the connection strings in the Web.Config files and run the application.
-
-## Database
