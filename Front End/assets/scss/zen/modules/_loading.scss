@@ -1,0 +1,92 @@
+//********************************************************//
+// Loading icons //
+
+// FULL SCREEN LOADING //
+// Navigation bar is still available on desktop
+.loading {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	color: rgba(0, 0, 0, 0.4);
+	text-align: center;
+	padding-top: 200px;
+	min-height: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.8);
+	z-index: 1700;
+
+	// This is the default
+	// Full color Zen logo
+	img {
+		animation: logo-spin 1.25s linear infinite; 
+	}
+
+	// This is will still work
+	.fa {
+		font-size: 144px;
+	}
+}
+
+.loading.watson {
+	img {
+		animation: none;
+	}
+}
+
+@keyframes logo-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+// Use solid white background
+// May be preferrable if elements don't load cleanly
+.loading.solid {
+	background: #fff;
+}
+
+// PARTIAL SCREEN LOADING //
+.loader {
+	position: relative;
+
+	// MODULAR LOADING //
+	// Used within panels, etc.
+	.loading {
+		position: absolute;
+		padding-top: 50px;
+		z-index: 900;
+
+		.fa {
+			font-size: 96px;
+		}
+	}
+
+	// IN-CONTROL LOADING //
+	// Used for typeaheads, etc.
+	// Not intended to work with an image
+	// Class should not be combined with ".loading"
+	.loading-sm {
+		position: absolute;
+		top: 0;
+		font-size: 24px;
+		color: #000;
+		text-align: center;
+		width: 100%;
+		opacity: .5;
+		z-index: 900;
+	}
+}
+
+.panel-body.loader, .modal-body.loader {
+	min-height: 190px;
+}
+
+@media screen and (min-width: 768px) {
+	#content > .loading {
+		left: 65px;
+	}
+}

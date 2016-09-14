@@ -1,0 +1,92 @@
+<div class="panel panel-primary" id="prescriber-details">
+    <div class="panel-heading">
+        <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> Medicare Part D Prescriber Details</h2>
+    </div>
+    <ul class="nav nav-tabs">
+        <li ng-class="{'active': CurrDataTab == 'charts'}"><a ng-click="CurrDataTab = 'charts'"><i class="fa fa-pie-chart" aria-hidden="true"></i> Insights</a></li>
+        <li ng-show="Loaded2014Data" ng-class="{'active': CurrDataTab == '2014'}"><a ng-click="CurrDataTab = '2014'"><i class="fa fa-table" aria-hidden="true"></i> 2014 Data</a></li>
+        <li ng-show="Loaded2013Data" ng-class="{'active': CurrDataTab == '2013'}"><a ng-click="CurrDataTab = '2013'"><i class="fa fa-table" aria-hidden="true"></i> 2013 Data</a></li>
+    </ul>
+
+    <!-- Sweet Charts -->
+    <div class="panel-body" ng-if="!ShowMessage && !LoadingData && CurrDataTab == 'charts'">
+        <h3 ng-if="Drugs2014Data.length > 0">Total Claims by Drug</h3>
+        <div class="row">
+            <div ng-if="Drugs2014Data.length > 0" class="col-sm-6 text-center data-viz">
+                <div class="well" popover-template="Drugs2014Popover.templateUrl" popover-placement="top" popover-popup-delay="500" popover-trigger="mouseenter">
+                    <h4>2014</h4>
+                    <canvas id="Drugs2014Chart" class="chart chart-pie" chart-data="Drugs2014Data" chart-labels="Drugs2014Labels"></canvas>
+                    <script type="text/ng-template" id="drugs-2014-popover.html">
+                        <strong>Legend:</strong>
+                        <ul>
+                            <li ng-repeat="label in Drugs2014Labels"><i class="fa fa-square" ng-style="{'color': PieColors[$index]}"></i> {{ label }} ({{PrettyNumber(Drugs2014Data[$index])}})</li>
+                        </ul>
+                    </script>
+                </div>
+            </div>
+            <div ng-if="Drugs2013Data.length > 0" class="col-sm-6 text-center data-viz">
+                <div class="well" popover-template="Drugs2013Popover.templateUrl" popover-placement="top" popover-popup-delay="500" popover-trigger="mouseenter">
+                    <h4>2013</h4>
+                    <canvas id="Drugs2013Chart" class="chart chart-pie" chart-data="Drugs2013Data" chart-labels="Drugs2013Labels"></canvas>
+                    <script type="text/ng-template" id="drugs-2013-popover.html">
+                        <strong>Legend:</strong>
+                        <ul>
+                            <li ng-repeat="label in Drugs2013Labels"><i class="fa fa-square" ng-style="{'color': PieColors[$index]}"></i> {{ label }} ({{PrettyNumber(Drugs2013Data[$index])}})</li>
+                        </ul>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2014 Data -->
+    <div class="panel-body" ng-if="!LoadingData && Loaded2014Data && CurrDataTab == '2014'">
+        <table ng-table="Prescriber2014Table" class="table table-bordered">
+            <tr ng-repeat="item in $data">
+                <td data-title="'Drug Name'" sortable="'drug_name'">{{ item.drug_name }}</td>
+                <td data-title="'Generic Name'" sortable="'generic_name'">{{ item.generic_name }}</td>
+                <td class="text-right" header-class="'text-right'" data-title="'Beneficiary Count'" sortable="'bene_count'">
+                    <span ng-if="item.bene_count == -1" class="text-muted">&lt; 11</span>
+                    <span ng-if="item.bene_count >= 0">{{ PrettyNumber(item.bene_count) }}</span>
+                </td>
+                <td class="text-right" header-class="'text-right'" data-title="'Total Claim Count'" sortable="'total_claim_count'">{{ PrettyNumber(item.total_claim_count) }}</td>
+                <td class="text-right" header-class="'text-right'" data-title="'Total Day Supply'" sortable="'total_day_supply'">{{ PrettyNumber(item.total_day_supply) }}</td>
+                <td class="text-right" header-class="'text-right'" data-title="'Total Drug Cost'" sortable="'total_drug_cost'">{{ PrettyNumber(item.total_drug_cost, true) }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 2013 Data -->
+    <div class="panel-body" ng-if="!LoadingData && Loaded2013Data && CurrDataTab == '2013'">
+        <table ng-table="Prescriber2013Table" class="table table-bordered">
+            <tr ng-repeat="item in $data">
+                <td data-title="'Drug Name'" sortable="'drug_name'">{{ item.drug_name }}</td>
+                <td data-title="'Generic Name'" sortable="'generic_name'">{{ item.generic_name }}</td>
+                <td class="text-right" header-class="'text-right'" data-title="'Beneficiary Count'" sortable="'bene_count'">
+                    <span ng-if="item.bene_count == -1" class="text-muted">&lt; 11</span>
+                    <span ng-if="item.bene_count >= 0">{{ PrettyNumber(item.bene_count) }}</span>
+                </td>
+                <td class="text-right" header-class="'text-right'" data-title="'Total Claim Count'" sortable="'total_claim_count'">{{ PrettyNumber(item.total_claim_count) }}</td>
+                <td class="text-right" header-class="'text-right'" data-title="'Total Day Supply'" sortable="'total_day_supply'">{{ PrettyNumber(item.total_day_supply) }}</td>
+                <td class="text-right" header-class="'text-right'" data-title="'Total Drug Cost'" sortable="'total_drug_cost'">{{ PrettyNumber(item.total_drug_cost, true) }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- No Data -->
+    <div class="panel-body" ng-if="!LoadingData && ShowMessage && CurrDataTab == 'charts'">
+        <div class="alert alert-info">
+            <h3 ng-if="!npi">Add an NPI to See Data</h3>
+            <h3 ng-if="npi">No Data Found for this Provider</h3>
+            <p>ZenPRM can display insights from the "Medicare Provider Utilization and Payment Data: Part D Prescriber" Detailed Data Table, which details the utilization and payments for prescriptions and refills prescribed to Medicare beneficiaries by specific inpatient and outpatient hospitals, physicians, and other suppliers. This information is provided by CMS for <a href="https://data.cms.gov/Public-Use-Files/Medicare-Provider-Utilization-and-Payment-Data-201/4uvc-gbfz" target="_blank">2013</a> and <a href="https://data.cms.gov/Public-Use-Files/Medicare-Provider-Utilization-and-Payment-Data-201/465c-49pb" target="_blank">2014</a>.</p>
+            <p ng-if="!npi">If you wish to see Prescriber Detailed data for this provider, <a ui-sref="site.EditProfile({ident: ident})">add his or her NPI</a>. Don't know the NPI? <a href="https://npiregistry.cms.hhs.gov/" target="_blank">Find it in the NPPES NPI Registry</a>.</p>
+        </div>
+    </div>
+
+    <!-- Loading Data -->
+    <div ng-show="LoadingData" class="panel-body loader">
+        <div class="loading">
+            <img src="assets/img/template/spinner_grey.png" width="90" alt="loading...">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,319 @@
+//********************************************************//
+// Print Styles //
+
+// MIXINS //
+
+@mixin columns($percent) {
+	float: left;
+	padding-left: 10px;
+	padding-right: 10px;
+	width: $percent;
+}
+
+@media print {
+
+	//--------------------------------------------------------//
+	// GLOBAL STYLES //
+
+	body {
+		font-size: 10pt;
+		padding: 0 10px;
+	}
+
+	h1 {
+		font-size: 16pt;
+	}
+	h2 {
+		font-size: 14pt;
+	}
+	h3 {
+		font-size: 12pt;
+	}
+	h4, h5, h6 {
+		font-size: 10pt;
+	}
+
+	a[href]:after {
+		content: "";
+	}
+
+	//--------------------------------------------------------//
+	// OVERRIDES //
+
+	.btn {
+		border: 1px solid #ccc;
+	}
+
+	.nav-pills {
+		.active {
+			border: 2pt solid #ddd;
+			border-radius: 5px;
+		}
+	}
+
+	.panel, .panel-alt {
+		border: 0;
+		box-shadow: 0;
+
+		.panel-heading {
+			padding: 0 0 5px 0;
+			border: 0;
+			border-bottom: 2pt solid #ccc;
+
+			.heading-form {
+				display: none;
+			}
+		}
+
+		.panel-body {
+			padding: 15px 0;
+		}
+
+		ul.panel-body {
+			padding: 0;
+
+			li {
+				padding: 10px 0;
+			}
+		}
+
+		.panel-footer {
+			display: none;
+		}
+	}
+
+	._pendo-badge {
+		display: none;
+	}
+
+	.progress {
+		border: 1px solid #ccc;
+
+		.progress-bar {
+			border-right: 1px solid #ccc;
+		}
+	}
+
+	//--------------------------------------------------------//
+	// MODULES //
+
+	#SuperBuilder {
+		#SuperList {
+			height: auto !important;
+
+			#SuperSidebar {
+				display: none;
+			}
+		}
+	}
+
+	.user-icon {
+		display: none;
+	}
+
+	//--------------------------------------------------------//
+	// LAYOUT //
+
+	#nav {
+		display: none;
+	}
+
+	#content {
+		.title {
+			padding: 0 0 10px 0;
+			margin-bottom: 20px;
+			border-bottom: 2px solid #ccc;
+
+			h1 {
+				margin: 0;
+			}
+
+			.btn-group, .btn, .nav-toggle, .nav-tabs {
+				display: none;
+			}
+		}
+
+		.container-fluid {
+			padding: 0;
+
+			// main panel
+			.panel-primary {
+				// border: 0;
+
+				.panel-heading {
+					margin: 0;
+					border-bottom: 2px solid #ddd;
+				}
+
+				.nav-tabs {
+					padding: 10px 0;
+					margin: 0;
+					border-bottom: 1pt solid #ddd;
+
+					.active {
+						a {
+							border: 2px solid #ddd;
+							border-radius: 5px;
+						}
+					}
+				}
+			} 
+		}
+	}
+
+	.stickers {
+		display: none;
+	}
+
+	//--------------------------------------------------------//
+	// PAGES //
+	//--------------------------------------------------------//
+
+	//--------------------------------------------------------//
+	// DASHBOARD //
+
+	// Dials
+	#panel-Measures, #panel-Projects {
+		.panel-body > .row div[class^=col] {
+			@include columns(50%);
+			page-break-inside: avoid;
+		}
+	}
+
+	.dial {
+		.metric {
+			background: transparent;
+
+			h3 {
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				border: 15px solid #ccc;
+				z-index: 0;
+			}
+		}
+	}
+
+	// Projects
+	.project {
+		.project-progress {
+			display: none;
+		}
+
+		.project-body {
+			border: 1pt solid #ddd;
+		}
+	}
+
+	//--------------------------------------------------------//
+	// RESOURCES //
+
+	// MY RESOURCES //
+
+	#Resources {
+		#SearchBar {
+			.row div[class^=col] {
+				@include columns(50%);
+			}
+
+			.btn-toolbar {
+				display: none;
+			}
+		}
+
+		.toolbar {
+			display: none;
+		}
+
+		#SearchResults {
+			.panel {
+				.panel-heading {
+					padding: 10px 0;
+					border-bottom: 1pt solid #ddd;
+
+					.row > div {
+						@include columns(50%);
+						padding-top: 0;
+					}
+
+					.username {
+						.bulk-check {
+							display: none;
+						}
+					}
+				}
+				.panel-body {
+					padding: 10px 0;
+					border-bottom: 2pt solid #ccc;
+				}
+			}
+
+			.more {
+				display: none;
+			}
+		}
+	}
+
+	// DEMOGRAPHICS //
+
+	#Demographics {
+		.h-bar-chart .row > div {
+			@include columns(50%);
+		}
+
+		a .fa-external-link-square, .legend {
+			display: none;
+		}
+	}
+
+	// ACTIVITY //
+	#Activity {
+		ul.panel-body .row > div {
+			@include columns(50%);
+		}
+	}
+
+	//--------------------------------------------------------//
+	// PROJECTS //
+
+	#Projects {
+		.row > div {
+			@include columns(50%);
+
+			.project {
+				.btn {
+					display: none;
+				}
+			}
+		}
+	}
+
+	#ProjectAudit {
+		.panel-body .row > div {
+			@include columns(25%);
+		}
+	}
+
+	//--------------------------------------------------------//
+	// PROFILE //
+
+	.title h1 .registered {
+		padding: 0;
+
+		.fa-check-circle {
+			display: none;
+		}
+	}
+
+	#Profile {
+		.panel.card {
+			margin-top: 0;
+		}
+
+		#Systems .row > div {
+			@include columns(50%);
+		}
+	}
+
+}

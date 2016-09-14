@@ -1,0 +1,58 @@
+<!-- Dial View -->
+<div class="panel-body loader">
+    <!-- Dials by org -->
+    <div class="row" ng-if="CurrentTab == 'dials' && DialsData.length > 0">
+        <zen-dial measure="measure" allow-edit="{{false}}" dial-click="MeasureClick" dial-class="{{dialClass}}" ng-repeat="measure in DialsData"></zen-dial>
+    </div>
+
+    <!-- Org participants -->
+    <h3 ng-if="CurrentTab == 'dials' && selectionMode" id="Participants" class="sub-title">{{ OrgName }} <span ng-if="OrgValue" ng-bind="'(' + OrgValue + ')'"></span></h3>
+    
+    <table ng-table="tableParams" class="table" show-filter="true" ng-show="CurrentTab == 'list' || selectionMode">
+        <tr ng-repeat="participant in $data">
+            <td data-title="'Participant'" filter="{ DisplayName: 'text'}" sortable="'DisplayName'">
+                <zen-resource-name name="participant.DisplayName" ident="participant.EntityIdent" photo="participant.ProfilePhoto"></zen-resource-name>
+            </td>
+            <td data-title="'NPI'" filter="{ NPI: 'text'}" sortable="'NPI'">
+                <span>{{participant.NPI}}</span>
+            </td>
+            <td ng-show="tableParams.ShowOrgCol" data-title="'Organization'" filter="{ Organization: 'text'}" sortable="'Organization'">
+                <span>{{participant.Organization}}</span>
+            </td>
+            <td data-title="measures.EntityMeasure" sortable="'Answer'" filter="{ AnswerDisplay: 'text'}">
+                <!-- Bar chart for percentage-based Measures -->
+                <div ng-if="participant.Answered == true && MeasureHasDenominator == true && MeasureIsPercentage == true">
+                    <div class="h-bar" ng-class="participant.Color">
+                        <div class="fill" ng-style="{width: participant.Answer + '%'}"></div>
+                    </div>
+                    <strong>{{ participant.AnswerDisplay }}%</strong>
+                </div>
+                <!-- Bar chart for Ratio Measures -->
+                <div ng-if="participant.Answered == true && MeasureHasDenominator == true && MeasureIsPercentage == false">
+                    <div class="h-bar" ng-class="participant.Color">
+                        <div class="fill" ng-style="{width: participant.Percentage + '%'}"></div>
+                    </div>
+                    <strong><span ng-if="MeasureQuestion1RequirementTypeIdent == 16">$</span>{{ participant.AnswerDisplay }}</strong>
+                </div>
+                <!-- Download link for Uploads -->
+                <span ng-if="participant.Answered == true && MeasureHasDenominator == false && participant.IsFileUpload">
+                    <a class="btn btn-default btn-xs" target="_blank" ng-href="{{participant.downloadLink}}"><i class="fa fa-download"></i> {{ participant.AnswerDisplay }}</a>
+                </span>
+                <!-- Everything else -->
+                <span ng-if="participant.Answered == true && MeasureHasDenominator == false && !participant.IsFileUpload">
+                    <span ng-if="MeasureQuestion1RequirementTypeIdent == 16">$</span>{{ participant.AnswerDisplay }}
+                </span>
+                <!-- Not answered -->
+                <span ng-if="participant.Answered == false">Not answered</span>
+
+                <div ng-if="participant.Answered && MeasureQuestion1RequirementTypeIdent == 3">
+                    <zen-tone-analysis name="participant.DisplayName" text="participant.Value1String" btn-class="'btn-xs tone-btn'"></zen-tone-analysis>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="loading" ng-show="loading">
+        <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+    </div>
+</div>

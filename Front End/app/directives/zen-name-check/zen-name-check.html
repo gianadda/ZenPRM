@@ -1,0 +1,37 @@
+<div class="name-match" ng-if="SupportsNPI()">
+    <abbr popover-template="NppesPopover.templateUrl" popover-trigger="mouseenter" popover-placement="bottom" popover-popup-delay="250">
+        <i class="fa" ng-class="NppesClass" aria-hidden="true"></i> NPPES
+    </abbr>
+    <abbr popover-template="PecosPopover.templateUrl" popover-trigger="mouseenter" popover-placement="bottom" popover-popup-delay="250">
+        <i class="fa" ng-class="PecosClass" aria-hidden="true"></i> PECOS
+    </abbr>
+
+    <script type="text/ng-template" id="Pecos-Popover.html">
+        <span ng-if="entity.NPI && PecosMatch">
+            First and last names match those in PECOS.
+        </span>
+        <span ng-if="entity.NPI && !PecosMatch && PecosData">
+            First and last names do not match those in PECOS, which lists "{{ PecosData.first_name }} {{ PecosData.last_name }}" as the name associated with this NPI.
+        </span>
+        <span ng-if="entity.NPI && !PecosData">
+            {{ entity.FirstName }} {{ entity.LastName }} was not found in PECOS.
+        </span>
+        <span ng-if="!entity.NPI">
+            Name verfication cannot be completed because this resource does not have an NPI on record.
+        </span>
+    </script>
+    <script type="text/ng-template" id="Nppes-Popover.html">
+        <span ng-if="entity.NPI && NppesMatch">
+            First and last names match those in NPPES NPI Registry.
+        </span>
+        <span ng-if="entity.NPI && !NppesMatch && NppesData">
+            First and last names do not match those in NPPES NPI Registry, which lists "{{ NppesData.basic.first_name }} {{ NppesData.basic.last_name }}" as the name associated with this NPI.
+        </span>
+        <span ng-if="entity.NPI && !NppesData">
+            {{ entity.FirstName }} {{ entity.LastName }} was not found in NPPES NPI Registry.
+        </span>
+        <span ng-if="!entity.NPI">
+            Name verfication cannot be completed because this resource does not have an NPI on record.
+        </span>
+    </script>
+</div>

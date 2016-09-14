@@ -1,0 +1,378 @@
+//********************************************************//
+// Dials //
+
+//--------------------------------------------------------//
+// Progress Gauge //
+
+// TODO: Replace .progress-marker on Profile with .dial
+
+.progress-marker {
+	position: relative;
+	font-size: 18px;
+	text-align: center;
+	vertical-align: middle;
+	margin: 0 15px 0 0;
+	height: 64px;
+	width: 64px;
+	background: $brand-pink;
+	border-radius: 50%;
+	box-shadow: 0 0 10px 0 rgba(0,0,0,.2);
+	overflow: hidden;
+	display: inline-block;
+
+	.num {
+		position: relative;
+		line-height: 54px;
+		margin: 5px;
+		height: 54px;
+		width: 54px;
+		background: #fff;
+		border-radius: 50%;
+		display: block;
+		z-index: 400;
+	}
+
+	.done {
+		position: absolute;
+		width: 100%;
+		left: 0;
+		bottom: 0;
+		background: $brand-teal;
+		z-index: 1;
+	}
+}
+
+.progress-marker + p {
+	display: inline-block;
+}
+
+//--------------------------------------------------------//
+// MEASURES //
+
+// Thanks to: http://codepen.io/jo-asakura/pen/stFHi
+
+// Base size for dials
+$dial-base: 180px;
+
+// Dial container
+.dial {
+	position: relative;
+	text-align: center;
+	padding: 10px;
+	margin-bottom: 20px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	display: block;
+
+	// Edit icon
+	.edit-dial {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		color: #aaa;
+		line-height: 100%;
+	}
+
+	.edit-dial:hover {
+		color: #888;
+	}
+
+	// Pie chart
+	.pie {
+		position: relative;
+		width: $dial-base;
+		display: inline-block;
+
+		.chart-container, .chart-pie {
+			height: $dial-base !important;
+			width: $dial-base !important;
+		}
+	}
+
+	// The dial base
+	// This is all that's needed for static values
+	.metric {
+		position: relative;
+		height: $dial-base;
+		width: $dial-base;
+		background-color: transparentize($brand-teal, 0.5);
+		border-radius: 50%;
+		display: inline-block;
+
+		// Display number
+		h3 {
+			position: absolute;
+			top: 15px;
+			right: 15px;
+			bottom: 15px;
+			left: 15px;
+			font-size: 60px;
+			font-weight: 700;
+			color: #000;
+			line-height: $dial-base - 30px;
+			vertical-align: middle;
+			text-shadow: 1px 1px 2px rgba(0, 0, 0, .2);
+			margin: 0;
+			background: #fff;
+			border-radius: 50%;
+			z-index: 200;
+
+			.money {
+				font-weight: 400;
+				font-size: 65%;
+				color: #777;
+				vertical-align: top;
+			}
+
+			// Percentage symbol and denominators
+			small {
+				font-size: 24px;
+			}
+		}
+
+		h3.chars-5 {
+			font-size: 54px;
+		}
+		h3.chars-6 {
+			font-size: 42px;
+		}
+		h3.chars-7 {
+			font-size: 36px;
+		}
+		h3.chars-8 {
+			font-size: 33px;
+		}
+		h3.chars-9 {
+			font-size: 30px;
+		}
+		h3.chars-10 {
+			font-size: 27px;
+		}
+		h3.chars-11 {
+			font-size: 24px;
+		}
+		h3.chars-12 {
+			font-size: 21px;
+		}
+
+		// PERCENTAGES
+		// The filled-in part of the dial
+		.clip {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			clip: rect(0, $dial-base, $dial-base, $dial-base / 2);
+
+			div {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				clip: rect(0, $dial-base / 2, $dial-base, 0);
+				border: 15px solid $brand-teal;
+				border-radius: 50%;
+			}
+
+			.right-side {
+				display: none;
+			}
+		}
+
+		.clip.over-half {
+			clip: rect(auto, auto, auto, auto);
+
+			.right-side {
+				transform: rotate(180deg);
+				display: block;
+			}
+		}
+
+		// Range markers
+		.range {
+			position: absolute;
+			left: $dial-base / 2 - 1;
+			height: $dial-base / 2;
+			width: 2px;
+			background: #fff;
+			transform-origin: (1px 100%);
+			transform: rotate(45deg);
+			z-index: 100;
+		}
+	}
+
+	// Label text
+	h4.dial-label {
+		@include data-label();
+		color: #666;
+		text-transform: uppercase;
+	}
+
+	p.dial-label {
+		@include data-label();
+	}
+
+	// Legend
+	.popover {
+		font-size: 13px;
+		text-align: left;
+		min-width: 180px;
+
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			li {
+				margin: 2px 0;
+			}
+		}
+
+		p, ul {
+			margin-bottom: 5px;
+		}
+
+		p:last-child {
+			margin: 0;
+		}
+	}
+}
+
+.dial.selected {
+	border-color: $brand-pink;
+	box-shadow: 0 0 20px 0 rgba(0,0,0,.2);
+}
+
+.no-link .dial a {
+	cursor: default;
+}
+
+// Dial colors
+// Based on user-defined ranges
+.dial {
+	// Static values
+	.static.purple {
+		background: $brand-purple;
+	}
+	.static.blue {
+		background: $brand-blue;
+	}
+	.static.sky {
+		background: $brand-sky;
+	}
+	.static.teal {
+		background: $brand-teal;
+	}
+	.static.green {
+		background: $brand-green;
+	}
+	.static.lime {
+		background: $brand-lime;
+	}
+	.static.yellow {
+		background: $brand-yellow;
+	}
+	.static.orange {
+		background: $brand-orange;
+	}
+	.static.burnt {
+		background: $brand-burnt;
+	}
+	.static.rust {
+		background: $brand-rust;
+	}
+	.static.red {
+		background: $brand-red;
+	}
+	.static.pink {
+		background: $brand-pink;
+	}
+
+	// Percentage values
+	.metric.purple {
+		background: transparentize($brand-purple, 0.5);
+
+		.clip div {
+			border-color: $brand-purple;
+		}
+	}
+	.metric.blue {
+		background: transparentize($brand-blue, 0.5);
+
+		.clip div {
+			border-color: $brand-blue;
+		}
+	}
+	.metric.sky {
+		background: transparentize($brand-sky, 0.5);
+
+		.clip div {
+			border-color: $brand-sky;
+		}
+	}
+	.metric.teal {
+		background: transparentize($brand-teal, 0.5);
+
+		.clip div {
+			border-color: $brand-teal;
+		}
+	}
+	.metric.green {
+		background: transparentize($brand-green, 0.5);
+
+		.clip div {
+			border-color: $brand-green;
+		}
+	}
+	.metric.lime {
+		background: transparentize($brand-lime, 0.5);
+
+		.clip div {
+			border-color: $brand-lime;
+		}
+	}
+	.metric.yellow {
+		background: transparentize($brand-yellow, 0.5);
+
+		.clip div {
+			border-color: $brand-yellow;
+		}
+	}
+	.metric.orange {
+		background: transparentize($brand-orange, 0.5);
+
+		.clip div {
+			border-color: $brand-orange;
+		}
+	}
+	.metric.burnt {
+		background: transparentize($brand-burnt, 0.5);
+
+		.clip div {
+			border-color: $brand-burnt;
+		}
+	}
+	.metric.rust {
+		background: transparentize($brand-rust, 0.5);
+
+		.clip div {
+			border-color: $brand-rust;
+		}
+	}
+	.metric.red {
+		background: transparentize($brand-red, 0.5);
+
+		.clip div {
+			border-color: $brand-red;
+		}
+	}
+	.metric.pink {
+		background: transparentize($brand-pink, 0.5);
+
+		.clip div {
+			border-color: $brand-pink;
+		}
+	}
+}

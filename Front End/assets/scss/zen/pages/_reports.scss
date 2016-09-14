@@ -1,0 +1,73 @@
+//********************************************************//
+// Reports //
+
+//--------------------------------------------------------//
+// CUSTOMER REPORTS //
+
+// Reports List
+
+#panel-Reports .panel-body h3 {
+	font-size: 16px;
+	margin-bottom: 4px;
+}
+
+// Editor
+
+// Add padding to template preview
+.mceTmpl {
+	padding: 10px;
+}
+
+#Editor {
+	padding: 15px;
+	background: #fff;
+
+	.mceTmpl {
+		padding: 0;
+	}
+
+	// From NG //
+	.ZenDial {
+		height: 249px;
+		width: 280px;
+		background: url(/assets/img/measure-placeholder.png) no-repeat center center;
+	}
+}
+
+// Templates
+
+.featured-value {
+	.fv-label {
+		color: #888;
+		margin-bottom: 5px;
+	}
+
+	.fv-value {
+		font-size: 30px;
+		margin-bottom: 0;
+	}
+}
+
+.bg-block {
+	padding: 10px 15px;
+	border-radius: 5px;
+}
+
+.report-title {
+	padding-bottom: 5px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #ccc;
+
+	h1 {
+		margin: 0;
+	}
+}
+
+//--------------------------------------------------------//
+// RESOURCE REPORTS //
+
+#Report {
+	.mceTmpl {
+		padding: 0;
+	}
+}

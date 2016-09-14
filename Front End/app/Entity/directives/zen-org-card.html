@@ -1,0 +1,52 @@
+<div class="panel panel-primary card">
+    <div class="panel-heading">
+        <div ng-if="EntityData.ProfilePhoto !== ''" class="user-icon img" ng-style="{'background-image': 'url(' + EntityData.ProfilePhoto + ')'}"></div>
+        <div class="user-icon" ng-if="EntityData.ProfilePhoto == ''">{{EntityData.FullName.substring(0,1)}}</div>
+        <h2>{{ EntityData.FullName }}</h2>
+    </div>
+    <div class="panel-body">
+        <h3 class="card-title">{{EntityData.EntityType}}</h3>
+        <div class="card-body" ng-if="CheckContactInfo() || EntityData.NPI !== '' || TaxonomyData.length > 0 || ServiceData.length > 0">
+            <div class="row">
+                <div  class="col-sm-6 col-md-12" ng-if="EntityData.NPI !== '' || TaxonomyData.length > 0 || ServiceData.length > 0">
+                    <section ng-if="EntityData.NPI !== ''">
+                        <p><strong>NPI:</strong> {{EntityData.NPI}}</p>
+                    </section>
+                    <section ng-if="TaxonomyData.length > 0">
+                        <h4>Taxonomies:</h4>
+                        <p><span ng-repeat="taxonomy in TaxonomyData">{{taxonomy.Name1}}{{$last ? '' : ', '}}</span></p>
+                    </section>
+                    <section ng-if="ServiceData.length > 0">
+                        <h4>Services:</h4>
+                        <p ng-repeat="service in ServiceData" ng-show="service.Name1 !== '' && service.Active == true">
+                            <i class="fa fa-stethoscope"></i> {{service.Name1}}
+                        </p>
+                    </section>
+                </div>
+                <div class="col-sm-6 col-md-12" ng-if="CheckContactInfo()">
+                    <section>
+                        <h4><i class="fa fa-home"></i> Primary Address</h4>
+                        <p ng-if="EntityData.PrimaryAddress1 !== ''">{{EntityData.PrimaryAddress1}}</p>
+                        <p ng-if="EntityData.PrimaryAddress2 !== ''">{{EntityData.PrimaryAddress2}}</p>
+                        <p ng-if="EntityData.PrimaryAddress3 !== ''">{{EntityData.PrimaryAddress3}}</p>
+                        <p ng-if="EntityData.PrimaryCounty !== ''">{{EntityData.PrimaryCounty}}</p>
+                        <p><span ng-show="EntityData.PrimaryCity !== ''">{{EntityData.PrimaryCity}}</span><span ng-show="EntityData.PrimaryCity !== '' && EntityData.PrimaryState !== ''">, {{EntityData.PrimaryState}}</span> <span ng-show="EntityData.PrimaryZip !== ''">{{EntityData.PrimaryZip}}</span></p>
+                    </section>
+                    <section>
+                        <p ng-if="EntityData.Email !== ''"><i class="fa fa-envelope-o"></i> <span ng-bind-html="TrustEmailHTML(EntityData.Email)"></span> <i ng-show="EntityData.Email.indexOf('*') > 0" class="fa fa-info-circle" title="An asterisk indicates that this email address is marked to receive notifications."></i></p>
+                        <p ng-if="EntityData.PrimaryPhone !== ''"><i class="fa fa-phone"></i> {{EntityData.PrimaryPhone}} <span ng-if="EntityData.PrimaryPhoneExtension !== ''">x{{EntityData.PrimaryPhoneExtension}}</span></p>
+                        <p ng-if="EntityData.PrimaryPhone2 !== ''"><i class="fa fa-phone"></i> {{EntityData.PrimaryPhone2}} <span ng-if="EntityData.PrimaryPhone2Extension !== ''">x{{EntityData.PrimaryPhone2Extension}}</span></p>
+                        <p ng-if="EntityData.PrimaryFax !== ''"><i class="fa fa-fax"></i> {{EntityData.PrimaryFax}}</p>
+                        <p ng-if="EntityData.PrimaryFax2 !== ''"><i class="fa fa-fax"></i> {{EntityData.PrimaryFax2}}</p>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- end .addresses -->
+    </div>
+    <!-- end .panel-body -->
+    <div class="panel-footer text-center">
+        <a ui-sref="site.EditProfile({ident: EntityData.Ident})"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Profile</a>
+    </div>
+</div>
+<!-- end .panel -->

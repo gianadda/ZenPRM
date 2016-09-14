@@ -1,0 +1,75 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-briefcase"></i> {{EntityProject.Name1}}</h1>
+    <ui-view name="projectnavigation"></ui-view>
+</header>
+
+<div id="ProjectAudit" class="container-fluid">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Project Audit History <small>(Results: {{ TotalResults }})</small></h2>
+            <button type="button" class="btn btn-default btn-sm heading-form" ng-click="ClearSearch()"><i class="fa fa-ban"></i> Clear Search</button>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="StartDate">Start Date</label>
+                    <zen-date-picker date-value="StartDate" id="StartDate" name="StartDate"></zen-date-picker>
+                </div>
+                <div class="col-md-3">
+                    <label for="EndDate">End Date</label>
+                    <zen-date-picker date-value="EndDate" id="EndDate" name="EndDate"></zen-date-picker>
+                </div>
+                <div class="col-md-3">
+                    <label for="SelectParticipant">Participant</label>
+                    <input type="text" ng-model="SelectParticipant" placeholder="Search by Name" typeahead="Provider as Provider.FullName for Provider in ProjectParticipantData | filter: {FullName: $viewValue} | limitTo: 15" typeahead-loading="loadingProviders" typeahead-no-results="noResults" typeahead-min-length="3" class="form-control" typeahead-on-select="SelectProvider($item)" id="SelectParticipant">
+                </div>
+                <div class="col-md-3">
+                    <label for="ProjectQuestions">Question</label>
+                    <select class="form-control" id="ProjectQuestions" ng-model="ProjectQuestions" ng-change="SelectProjectQuestion()" ng-options="option.Ident as option.label for option in ProjectQuestionData"></select>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Answer Date</th>
+                    <th>Participant</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Answered By</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="history in ProjectHistoryData.results">
+                    <td data-title="Answer Date"><time>{{ FormatDateTime(history.AnswerDateTime) }}</time></td>
+                    <td data-title="Participant">
+                        <zen-resource-name name="history.Entity" ident="history.EntityIdent" photo="history.EntityProfilePhoto"></zen-resource-name>
+                    </td>
+                    <td data-title="Question">{{ history.Question }}</td>
+                    <td data-title="Answer">{{ history.Answer }}</td>
+                    <td data-title="Answered By">
+                        <zen-resource-name name="history.AnswerUser" ident="history.AnswerEntityIdent" photo="history.AnswerEntityProfilePhoto"></zen-resource-name>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="ng-table-pager">
+            <div class="ng-table-counts btn-group pull-right">
+                <button type="button" class="btn btn-default btn-sm" ng-click="ResultsPerPage(10)" ng-class="{'active': ResultsShown == 10}">10</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="ResultsPerPage(25)" ng-class="{'active': ResultsShown == 25}">25</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="ResultsPerPage(50)" ng-class="{'active': ResultsShown == 50}">50</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="ResultsPerPage(100)" ng-class="{'active': ResultsShown == 100}">100</button>
+            </div>
+
+            <pagination total-items="TotalResults" ng-model="CurrentPage" ng-change="GetProjectHistory()" items-per-page="ResultsShown" max-size="6" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+        </div>
+    </div>
+
+</div>
+<!-- end .container -->
+
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

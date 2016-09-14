@@ -1,0 +1,68 @@
+<div>
+    <div class="panel panel-primary" id="referrals">
+        <div class="panel-heading">
+            <h2><i class="fa fa-random" aria-hidden="true"></i> Top Referrals</h2>
+            <button type="button" class="btn btn-info btn-xs heading-form" ng-click="OpenReferralModal()" ng-if="!LoadingReferralData && ReferralData.length > 0">All Referrals</button>
+        </div>
+        <ul class="panel-body" ng-if="!LoadingReferralData && ReferralData.length > 0">
+            <li class="sub-head"><h3>Resources by Shared Transactions</h3></li>
+            <li class="row" ng-repeat="referral in ReferralData | limitTo: 5">
+                <div class="col-xs-12" ng-if="referral.ReferredTo == false">
+                    <small><i class="fa fa-arrow-right" aria-hidden="true"></i> Referrals to</small>
+                </div>
+                <div class="col-xs-12" ng-if="referral.ReferredTo == true">
+                    <small><i class="fa fa-arrow-left" aria-hidden="true"></i> Referrals from</small>
+                </div>
+                <div class="col-xs-9">
+                    <a ui-sref="site.Profile({ident: referral.Ident})">{{referral.DisplayName}}</a>
+                </div>
+                <div class="col-xs-3">{{ referral.SharedTransactionCount }}</div>
+            </li>
+        </ul>
+        <!-- No Data -->
+        <div class="panel-body" ng-if="!LoadingReferralData && ReferralData.length == 0">
+            <div class="alert alert-info">
+                <h3 ng-if="!npi">Add an NPI to See Data</h3>
+                <h3 ng-if="npi">No Data Found for this Provider</h3>
+                <p>ZenPRM can display referrals for Providers, Organizations, or Facilities with NPIs (National Provider Identifiers). A referral is counted when a single beneficiary visits one Provider (or Organization) and then visits another within a period of time. This information is provided by CMS under the Freedom of Information Act.</p>
+                <p ng-if="!npi">If you wish to see Referrals for this provider, <a ui-sref="site.EditProfile({ident: ident})">add his or her NPI</a>. Don't know the NPI? <a href="https://npiregistry.cms.hhs.gov/" target="_blank">Find it in the NPPES NPI Registry</a>.</p>
+            </div>
+        </div>
+        <!-- Loading Data -->
+        <div ng-show="LoadingReferralData" class="panel-body loader">
+            <div class="loading">
+                <img src="assets/img/template/spinner_grey.png" width="90" alt="loading...">
+            </div>
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="ReferralModal.html">
+        <div class="modal-header">
+            <a class="close" ng-click="ReferralModal.close()"><i class="fa fa-times"></i></a>
+            <h3 class="modal-title">All Referrals</h3>
+        </div>
+        <div class="modal-body" id="ReferralModal">
+            <table ng-table="tableParams" class="table table-bordered table-condensed table-striped" show-filter="true">
+                <tr ng-repeat="referral in $data">
+                    <td data-title="'Resource'" sortable="'DisplayName'" filter="{ DisplayName: 'text'}" width="20%">
+                        <i class="fa fa-arrow-right text-muted" aria-hidden="true" ng-if="referral.ReferredTo == false" title="Referrals to"></i> 
+                        <i class="fa fa-arrow-left text-muted" aria-hidden="true" ng-if="referral.ReferredTo == true" title="Referrals from"></i> 
+                        <a ng-click="GoToProfile(referral.Ident)">{{referral.DisplayName}}</a>
+                    </td>
+                    <td data-title="'NPI'" sortable="'NPI'" filter="{ NPI: 'text'}">{{ referral.NPI }}</td>
+                    <td data-title="'Specialty'" sortable="'Specialty'" filter="{ Specialty: 'text' }">{{ referral.Specialty }}</td>
+                    <td data-title="'Shared Transactions'" sortable="'SharedTransactionCount'" filter="{ SharedTransactionCount: 'text'}">{{ referral.SharedTransactionCount }}</td>
+                    <td data-title="'Patient Total'" sortable="'PatientTotal'" filter="{ PatientTotal: 'text'}">{{ referral.PatientTotal }}</td>
+                    <td data-title="'SameDayTotal'" sortable="'SameDayTotal'" filter="{ SameDayTotal: 'text'}">{{ referral.SameDayTotal }}</td>
+                    <td data-title="'In Network'" sortable="'InNetwork'" class="text-center" header-class="'text-center'">
+                        <span ng-if="referral.InNetwork"><i class="fa fa-check-circle text-success"></i></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="ReferralModal.close()"><i class="fa fa-times"></i> Close</button>
+        </div>
+    </script>
+
+</div>

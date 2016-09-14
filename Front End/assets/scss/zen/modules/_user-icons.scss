@@ -1,0 +1,67 @@
+//********************************************************//
+// User Icons //
+
+// User pic or icon thumbs //
+.user-icon {
+	color: #fff;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 28px;
+	margin-right: 5px;
+	height: 32px;
+	width: 32px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+	background-color: $brand-blue;
+	border: 2px solid #ccc;
+	border-radius: 50%;
+	display: inline-block;
+	overflow: hidden;
+}
+
+.user-icon.img {
+	text-indent: -999em;
+	background-color: #fff;
+}
+
+.user-link, .user-link:link, .user-link:visited {
+	white-space: nowrap;
+	text-decoration: none;
+
+	.link-text {
+		text-decoration: underline;
+	}
+}
+
+.user-link:hover, .user-link:focus {
+	.link-text {
+		text-decoration: none;
+	}
+}
+
+// User pick or icon button //
+.user-btn, .user-btn:link, .user-btn:visited {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-decoration: none;
+	padding: 1px 15px 1px 1px;
+	max-width: 100%;
+	background: #fff;
+	border: 2px solid #ccc;
+	border-radius: 18px;
+	overflow: hidden;
+	display: inline-block;
+
+	.user-icon {
+		height: 30px;
+		width: 30px;
+		border: 0;
+	}
+}
+
+.user-btn:hover, .user-btn:focus {
+	text-decoration: none;
+	border-color: $brand-pink;
+}
+

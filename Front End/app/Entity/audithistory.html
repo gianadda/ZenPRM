@@ -1,0 +1,59 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-history"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        Audit History <small ng-bind="EntityDetails.FullName"></small>
+    </h1>
+
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+
+
+<div id="Audit" class="container-fluid" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="input-group">
+                <label class="input-group-addon" for="ProviderFilter"><i class="fa fa-search"></i></label>
+                <input id="ProviderFilter" class="form-control" type="text" placeholder="Filter or search..." ng-model="Filter" />
+            </div>
+        </div>
+        <table ng-table="tableParams" class="table table-bordered">
+            <tbody ng-repeat="group in $groups | orderBy:'-value'">
+                <tr class="ng-table-group">
+                    <td colspan="{{$columns.length}}">
+                        <i class="fa fa-pencil" ng-if="GetEntryHeaderDetails(group.value).EventType == 'Edit'"></i>
+                        <i class="fa fa-plus" ng-if="GetEntryHeaderDetails(group.value).EventType == 'Add'"></i>
+                        <i class="fa fa-trash-o" ng-if="GetEntryHeaderDetails(group.value).EventType == 'Delete'"></i>
+                        <span>
+                            <time ng-bind-html="highlightSearchValue(getMomentDate(GetEntryHeaderDetails(group.value).ActivityDateTime)) "></time> 
+                            <span ng-bind-html="highlightSearchValue(GetEntryHeaderDetails(group.value).ActivityDescription) "></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr class="updated-data" ng-repeat="entry in group.data | orderBy: 'ActivityDateTime' | filter: {FieldName: '!'}: true">
+                    <td sortable=" 'Author' " data-title="'Author'" groupable="'Author'">
+                        <a ui-sref="site.Profile({ident: entry.ASUserIdent})"><span ng-bind-html="highlightSearchValue(entry.Author) " /></a>
+                    </td>
+                    <td sortable=" 'FieldName' " data-title=" 'Field' " groupable=" 'FieldName' ">
+                        <span ng-bind-html="highlightSearchValue(CleanUpTableAndColumnName(entry.FieldName)) " />
+                    </td>
+                    <td data-title="'Old Value'">
+                        <span class="force-wrap" ng-bind-html="highlightSearchValue(entry.OldValue, entry.FieldName)" />
+                    </td>
+                    <td data-title=" 'New Value' ">
+                        <span class="force-wrap" ng-bind-html="highlightSearchValue(entry.NewValue, entry.FieldName) " />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

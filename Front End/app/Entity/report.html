@@ -1,0 +1,29 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        Report <small ng-bind="EntityDetails.FullName"></small>
+    </h1>
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+
+<div id="Profile" class="container-fluid" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+    <div id="Report" class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>{{ Report.Name1 }}</h2>
+        </div>
+        <div class="panel-body" ng-if="Report.Desc1">
+            {{ Report.Desc1 }}
+        </div>
+        <div class="panel-body">
+            <zen-resource-report ng-if="ReportLoaded" profile="EntityDetails" report-html="Report.TemplateHTML" report-measure-data="ReportMeasureData"></zen-resource-report>
+        </div>
+    </div>
+</div>
+<!-- end .container-fluid -->
+
+<div class="loading" ng-show="!EntityLoaded && !ReportLoaded">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

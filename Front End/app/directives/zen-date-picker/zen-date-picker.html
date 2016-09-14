@@ -1,0 +1,9 @@
+<div class="input-group ui-datepicker" ng-class="'{{dateClass}}'">
+    <input type="text" id="{{id}}" name="{{name}}" class="form-control date" placeholder="mm/dd/yyyy"
+    	ng-model="displayValue" ng-change="syncDateValue()"
+    	model-view-value="true" ui-mask="99/99/9999"  ui-mask-placeholder ui-mask-placeholder-char="space"
+    	datepicker-popup="MM/dd/yyyy" is-open="datePickerOpened" datepicker-options="dateOptions" />
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="openDatePicker($event)"><i class="fa fa-calendar"></i></button>
+    </span>
+</div>

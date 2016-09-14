@@ -1,0 +1,111 @@
+<a class="user-link" ng-class="class" ng-click="LoadPreview(ident)" title="{{name}}">
+    <span class="user-icon" ng-if="!photo"><i class="fa fa-user"></i></span>
+    <span class="user-icon img" ng-if="photo" ng-style="{'background-image': 'url(' + photo + ')'}"></span> {{ name }}
+</a>
+
+<script type="text/ng-template" id="ResourcePreview.html">
+	<div class="modal-header">
+		<a class="close" ng-click="ResourcePreview.close()"><i class="fa fa-times"></i></a>
+		<div ng-if="EntityData.ProfilePhoto !== ''" class="user-icon img" ng-style="{'background-image': 'url(' + EntityData.ProfilePhoto + ')'}"></div>
+		<div class="user-icon" ng-if="EntityData.ProfilePhoto == ''">{{name.substring(0,1)}}</div>
+		<h2>{{ EntityData.FullName }}</h2>
+		<zen-name-check entity="EntityData"></zen-name-check>
+	</div>
+	<div class="modal-body">
+		<h3 class="card-title">{{ EntityData.EntityType }}</h3>
+		<!-- Providers -->
+		<div class="card-body" ng-if="EntityData.EntityTypeIdent == 3 && (CheckContactInfo() || EntityData.NPI !== '' || SpecialtyData.length > 0 || EntityData.Gender !== 'N/A' || (IsInNetwork && HierarchyData.length > 0))">
+			<div class="row">
+				<div ng-class="{'col-sm-4': IsInNetwork && HierarchyData.length > 0, 'col-sm-6': !IsInNetwork || HierarchyData.length == 0}" ng-if="CheckContactInfo()">
+					<section>
+						<h4>Contact Information:</h4>
+						<p>
+							<span ng-if="EntityData.PrimaryAddress1">{{ EntityData.PrimaryAddress1 }}<br></span>
+							<span ng-if="EntityData.PrimaryAddress2">{{ EntityData.PrimaryAddress2 }}<br></span>
+							<span ng-if="EntityData.PrimaryAddress3">{{ EntityData.PrimaryAddress3 }}<br></span>
+							<span ng-if="EntityData.PrimaryCity || (EntityData.PrimaryState && EntityData.PrimaryZip)">
+								<span ng-if="EntityData.PrimaryCity">{{ EntityData.PrimaryCity }}, </span>{{ EntityData.PrimaryState }} {{ EntityData.PrimaryZip }}
+							</span>
+						</p>
+						<p ng-if="EntityData.PrimaryPhone">
+							<i class="fa fa-phone"></i> {{ EntityData.PrimaryPhone }} <span ng-if="EntityData.PrimaryPhoneExtension">x{{ EntityData.PrimaryPhoneExtension }}</span>
+						</p>
+					</section>
+					<section ng-if="Emails.length > 0">
+						<h4>Email Addresses:</h4>
+						<ul class="emails">
+	                        <li class="ellipsis" ng-repeat="email in Emails">
+	                            <i ng-if="email.Verified" class="fa fa-check-circle text-success" aria-hidden="true" title="Verified"></i>
+	                            <i ng-if="!email.Verified" class="fa fa-ban" aria-hidden="true" title="Not Verified"></i>
+	                            <i ng-if="email.Notify" class="fa fa-paper-plane text-success" aria-hidden="true" title="Receives Notifications"></i>
+	                            <i ng-if="!email.Notify" class="fa fa-ban" aria-hidden="true" title="Do Not Receive Notifications"></i>
+	                            <a href="mailto:{{email.Email}}">{{email.Email}}</a>
+	                        </li>
+	                    </ul>
+					</section>
+				</div>
+				<div ng-class="{'col-sm-4': IsInNetwork && HierarchyData.length > 0, 'col-sm-6': !IsInNetwork || HierarchyData.length == 0}" ng-if="EntityData.NPI !== '' || SpecialtyData.length > 0 || EntityData.Gender !== 'N/A'">
+					<section ng-if="EntityData.NPI !== ''">
+						<p><strong>NPI:</strong> {{ EntityData.NPI }}</p>
+					</section>
+					<section ng-if="SpecialtyData.length > 0">
+						<h4>Specialty:</h4>
+						<p ng-repeat="specialty in SpecialtyData"><i class="fa fa-stethoscope"></i> {{ specialty.Name1 }}</p>
+					</section>
+					<section ng-if="EntityData.Gender !== 'N/A'">
+						<p><strong>Gender:</strong> {{ EntityData.Gender }}</p>
+					</section>
+				</div>
+				<div class="col-sm-4" ng-if="IsInNetwork && HierarchyData.length > 0">
+					<section ng-repeat="(key, value) in HierarchyData | groupBy: 'ReverseHierarchyType'">
+						<h4>{{ key }}:</h4>
+						<p><a ng-repeat="relationship in value" ng-click="GoToProfile(relationship.OrganizationIdent)">{{ relationship.Organization }}<span ng-if="!$last">, </span></a></p>
+					</section>
+					<section ng-if="HierarchyData.length == 0">
+						<p>No organization affiliations on file.</p>
+					</section>
+				</div>
+			</div>
+		</div>
+		<!-- All other resource types -->
+		<div class="card-body" ng-if="EntityData.EntityTypeIdent != 3 && (CheckContactInfo()|| SpecialtyData.length > 0)">
+			<div class="row">
+				<div class="col-sm-6" ng-if="CheckContactInfo()">
+					<section>
+						<h4>Contact Information:</h4>
+						<p>
+							<span ng-if="EntityData.PrimaryAddress1">{{ EntityData.PrimaryAddress1 }}<br></span>
+							<span ng-if="EntityData.PrimaryAddress2">{{ EntityData.PrimaryAddress2 }}<br></span>
+							<span ng-if="EntityData.PrimaryAddress3">{{ EntityData.PrimaryAddress3 }}<br></span>
+							<span ng-if="EntityData.PrimaryCity || (EntityData.PrimaryState && EntityData.PrimaryZip)">
+								<span ng-if="EntityData.PrimaryCity">{{ EntityData.PrimaryCity }}, </span>{{ EntityData.PrimaryState }} {{ EntityData.PrimaryZip }}
+							</span>
+						</p>
+						<p ng-if="EntityData.PrimaryPhone">
+							<i class="fa fa-phone"></i> {{ EntityData.PrimaryPhone }} <span ng-if="EntityData.PrimaryPhoneExtension">x{{ EntityData.PrimaryPhoneExtension }}</span>
+						</p>
+						<p class="ellipsis" ng-if="EntityData.Email">
+							<i class="fa fa-envelope-o"></i> <span ng-bind-html="TrustEmailHTML(EntityData.Email)"></span>
+						</p>
+					</section>
+				</div>
+				<div class="col-sm-6">
+					<section ng-if="SpecialtyData.length > 0">
+						<h4>Taxonomies:</h4>
+						<p ng-repeat="specialty in SpecialtyData"><i class="fa fa-stethoscope"></i> {{ specialty.Name1 }}</p>
+					</section>
+					<section ng-repeat="(key, value) in HierarchyData | groupBy: 'ReverseHierarchyType'">
+						<h4>{{ key }}:</h4>
+						<p><a ng-repeat="relationship in value" ng-click="GoToProfile(relationship.OrganizationIdent)">{{ relationship.Organization }}<span ng-if="!$last">, </span></a></p>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal-footer">
+		<a class="btn btn-link btn-sm pull-left" ng-click="EditProfile(ident)"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Profile</a>
+		<a class="btn btn-primary btn-sm" ng-click="GoToProfile(ident)"><i class="fa fa-user"></i> View Full Profile</a>
+		<button type="button" class="btn btn-default btn-sm" ng-click="ResourcePreview.close()"><i class="fa fa-times"></i> Close</button>
+	</div>
+</script>

@@ -1,0 +1,42 @@
+<div id="Logo">
+    <a ui-sref="site.home"><img src="assets/img/template/logo_header.png" width="45" alt="ZenPRM"></a>
+</div>
+<ul ng-if="userType == 'customer'">
+    <li><a ui-sref="site.dashboard" ui-sref-active="selected"><i class="fa fa-home"></i><span class="text">Dashboard</span></a></li>
+    <li><a ui-sref="site.Resources" ui-sref-active="selected"><i class="fa fa-user-md"></i><span class="text">My Resources</span></a></li>
+    <li><a ui-sref="site.GlobalResources" ui-sref-active="selected"><i class="fa fa-globe"></i><span class="text">Global Resources</span></a></li>
+    <li><a ui-sref="site.Projects" ng-class="{'selected': isInSection('/project')}"><i class="fa fa-briefcase"></i><span class="text">Projects</span></a></li>
+    <li><a ui-sref="site.Reports" ui-sref-active="selected"><i class="fa fa-file-text-o" aria-hidden="true"></i><span class="text">Report Builder</span></a></li>
+    <li><a ui-sref="site.Tickets" ui-sref-active="selected"><i class="fa fa-ticket"></i><span class="text">Tickets</span></a></li>
+</ul>
+<ul ng-if="userType == 'entity'">
+    <li><a ui-sref="site.Profile({ident: userIdent})" ui-sref-active="selected"><i class="fa fa-home"></i><span class="text">My Profile</span></a></li>
+    <li><a ui-sref="site.EntityProjects({ident: userIdent})" ng-class="{'selected': isInSection('/resourceproject')}"><i class="fa fa-briefcase"></i><span class="text">My Projects</span></a></li>
+    <li><a ui-sref="site.EntityDetails({ident: userIdent})" ui-sref-active="selected"><i class="fa fa-user"></i><span class="text">My Details</span></a></li>
+    <li><a ui-sref="site.AuditHistory({ident: userIdent})" ui-sref-active="selected"><i class="fa fa-history"></i><span class="text">My Audit History</span></a></li>
+    <li ng-if="EntityTypeIdent == 2 || EntityTypeIdent == 3 || EntityTypeIdent == 4"><a ui-sref="site.EntityInsights({ident: userIdent})" ui-sref-active="selected"><i class="fa fa-bar-chart"></i><span class="text">My Insights</span></a></li>
+    <li><a ui-sref="site.Repository({entityIdent: userIdent})" ui-sref-active="selected"><i class="fa fa-files-o"></i><span class="text">My Files</span></a></li>
+</ul>
+<div id="Settings" class="dropdown" dropdown>
+    <a id="Avatar" class="{{DelegateClass(userIdent)}}" href="#" dropdown-toggle ng-class="{'noimg': !userProfilePhoto}">
+        <span class="user-icon img" ng-if="userProfilePhoto" style="background-image: url({{userProfilePhoto}})">{{userName}}</span>
+        <span class="user-icon" ng-if="!userProfilePhoto">{{userName.substring(0,1)}}</span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        <li ng-if="delegateUsers.length > 0" class="{{DelegateClass(userIdent)}} username">Working as {{userName}}</li>
+        <li ng-show="isDelegationMode()"><a ng-click="logOutAs()"><i ng-class="{{DelegateClass(userIdent)}}" class="fa fa-arrow-left"></i> Return to My Account</a></li>
+        <li class="delegate {{DelegateClass(delegate.ToEntityIdent)}}" ng-repeat="delegate in delegateUsers" ng-if="delegateUsers.length < 4" ng-hide="delegate.ToEntityIdent === userIdent"><a ng-click="logInAs(delegate)"><i class="fa fa-sign-in"></i> Switch To: {{delegate.ToEntityFullName}}</a></li>
+        <li ng-if="delegateUsers.length > 0"><a ui-sref="site.delegatesMenu"><i class="fa fa-sign-in"></i> Switch to Another Account</a></li>
+        <li><a ng-show="isLoggedIn()" ui-sref="site.MyProfile"><i class="fa fa-user-md"></i> Profile</a></li>
+        <li><a ui-sref="site.Delegates"><i class="fa fa-users"></i> Delegates</a></li>
+        <li><a ng-show="isLoggedIn() && !isDelegationMode() && !isExternalLogin" ui-sref="site.changePassword"><i class="fa fa-unlock-alt"></i> Change Password</a></li>
+        <li ng-show="isLoggedIn()"><a ng-click="logout();"><i class="fa fa-sign-out"></i> Sign Out</a></li>
+        <li ng-hide="isLoggedIn()"><a ui-sref="login"><i class="fa fa-sign-in"></i> Sign in</a></li>
+    </ul>
+</div>
+<footer class="stickers">
+    <ul>
+        <li ng-if="delegateUsers.length > 0"><span class="sticker"><i class="fa fa-user {{DelegateClass(userIdent)}}"></i> Working as {{userName}}</span></li>
+        <li><a class="sticker help" ng-click="HelpMenu()" ng-class="{'active': menuActive}"><i class="fa fa-question-circle"></i> Help</a></li>
+    </ul>
+</footer>

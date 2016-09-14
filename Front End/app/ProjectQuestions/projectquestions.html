@@ -1,0 +1,168 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-briefcase"></i> {{EntityProject.Name1}}</h1>
+    <button type="button" class="btn btn-primary header-action" ng-click="showPreviewModal()">
+        <i class="fa fa-eye"></i> Preview Project
+    </button>
+    <ui-view name="projectnavigation"></ui-view>
+</header>
+<div class="container-fluid" id="FormBuilder">
+    <form name="ProjectQuestion">
+        <div class="panel panel-primary" id="SuperBuilder">
+            <div id="TitleBar" class="panel-heading">
+                <h2>Questions</h2>
+                <button type="button" class="btn btn-primary heading-form" ng-click="addQuestion()" ng-disabled="EntityProjectQuestions[activeQuestionIndex].Ident == 0 || ProjectQuestion.NestedForm.$dirty">
+                    <i class="fa fa-plus"></i> Add Question
+                </button>
+            </div>
+            <div class="panel-body" id="SuperList" ng-class="{'full': showSidebar == false}">
+                <div class="sl-scroller" id="sortable-container-questions" data-as-sortable="dragControlListeners2" data-ng-model="EntityProjectQuestions">
+                    
+                    <a id="question{{$index}}" class="sl-item clearfix" ng-class="{'active': activeQuestionIndex === $index}" ng-repeat-start="question in EntityProjectQuestions" data-as-sortable-item tabindex="0" ng-click="activateQuestionRow(question, $index)" ng-dblclick="ToggleSidebar(!showSidebar)">
+                        <span class="sl-item-body">
+                            <span class="sl-action" data-as-sortable-item-handle>
+                                <i class="fa fa-bars"></i>
+                            </span>
+                            <span class="sl-label">{{question.label}}</span>
+                            <span class="sl-meta">{{question.type}}</span>
+                        </span>
+                        <span class="sl-expando" ng-if="activeQuestionIndex === $index" ng-click="ToggleSidebar(!showSidebar)">
+                            <i class="fa" ng-class="SidebarArrowClass" aria-hidden="true"></i>
+                        </span>
+                    </a>
+
+                    <div class="row sort-buttons" ng-if="activeQuestionIndex === $index">
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-primary btn-xs btn-block" ng-click="SortTop(activeQuestionIndex)"><i class="fa fa-angle-double-up" aria-hidden="true"></i> Top</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-primary btn-xs btn-block" ng-click="SortUp(activeQuestionIndex)"><i class="fa fa-angle-up" aria-hidden="true"></i> Up</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-primary btn-xs btn-block" ng-click="SortDown(activeQuestionIndex)"><i class="fa fa-angle-down" aria-hidden="true"></i> Down</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-primary btn-xs btn-block" ng-click="SortBottom(activeQuestionIndex)"><i class="fa fa-angle-double-down" aria-hidden="true"></i> Bottom</button>
+                        </div>
+                    </div>
+
+                    <aside id="SuperSidebar" class="loader" ng-if="activeQuestionIndex === $index" ng-repeat-end>
+                        <button type="button" class="close" ng-click="ToggleSidebar(false)"><i class="fa fa-times"></i></button>
+                        <ng-form name="NestedForm">
+                            <div class="form-group">
+                                <label class="required" for="QuestionLabel">Label:</label>
+                                <input class="form-control" type="text" id="QuestionLabel" ng-model="question.label" required="">
+                            </div>
+                            <div class="form-group">
+                                <label class="required" for="requirementType">Field Type:</label>
+                                <select ng-disabled="question.TotalEntityProjectEntityEntityProjectAnswers > 0"  name="requirementType" id="requirementType" class="form-control" 
+                                    ng-model="question.RequirementTypeIdent" ng-options="type.Ident as type.Name1 for type in RequirementTypes" required="" ng-change="checkIfRequirementTypeHasOptions(question)">
+                                </select>
+                                <span class="text-danger" ng-show="question.TotalEntityProjectEntityEntityProjectAnswers > 0">Once a question is answered, the Field Type cannot be changed.</span>
+                            </div>
+                            <div class="well" ng-if="question.RequirementTypeIdent == 28">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label for="MinRange">Min:</label>
+                                        <input type="number" class="form-control" ng-model="question.minRange" id="MinRange" />
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label for="MaxRange">Max:</label>
+                                        <input type="number" class="form-control" ng-model="question.maxRange" id="MaxRange" />
+                                    </div>
+                                </div>
+                                <span class="text-danger" ng-show="question.minRange >= question.maxRange">The Min value must be less than the Max value.</span>
+                            </div>
+                            <div class="well" ng-if="question.HasOptions && question.RequirementTypeIdent != 28">
+                                <div class="form-group">
+                                    <div class="btn-group pull-right">
+                                        <button class="btn btn-default btn-xs" type="button" ng-click="resortQuestionAlpha(question, false)" title="Sort Options Alphabetically">
+                                            <i class="fa fa-arrow-down"></i> A-Z
+                                        </button>
+                                        <button class="btn btn-default btn-xs" type="button" ng-click="resortQuestionAlpha(question, true)" title="Sort Options Reverse Alphabetically">
+                                            <i class="fa fa-arrow-up"></i> Z-A
+                                        </button>
+                                    </div>
+                                    <label>Options:</label>
+                                </div>
+                                <ul class="nav nav-pills">
+                                    <li ng-class="{'active': !question.showTextSort}"><a ng-click="toggleTextSort(question)"><i class="fa fa-bars" aria-hidden="true"></i> Drag and Drop Input</a></li>
+                                    <li ng-class="{'active': question.showTextSort}"><a ng-click="toggleTextSort(question)"><i class="fa fa-font" aria-hidden="true"></i> Plain Text Input</a></li>
+                                </ul>
+                                <div ng-show="!question.showTextSort" id="sortable-container" data-as-sortable="dragControlListeners" data-ng-model="question.questionOptions">
+                                    <div class="input-group input-group-sm" ng-repeat="option in question.questionOptions track by $index" data-as-sortable-item>
+                                        <span class="input-group-addon" data-as-sortable-item-handle><i class="fa fa-bars"></i></span>
+                                        <input class="form-control" type="text" ng-model="question.questionOptions[$index]">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" ng-confirm-click="Are you sure you want to delete this option?" ng-click="removeOptionValue(question, $index)"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div ng-show="question.showTextSort" class="form-group">
+                                    <textarea class="form-control" rows="10" placeholder="Paste Your List Here" ng-model="question.questionOptions" ng-list="&#10;" ng-trim="false" />
+                                </div>
+                                <div ng-show="!question.showTextSort" class="text-right">
+                                    <button class="btn btn-primary btn-sm" ng-click="addOption(question)"><i class="fa fa-plus"></i> Add Option</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="QuestionDesc">Description:</label>
+                                <text-angular ng-model="question.description" ta-toolbar="CustomToolbar" ta-toolbar-button-class="btn btn-default btn-sm"></text-angular>
+                            </div>
+                            <div class="form-group">
+                                <label for="QuestionPlaceholder">Placeholder Text:</label>
+                                <input class="form-control" type="text" id="QuestionPlaceholder" ng-model="question.placeholder" ng-disabled="PlaceholderNA(question.type)">
+                            </div>
+                            <div class="form-group">
+                                <label for="QuestionHelpText">Help Text:</label>
+                                <textarea class="form-control" rows="5" id="QuestionHelpText" ng-model="question.helpText"></textarea>
+                            </div>
+                            <div class="btn-toolbar super-toolbar">
+                                <button class="btn btn-success" type="button" ng-click="saveQuestion(question,false)" 
+                                    ng-disabled="ProjectQuestion.$invalid || !isQuestionValidForSave(question)">
+                                    <i class="fa fa-floppy-o"></i> Save
+                                </button>
+                                <button class="btn btn-link pull-right" type="button" ng-click="deleteQuestion(question, $index)">
+                                    <i class="fa fa-trash-o"></i> Delete
+                                </button>
+                            </div>
+                        </ng-form>
+                        <div class="loading" ng-show="loadingQuestionRecord">
+                            <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+                        </div>
+                    </aside>
+                    <!-- END #SuperSidebar -->
+
+                </div>
+                <!-- .sl-scroller -->
+            </div>
+            <!-- end .sl-body -->
+        </div>
+        <!-- end .panel -->
+    </form>
+    <!-- end #TaskView -->
+</div>
+<!-- end .container -->
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>
+
+<script type="text/ng-template" id="connectionTypeTemplate.html">
+    <a>
+        <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+    </a>
+</script>
+
+<!-- Preview Modal -->
+<script type="text/ng-template" id="PreviewModal.html">
+    <div class="modal-header">
+        <a class="close" ng-click="PreviewModal.close()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">Preview</h3>
+    </div>
+    <div class="modal-body" id="modPreview">
+        <div ui-view="preview@"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="PreviewModal.close()"><i class="fa fa-times"></i> Close</button>
+    </div>
+</script>

@@ -1,0 +1,144 @@
+<div class="panel panel-primary Insights" id="prescriber-summary">
+    <div class="panel-heading">
+        <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> Medicare Part D Prescriber Summary</h2>
+    </div>
+    <ul class="nav nav-tabs">
+        <li ng-class="{'active': CurrDataTab == 'charts'}"><a ng-click="CurrDataTab = 'charts'"><i class="fa fa-pie-chart" aria-hidden="true"></i> Insights</a></li>
+        <li ng-show="Loaded2014Data" ng-class="{'active': CurrDataTab == '2014'}"><a ng-click="CurrDataTab = '2014'"><i class="fa fa-table" aria-hidden="true"></i> 2014 Data</a></li>
+        <li ng-show="Loaded2013Data" ng-class="{'active': CurrDataTab == '2013'}"><a ng-click="CurrDataTab = '2013'"><i class="fa fa-table" aria-hidden="true"></i> 2013 Data</a></li>
+    </ul>
+
+    <!-- Sweet Charts -->
+    <div class="panel-body" ng-if="!ShowMessage && !LoadingData && CurrDataTab == 'charts'">
+        
+        <section class="insight-group">
+            <h3 class="sub-title">Beneficiary Prescription Summaries</h3>
+            <div ng-repeat="totals in PrimaryData.Summary" ng-init="sectionIndex = $index">
+                <h4>{{ totals.Name }}</h4>
+                <div class="well">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-3 data-viz" ng-repeat="num in totals.Data">
+                            <div class="viz-metric">
+                                <p class="viz-label">{{ num.Name }}</p>
+                                <h5 class="viz-num chars-8" ng-if="num.Value">
+                                    <span ng-if="num.Money">$</span>{{ PrettyNumber(num.Value) }}<i ng-if="CompareData && SecondaryData.Summary[sectionIndex].Data[$index].Value" class="fa" ng-class="CompareDataPoints(num.Value, SecondaryData.Summary[sectionIndex].Data[$index].Value)" ng-attr-title="Previously {{PrettyNumber(SecondaryData.Summary[sectionIndex].Data[$index].Value)}}"></i>
+                                </h5>
+                                <h5 class="viz-num chars-8 text-muted" ng-if="!num.Value">N/A</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end .row -->
+                </div>
+                <!-- end .well -->
+            </div>
+            <!-- end ng-repeat -->
+        </section>
+
+        <section class="insight-group" ng-if="ShowBrandCountChart || ShowBrandCostChart">
+            <h3 class="sub-title">Brand vs Generic vs Other</h3>
+            <div class="row">
+                <div ng-if="ShowBrandCountChart" class="col-sm-6 text-center data-viz">
+                    <div class="well" popover-template="BrandCountPopover.templateUrl" popover-placement="bottom" popover-popup-delay="500" popover-trigger="mouseenter">
+                        <h4>Claim Count</h4>
+                        <canvas id="BrandCountChart" class="chart chart-pie" chart-data="BrandCountChartData" chart-labels="BrandCountChartLabels"></canvas>
+                        <script type="text/ng-template" id="brand-count-popover.html">
+                            <strong>Legend:</strong>
+                            <ul>
+                                <li ng-repeat="label in BrandCountChartLabels"><i class="fa fa-square" ng-style="{'color': PieColors[$index]}"></i> {{ label }} ({{ PrettyNumber(BrandCountChartData[$index]) }})</li>
+                            </ul>
+                        </script>
+                    </div>
+                </div>
+                <div ng-if="ShowBrandCostChart" class="col-sm-6 text-center data-viz">
+                    <div class="well" popover-template="BrandCostPopover.templateUrl" popover-placement="bottom" popover-popup-delay="500" popover-trigger="mouseenter">
+                        <h4>Drug Cost</h4>
+                        <canvas id="BrandCostChart" class="chart chart-pie" chart-data="BrandCostChartData" chart-labels="BrandCostChartLabels"></canvas>
+                        <script type="text/ng-template" id="brand-cost-popover.html">
+                            <strong>Legend:</strong>
+                            <ul>
+                                <li ng-repeat="label in BrandCostChartLabels"><i class="fa fa-square" ng-style="{'color': PieColors[$index]}"></i> {{ label }} (${{PrettyNumber(BrandCostChartData[$index])}})</li>
+                            </ul>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="insight-group">
+            <h3 class="sub-title">Beneficiary Plans &amp; Subsidies</h3>
+            <div class="row">
+                <div class="col-md-6" ng-repeat="totals in PrimaryData.Coverages" ng-init="sectionIndex = $index">
+                    <h4>{{ totals.Name }}</h4>
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-sm-6 data-viz" ng-repeat="num in totals.Data">
+                                <div class="viz-metric">
+                                    <p class="viz-label">{{ num.Name }}</p>
+                                    <h5 class="viz-num chars-8" ng-if="num.Value">
+                                        <span ng-if="num.Money">$</span>{{ PrettyNumber(num.Value) }}<i ng-if="CompareData && SecondaryData.Coverages[sectionIndex].Data[$index].Value" class="fa" ng-class="CompareDataPoints(num.Value, SecondaryData.Coverages[sectionIndex].Data[$index].Value)" ng-attr-title="Previously {{PrettyNumber(SecondaryData.Coverages[sectionIndex].Data[$index].Value)}}"></i>
+                                    </h5>
+                                    <h5 class="viz-num chars-8 text-muted" ng-if="!num.Value">N/A</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .well -->
+                </div>
+                <!-- end .col -->
+            </div>
+            <!-- end .row -->
+        </section>
+    </div>
+
+    <!-- 2014 Data -->
+    <div class="panel-body" ng-if="!LoadingData && Loaded2014Data && CurrDataTab == '2014'">
+        <table class="table table-bordered" ng-repeat="(key, value) in CleanData2014">
+            <tbody ng-repeat="group in value">
+                <tr>
+                    <th colspan="2">{{ group.Name }}</th>
+                </tr>
+                <tr ng-repeat="item in group.Data">
+                    <td data-title="Column" width="50%">{{ item.Name }}</td>
+                    <td data-title="Value">
+                        <span ng-if="item.Money && item.Value">$</span>{{ PrettyNumber(item.Value) }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 2013 Data -->
+    <div class="panel-body" ng-if="!LoadingData && Loaded2013Data && CurrDataTab == '2013'">
+        <table class="table table-bordered" ng-repeat="(key, value) in CleanData2013">
+            <tbody ng-repeat="group in value">
+                <tr>
+                    <th colspan="2">{{ group.Name }}</th>
+                </tr>
+                <tr ng-repeat="item in group.Data">
+                    <td data-title="Column" width="50%">{{ item.Name }}</td>
+                    <td data-title="Value">
+                        <span ng-if="item.Money && item.Value">$</span>{{ PrettyNumber(item.Value) }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- No Data -->
+    <div class="panel-body" ng-if="!LoadingData && ShowMessage && CurrDataTab == 'charts'">
+        <div class="alert alert-info">
+            <h3 ng-if="!npi">Add an NPI to See Data</h3>
+            <h3 ng-if="npi">No Data Found for this Provider</h3>
+            <p>ZenPRM can display insights from the "Medicare Provider Utilization and Payment Data: Part D Prescriber" Provider Summary Table, which summarizes the utilization and payments for prescriptions and refills prescribed to Medicare beneficiaries by specific inpatient and outpatient hospitals, physicians, and other suppliers. This information is provided by CMS for <a href="https://data.cms.gov/Public-Use-Files/Medicare-Provider-Utilization-and-Payment-Data-Par/mxq9-aiiw" target="_blank">2013</a> and <a href="https://data.cms.gov/Public-Use-Files/Medicare-Provider-Utilization-and-Payment-Data-Par/cks9-s5d9" target="_blank">2014</a>.</p>
+            <p ng-if="!npi">If you wish to see Prescriber Summary data for this provider, <a ui-sref="site.EditProfile({ident: ident})">add his or her NPI</a>. Don't know the NPI? <a href="https://npiregistry.cms.hhs.gov/" target="_blank">Find it in the NPPES NPI Registry</a>.</p>
+        </div>
+    </div>
+
+    <!-- Loading Data -->
+    <div ng-show="LoadingData" class="panel-body loader">
+        <div class="loading">
+            <img src="assets/img/template/spinner_grey.png" width="90" alt="loading...">
+        </div>
+    </div>
+</div>

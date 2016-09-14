@@ -1,0 +1,53 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-users"></i> Delegates</h1>
+
+    <button type="button" class="btn btn-primary header-action" ng-click="showAddDelegateModal()">
+        <i class="fa fa-user-plus"></i> Add Delegate
+    </button>
+</header>
+
+<div class="container-fluid">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>{{ UserName }}'s Delegates</h2>
+        </div>
+        <table ng-table="tableParams" class="table animate" ng-show="delegates.length > 0">
+            <tr ng-repeat="user in delegates">
+                <td data-title="'Name'">
+                    <zen-resource-name name="user.ToEntityFullName" ident="user.ToEntityIdent" photo="user.ProfilePhoto"></zen-resource-name>
+                </td>
+                <td data-title="'Actions'">
+                    <button type="button" ng-click="removeDelegate(user.EntityConnectionIdent)" class="btn btn-warning btn-sm" ng-confirm-click="You are about to remove this person as a delegate, are you sure you want to do this?">
+                        <i class="fa fa-times"></i> Remove Delegate
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div class="panel-body" ng-if="delegates.length == 0">
+            <div class="alert alert-info">
+                <h2><i class="fa fa-exclamation-triangle"></i> You do not have any delegates.</h2>
+                <p>Delegates are users that have access to complete work in ZenPRM on the behalf of another user. You may create a delegate for yourself by clicking the Add Delegate button above, or by visiting the profile of a connected user and pressing the <b>Add As Delegate</b> button.</p>
+            </div>
+        </div>
+    </div>
+    <!-- end .panel -->
+
+</div>
+
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>
+
+
+<!-- end .container -->
+<script type="text/ng-template" id="AddDelegateModal.html">
+    <div class="modal-header">
+        <button class="close" ng-click="AddDelegateModal.closeAndReload()"><i class="fa fa-times"></i></button>
+        <h3 class="modal-title">Add Delegate</h3>
+    </div>
+    <div class="modal-body">
+        <add-delegate></add-delegate>
+    </div>
+</script>

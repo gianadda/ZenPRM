@@ -1,0 +1,27 @@
+<div class="project" ng-class="projectClass">
+    <div class="project-progress">
+        <span class="done" ng-style="{'width': drawComplete(project.PercentComplete) + '%'}"></span>
+    </div>
+    <div class="project-body">
+        
+        <button ng-if="showArchive" type="button" class="btn btn-default btn-xs" ng-confirm-click="Are you sure you want to Archive this project?" ng-click="ArchiveProject(project.Ident)"><i class="fa fa-archive"></i> Archive</button>
+        
+        <button ng-if="showReactivate" type="button" class="btn btn-default btn-xs" ng-confirm-click="Are you sure you want to reactivate this project?" ng-click="ReactivateProject(project.Ident)"><i class="fa fa-undo"></i> Reactivate</button>
+
+        <p class="org-name" ng-if="showOrgLabel">{{project.EntityName}}</p>
+        <h3><a ng-click="ProjectLink()"><i class="fa fa-bookmark" ng-if="showBookmark && project.ShowOnProfile"></i> <i class="fa fa-lock" ng-if="project.PrivateProject == true"></i> {{project.Name1}}</a></h3>
+        <div class="row">
+            <div class="metric col-sm-6">
+                <h4>{{drawComplete(project.PercentComplete)}}<small>%</small></h4>
+            </div>
+            <div class="context col-sm-6">
+                <p ng-if="adminMode">{{project.TotalEntityProjectEntity}} participants</p>
+                <p ng-if="!adminMode">Remaining Questions: {{ project.RemainingQuestions }}</p>
+                <p>Due Date: <span ng-if="project.DueDate != null">{{project.DueDate}}</span><span ng-if="project.DueDate == null">Not set</span></p>
+            </div>
+        </div>
+        <!-- end .row -->
+    </div>
+    <!-- end .project-body -->
+</div>
+<!-- end .project -->

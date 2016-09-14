@@ -1,0 +1,188 @@
+//********************************************************//
+// Super List //
+
+// Used for Project Questions and Tickets.
+// This is the core UI. Customizations are expected.
+// It's intended to applied to a panel.
+
+// Wrapper
+// Apply to .panel
+#SuperBuilder {
+	position: relative;
+	font-size: 14px;
+	margin: 0;
+}
+
+// Main list
+// Apply to .panel-body
+#SuperList {
+	padding: 0;
+	border-top: 0;
+	box-shadow: none;
+
+	// Group label
+	h3 {
+		font-size: 15px;
+		padding: 10px 20px;
+		margin: 0;
+		background: #f5f5f5;
+		border-bottom: 1px solid #ddd;
+		clear: both;
+	}
+
+	// Individual row
+	.sl-item {
+		position: relative;
+		color: inherit;
+		min-height: 41px;
+		border-bottom: 1px solid #ddd;
+		display: block;
+		clear: both;
+		cursor: default;
+
+		.sl-label {
+			padding: 10px 20px 7px 20px;
+		}
+
+		.sl-meta {
+			font-size: 13px;
+			padding: 0 20px 10px 20px;
+		}
+	}
+
+	.sl-item:focus {
+		outline: none;
+	}
+
+	// Active row
+	.sl-item.active, .sl-item.complete.active {
+		color: #fff;
+		background: $brand-pink;
+
+		.sl-meta {
+			color: #eee;
+		}
+	}
+}
+
+// Sidebar
+#SuperSidebar {
+	margin: 0;
+	padding: 20px;
+	background: #fff;
+	border-bottom: 1px solid #ccc;
+	box-shadow: inset 0px 10px 10px -10px rgba(0,0,0,0.1);
+	overflow-x: hidden;
+	clear: left;
+
+	.super-toolbar {
+		margin: 15px 0 0 0;
+		padding-top: 15px;
+		border-top: 1px solid #ccc;
+	}
+
+	.close {
+		margin: -10px -10px 0 0;
+	}
+
+	label {
+		display: block;
+	}
+}
+
+// Make buttons look nice at narrow widths
+@media screen and (max-width: 767px), screen and (min-width: 992px) and (max-width: 1199px) {
+
+	#SuperSidebar .pull-right {
+		float: none !important;
+
+		.btn {
+			margin: 0 5px 5px 0;
+		}
+	}
+
+}
+
+// Make sure height is reset at narrow widths
+@media screen and (max-width: 991px) {
+
+	#SuperList {
+		height: auto !important;
+	}
+
+}
+
+// Desktop layout
+@media screen and (min-width: 992px) {
+
+	#SuperList {
+		width: 60%;
+		height: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
+		z-index: 2;
+		transition: width 250ms;
+	}
+
+	#SuperList.full {
+		width: 100%;
+		transition: none;
+
+		.sl-item {
+				.sl-label {
+				float: left;
+				padding-bottom: 10px;
+				width: 75%;
+			}
+
+			.sl-meta {
+				float: left;
+				text-align: right;
+				padding-top: 10px;
+				width: 25%;
+			}
+		}
+	}
+
+	#SuperSidebar {
+		position: absolute;
+		top: 52px;
+		right: 0;
+		bottom: 0;
+		margin: 0;
+		padding-bottom: 0;
+		width: 40%;
+		border: 0;
+		border-left: 1px solid #ccc;
+		box-shadow: inset 10px 0px 10px -10px rgba(0,0,0,.2);
+		overflow-y: auto;
+		z-index: 1;
+
+		// Firefox & IE are having problems with the bottom padding
+		// But stripping it off #SuperSidebar and applying it to 
+		// .super-toolbar seems to fix the issue. Dumb.
+		.super-toolbar {
+			padding-bottom: 20px;
+		}
+	}
+
+}
+
+@media screen and (min-width: 1200px) {
+
+	#SuperList .sl-item {
+		.sl-label {
+			float: left;
+			padding-bottom: 10px;
+			width: 75%;
+		}
+
+		.sl-meta {
+			float: left;
+			text-align: right;
+			padding-top: 10px;
+			width: 25%;
+		}
+	}
+
+}

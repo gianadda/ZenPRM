@@ -1,0 +1,61 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-briefcase" aria-hidden="true"></i> {{ ProjectName }}</h1>
+    <a ui-sref="site.ProjectDetail({ident: EntityProjectIdent})" class="btn btn-primary header-action">
+        <i class="fa fa-long-arrow-left"></i> Back to Overview
+    </a>
+    <ui-view name="projectnavigation"></ui-view>
+</header>
+
+<div id="ProjectQuestion" class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-lg-9">
+            <div class="panel panel-primary" id="panel-Measures">
+                <div class="panel-heading">
+                    <zen-tone-analysis ident="requirementIdent" name="RequirementName" btn-class="'heading-form'"></zen-tone-analysis>
+                    <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> {{ RequirementName }} </h2>
+                </div>
+
+                <ul class="nav nav-tabs">
+                    <li ng-class="{'active': CurrentTab == 'dials'}"><a ui-sref="site.ProjectDetail.Question({questionident: requirementIdent, tab: 'dials'})">Organization View</a></li>
+                    <li ng-class="{'active': CurrentTab == 'list'}"><a ui-sref="site.ProjectDetail.Question({questionident: requirementIdent, tab: 'list'})">Participant View</a></li>
+                </ul>
+
+                <zen-question-drilldown loading="loading" measures="RequirementData" measures-view="CurrentTab" dial-class="{{'col-sm-6 col-lg-4'}}"></zen-question-drilldown>
+            </div>
+            <!-- end .panel -->
+        </div>
+        <!-- end .col -->
+        <div class="col-md-4 col-lg-3">
+            <div id="SwapQuestion" class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-asterisk" aria-hidden="true"></i> Swap Question</h2>
+                </div>
+                <div class="panel-body">
+                    <label class="control-label" for="cboProjectQuestion">Select a Question:</label>
+                    <select class="form-control" id="cboProjectQuestion" ng-model="EntityProjectRequirement.Ident"  ng-change="changeQuestion()" ng-options="option.Ident as option.label for option in ProjectQuestions"></select>
+                    <div class="btn-toolbar">
+                        <a ui-sref="site.ProjectDetail.Question({questionident: prevIdent, tab: currentTab})" class="btn btn-primary btn-sm pull-left" ng-if="prevIdent != undefined"><i class="fa fa-arrow-left"></i> Previous</a>
+                        <a ui-sref="site.ProjectDetail.Question({questionident: nextIdent, tab: currentTab})" class="btn btn-primary btn-sm pull-right" ng-if="nextIdent != undefined">Next <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div id="QuestionTotals" class="panel panel-primary" ng-if="RequirementData.EntityMeasureTotal.length > 0">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> Totals </h2>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <zen-dial ng-if="CurrentTab == 'dials'" measure="measure" allow-edit="{{false}}" dial-click="MeasureClick" dial-class="{{'col-sm-12'}}" 
+                            ng-repeat="measure in RequirementData.EntityMeasureTotal"></zen-dial>
+                        <zen-dial ng-if="CurrentTab == 'list'" measure="measure" allow-edit="{{false}}" dial-class="{{'col-sm-6 col-md-12 no-link'}}" 
+                            ng-repeat="measure in RequirementData.EntityMeasureTotal"></zen-dial>
+                    </div>
+                </div>
+            </div>
+            <!-- end .panel -->
+        </div>
+        <!-- end .col -->
+    </div>
+    <!-- end .row -->
+</div>
+<!-- end container -->

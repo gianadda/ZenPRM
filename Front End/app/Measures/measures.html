@@ -1,0 +1,23 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-pie-chart" aria-hidden="true"></i> Key Performance Measures</h1>
+</header>
+
+<div id="Measures" class="container-fluid">
+
+    <div class="panel panel-primary" id="panel-Measures">
+        <div class="panel-heading">
+            <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> {{ MeasureName }} <small ng-if="CurrentTab == 'dials'">By Organization</small><small ng-if="CurrentTab == 'list'">By Participant</small></h2>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li ng-class="{'active': CurrentTab == 'dials'}"><a ui-sref="site.measures({ident: MeasureIdent, tab: 'dials'})">Organization View</a></li>
+            <li ng-class="{'active': CurrentTab == 'list'}"><a ui-sref="site.measures({ident: MeasureIdent, tab: 'list'})">Participant View</a></li>
+        </ul>
+
+        <zen-question-drilldown loading="loading" measures="MeasuresData" measures-view="CurrentTab" dial-class="{{'col-sm-6 col-md-4 col-lg-3'}}"></zen-question-drilldown>
+
+    </div>
+    <!-- end .panel -->
+
+</div>
+<!-- end container -->

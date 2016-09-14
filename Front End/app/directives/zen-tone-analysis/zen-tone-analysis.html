@@ -1,0 +1,66 @@
+<button type="button" class="btn btn-primary" ng-class="btnClass" ng-click="OpenModal()"><i class="fa fa-flask" aria-hidden="true"></i> Analyze Tone with Watson</button>
+
+<script type="text/ng-template" id="ToneModal.html">
+    <div class="modal-header">
+        <a class="close" ng-click="ToneModal.close()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">Tone Analysis for {{ name }}</h3>
+    </div>
+    <div class="modal-body loader">
+        <div ng-if="!Accepted && !ShowAnalysis">
+            <h4>DISCLAIMER</h4>
+            <p>The text of these answers will be transmitted to IBM Watson as-is. They will not be attributable to you or the original respondent in the transmission. This transaction is governed by the <a href="http://www.ibm.com/legal/us/en/" target="_blank">IBM Watson Terms of Use</a> and <a href="http://www.ibm.com/privacy/us/en/" target="_blank">Privacy Policy</a>.</p>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-model="Accepted"> I acknowledge that I have read and accept the terms</label>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" ng-disabled="!Accepted" ng-click="GetWatson()">See Tone Analysis</button>
+        </div>
+
+        <!-- Radar Charts -->
+        <div ng-if="ShowAnalysis">
+            <div class="row">
+                <div class="col-md-4" ng-repeat="category in CatNames">
+                    <h4 class="text-center">{{ category }}</h4>
+                    <canvas class="chart chart-radar" chart-data="ChartData[$index]" chart-labels="ChartLabels[$index]"></canvas>
+                </div>
+            </div>
+            <hr>
+            <!-- Bar Charts -->
+            <div class="row">
+                <div class="col-md-4" ng-repeat="category in ToneData.document_tone.tone_categories">
+                    <h4>{{ category.category_name }}</h4>
+                    <ul class="h-bar-chart">
+                        <li class="row" ng-repeat="tone in category.tones">
+                            <div class="col-xs-12 bar-label">
+                                {{ tone.tone_name }} <b>({{ tone.score.toFixed(2) }})</b>
+                            </div>
+                            <div class="col-xs-12 hidden-print">
+                                <div class="h-bar">
+                                    <div class="fill" ng-class="{'full': percentify(tone.score) >= 100}" ng-style="{width: percentify(tone.score) + '%'}"></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <footer class="text-center">
+                <br>
+                Powered by <a href="http://www.ibm.com/watson/" target="_blank">IBM <b>Watson</b></a>
+            </footer>
+        </div>
+
+        <div class="alert alert-danger" ng-if="ShowError">
+            <strong><i class="fa fa-frown-o" aria-hidden="true"></i> Oh no! We seem to have lost contact with Watson.</strong> Please try again later.
+        </div>
+
+        <div class="loading solid watson" ng-show="Loading">
+            <img src="assets/img/template/spinner_watson.gif" width="90" alt="loading...">
+            <br>
+            Powered by IBM <b>Watson</b>
+        </div>
+    </div>
+    <div class="modal-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="ToneModal.close()"><i class="fa fa-times"></i> Close</button>
+    </div>
+</script>

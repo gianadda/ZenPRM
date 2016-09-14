@@ -1,0 +1,33 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-users"></i> My Delegate Accounts</h1>
+</header>
+
+<div class="container-fluid" id="DelegatesMenu">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="input-group">
+                <label for="SearchBox" class="input-group-addon"><i class="fa fa-search"></i></label>
+                <input type="text" class="form-control" placeholder="Search by Name" id="SearchBox" ng-model="delegateSearch">
+            </div>
+        </div>
+        <ul class="panel-body">
+            <li class="row" ng-repeat="delegate in delegateUsers | filter: delegateSearch">
+                <div class="col-sm-8">
+                    <i class="fa fa-square {{DelegateClass(delegate.ToEntityIdent)}}" style="margin-right: 5px"></i> 
+                    <strong>{{delegate.ToEntityFullName}}</strong>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-primary btn-xs" type="button" ng-click="logInAs(delegate)"><i class="fa fa-sign-in"></i> Switch</button></td>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- end .panel -->
+
+</div>
+<!-- end .container -->
+
+<div class="loading" ng-show="loadingDelegates">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

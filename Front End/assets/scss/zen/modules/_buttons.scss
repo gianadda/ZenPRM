@@ -1,0 +1,164 @@
+//********************************************************//
+// Buttons //
+
+//--------------------------------------------------------//
+// SOCIAL BUTTONS //
+
+.social-btn {
+	font-size: 18px;
+	font-weight: 700;
+	color: #fff;
+	text-align: center;
+	padding: 10px 20px;
+	margin-bottom: 15px;
+	background: $brand-purple;
+	border-radius: 5px;
+	display: block;
+}
+
+.social-btn.facebook {
+	background: #3b5998;
+}
+
+.social-btn.google {
+	background: #ca1e04;
+}
+
+.social-btn.twitter {
+	background: #1da1f2;
+}
+
+.social-btn.linkedin {
+	background: #0077b5;
+}
+
+.social-btn:hover, .social-btn:focus {
+	color: #fff;
+	opacity: .9;
+}
+
+.social-btns > div:last-child .social-btn {
+	margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+	.social-btns > div:nth-of-type(3) .social-btn {
+		margin-bottom: 0;
+	}
+}
+
+//--------------------------------------------------------//
+// WATSON TONE BUTTON //
+
+.tone-btn {
+	margin-top: 5px;
+}
+
+//--------------------------------------------------------//
+// STICKY (Quick Action) BUTTON //
+
+// Placed in lower right corner for quick access.
+// Combine with standard BS classes for color.
+// Works best with FA icon and no text.
+
+.sticky-btn {
+	position: fixed;
+	bottom: 39px;
+	right: 5px;
+	font-size: 24px;
+	line-height: 48px;
+	padding: 0;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), 0 0 10px 0 rgba(0,0,0,.2);
+	z-index: 1999;
+}
+
+.sticky-btn:focus, .sticky-btn:active:focus {
+	outline: none;
+}
+
+@media screen and (min-width: 992px) {
+
+	.sticky-btn {
+		font-size: 30px;
+		line-height: 60px;
+		width: 60px;
+		height: 60px;
+	}
+
+}
+
+//--------------------------------------------------------//
+// WIZARD (Prev/Next) BUTTONS //
+
+// Intended for display overtop modals
+
+.wizard-btn {
+	position: fixed;
+	top: 150px;
+	font-size: 24px;
+	line-height: 48px;
+	color: #fff;
+	vertical-align: middle;
+	padding: 0 4px;
+	width: 48px;
+	height: 48px;
+	background-color: rgba(0,0,0,.75);
+	border-radius: 50%;
+	z-index: 1999;
+}
+
+.prev {
+	left: -24px;
+	text-align: right;
+}
+
+.next {
+	right: -24px;
+	text-align: left;
+}
+
+.wizard-btn:hover {
+	color: #fff;
+	background-color: #000;
+}
+
+@media screen and (min-width: 600px) {
+
+	.wizard-btn {
+		font-size: 36px;
+		line-height: 60px;
+		width: 60px;
+		height: 60px;
+	}
+
+}
+
+@media screen and (min-width: 768px) {
+
+	.prev, .next {
+		text-align: center;
+	}
+
+	.prev {
+		left: -6px;
+	}
+
+	.next {
+		right: -6px;
+	}
+
+}
+
+@media screen and (min-width: 1200px) {
+
+	.wizard-btn {
+		font-size: 48px;
+		line-height: 72px;
+		width: 72px;
+		height: 72px;
+	}
+
+}

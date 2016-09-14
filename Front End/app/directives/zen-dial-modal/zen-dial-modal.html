@@ -1,0 +1,168 @@
+<a class="edit-dial" ng-if="!addMode" ng-click="openModel(measure)" title="Edit dial"><i class="fa fa-cog"></i></a>
+
+<button type="button" class="btn btn-primary btn-sm" ng-if="addMode" ng-click="openModel()"><i class="fa fa-plus"></i> New Measure</button>
+
+<script type="text/ng-template" id="DialModal.html">
+    <form id="AddDialForm" name="AddDialForm">
+        <div class="modal-header">
+            <a class="close" ng-click="CancelDial()"><i class="fa fa-times"></i></a>
+            <h3 class="modal-title" ng-if="!measure.Ident">Add New Measure</h3>
+            <h3 class="modal-title" ng-if="measure.Ident">Edit Measure</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-2 control-label required" for="MeasureName">Name:</label>
+                    <div class="col-md-8">
+                        <input class="form-control" type="text" ng-model="measure.MeasureName" id="MeasureName" name="MeasureName" ng-maxlength="255">
+                        <span class="text-danger" ng-show="AddDialForm.MeasureName.$error.maxlength">The Measure Name must be less than 255 characters.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label required" for="DialType">Type:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="MeasureTypeIdent" ng-model="measure.MeasureTypeIdent" ng-options="option.Ident as option.Name1 for option in MeasureTypes" ng-change="GetNewMeasureTypeSettings(measure.MeasureTypeIdent)">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="EntitySearchIdent">Segment:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="EntitySearchIdent" ng-model="measure.EntitySearchIdent" ng-options="seg.Ident as seg.Name1 for seg in segments">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label required" for="EntityProject1Ident"><span ng-if="measure.HasDenominator == true">Numerator </span>Project:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="EntityProject1Ident" ng-model="measure.EntityProject1Ident" ng-options="option.Ident as option.Name1 for option in projects | filter: {Archived: false}" ng-change="LoadProjectQuestions(measure.EntityProject1Ident, 1, measure.DataTypeIdent)">
+                        </select>
+                        <span class="text-danger" ng-if="measure.EntityProject1Ident && ProjectQuestions1.length == 0">The selected project contains no questions of the correct data type. Please select another.</span>
+                        <span class="text-danger" ng-if="ProjectQuestions1 == undefined">The selected project contains no questions. Please select another.</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="measure.MeasureTypeIdent && measure.EntityProject1Ident && ProjectQuestions1.length > 0">
+                    <label class="col-md-2 control-label required" for="Question1EntityProjectRequirementIdent">
+                        <span ng-if="measure.HasDenominator == true">Numerator </span>Question:
+                    </label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="Question1EntityProjectRequirementIdent" ng-model="measure.Question1EntityProjectRequirementIdent" 
+                            ng-options="option.Ident as option.label for option in ProjectQuestions1">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="measure.Question1EntityProjectRequirementIdent && measure.HasDenominator == true">
+                    <label class="col-md-2 control-label required" for="EntityProject2Ident"><span ng-if="measure.HasDenominator == true">Denominator </span>Project:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="EntityProject2Ident" ng-model="measure.EntityProject2Ident" ng-options="option.Ident as option.Name1 for option in projects | filter: {Archived: false}" ng-change="LoadProjectQuestions(measure.EntityProject2Ident, 2, measure.DataTypeIdent)">
+                        </select>
+                        <span class="text-danger" ng-if="measure.EntityProject2Ident && ProjectQuestions2.length == 0">The selected project contains no questions of the correct data type. Please select another.</span>
+                        <span class="text-danger" ng-if="ProjectQuestions2 == undefined">The selected project contains no questions. Please select another.</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="measure.EntityProject2Ident && ProjectQuestions2.length > 0">
+                    <label class="col-md-2 control-label required" for="Question2EntityProjectRequirementIdent"><span ng-if="measure.HasDenominator == true">Denominator </span>Question:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="Question2EntityProjectRequirementIdent" ng-model="measure.Question2EntityProjectRequirementIdent" 
+                            ng-options="option.Ident as option.label for option in ProjectQuestions2">
+                        </select>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label class="col-md-2 control-label" for="cblMeasureLocation"> Location:</label>
+                    <div class="col-md-8">
+                        <div class="checkbox" ng-repeat="location in measure.Location">
+                          <label><input type="checkbox" ng-model="location.Selected" ng-value="location.Ident">{{location.LocationName}} </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <pre>{{ measure | json }}</pre> -->
+            <div class="row" ng-if="measure.EntityProject1Ident && measure.Question1EntityProjectRequirementIdent && ProjectQuestions1.length > 0 && measure.MeasureTypeIdent != 7">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="well">
+                        <h3>Ranges</h3>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="RangeLabel">Label:</label>
+                                    <input type="text" class="form-control input-sm" ng-model="NewRange.Label" id="RangeLabel" placeholder="Low">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="RangeStart">Range:</label>
+                                    <div class="input-group input-group-sm">
+                                        <input type="number" class="form-control" ng-model="NewRange.Low" id="RangeStart" placeholder="0">
+                                        <label class="input-group-addon" for="RangeEnd">&mdash;</label>
+                                        <input type="number" class="form-control" ng-model="NewRange.High" id="RangeEnd" placeholder="25">
+                                    </div>
+                                    <span class="text-danger" ng-if="ShowRangeError == true">Start value must be less than or equal to end value.</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="RangeColor">Color:</label>
+                                    <div class="loader" dropdown>
+                                        <a class="btn btn-default btn-sm btn-block" dropdown-toggle>
+                                        <span ng-show="!NewRange.Color">Select a color</span>
+                                        <span ng-show="NewRange.Color"><i class="fa fa-square text-{{ NewRange.Color }}"></i> {{ NewRange.Color }}</span>
+                                        <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" dropdown-menu>
+                                            <li><a ng-click="PickColor('purple')"><i class="fa fa-square text-purple"></i> purple</a></li>
+                                            <li><a ng-click="PickColor('blue')"><i class="fa fa-square text-blue"></i> blue</a></li>
+                                            <li><a ng-click="PickColor('sky')"><i class="fa fa-square text-sky"></i> sky</a></li>
+                                            <li><a ng-click="PickColor('teal')"><i class="fa fa-square text-teal"></i> teal</a></li>
+                                            <li><a ng-click="PickColor('green')"><i class="fa fa-square text-green"></i> green</a></li>
+                                            <li><a ng-click="PickColor('lime')"><i class="fa fa-square text-lime"></i> lime</a></li>
+                                            <li><a ng-click="PickColor('yellow')"><i class="fa fa-square text-yellow"></i> yellow</a></li>
+                                            <li><a ng-click="PickColor('orange')"><i class="fa fa-square text-orange"></i> orange</a></li>
+                                            <li><a ng-click="PickColor('burnt')"><i class="fa fa-square text-burnt"></i> burnt</a></li>
+                                            <li><a ng-click="PickColor('rust')"><i class="fa fa-square text-rust"></i> rust</a></li>
+                                            <li><a ng-click="PickColor('red')"><i class="fa fa-square text-red"></i> red</a></li>
+                                            <li><a ng-click="PickColor('pink')"><i class="fa fa-square text-pink"></i> pink</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group btn-toolbar">
+                            <button type="button" class="btn btn-primary btn-sm" ng-click="AddRange()" ng-disabled="IsRangeFormInvalid()" ng-if="!isEditingRange"><i class="fa fa-plus"></i> Add Range</button>
+                            <button type="button" class="btn btn-success btn-sm" ng-click="SaveRange()" ng-disabled="IsRangeFormInvalid()" ng-if="isEditingRange"><i class="fa fa-floppy-o"></i> Save Range</button>
+                            <button type="button" class="btn btn-default btn-sm" ng-click="ClearRangeForm()"><i class="fa fa-times"></i> Cancel</button>
+                        </div>
+
+                        <table class="table" ng-if="measure.Ranges.length > 0">
+                            <thead>
+                                <tr>
+                                    <th>Label</th>
+                                    <th>Color</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="range in measure.Ranges | orderBy:'Low'">
+                                    <td data-title="Label">{{ range.Label }}</td>
+                                    <td data-title="Color"><i class="fa fa-square text-{{ range.Color }}"></i> {{ range.Color }}</td>
+                                    <td data-title="Start">{{ range.Low }}</td>
+                                    <td data-title="End">{{ range.High }}</td>
+                                    <td data-title="Actions">
+                                        <button class="btn btn-primary btn-xs" title="Edit" ng-click="EditRange(range, $index)"><i class="fa fa-pencil"></i> Edit</button>
+                                        <button class="btn btn-link btn-xs" title="Delete" ng-click="DeleteRange(range.Ident, $index)"><i class="fa fa-trash"></i> Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-left" ng-if="measure.Ident" ng-click="DeleteDial()" ng-confirm-click="Are you sure you want to delete this measure?"><i class="fa fa-trash"></i> Delete</button>
+            <button type="button" class="btn btn-success" ng-disabled="IsDialFormInvalid()" ng-click="SaveDial()"><i class="fa fa-floppy-o"></i> Save</button>
+            <button type="button" class="btn btn-default" ng-click="CancelDial()"><i class="fa fa-times"></i> Close</button>
+        </div>
+    </form>
+</script>

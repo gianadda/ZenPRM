@@ -1,0 +1,162 @@
+//********************************************************//
+// Todos & Project Questions (Super Lists) //
+
+#Tickets {
+	#SuperBuilder > .alert {
+		margin: 20px;
+	}
+
+	#SuperList {
+		.sl-item {
+			.sl-label {
+				padding-right: 74px;
+
+				// Status
+				.label {
+					text-transform: lowercase;
+					margin-right: 15px;
+					width: 22px;
+				}
+
+				// Type
+				.fa {
+					color: #888;
+					text-align: center;
+					margin-right: 15px;
+					width: 15px;
+				}
+			}
+
+			.sl-meta {
+				text-align: left;
+				padding: 0 74px 10px 20px;
+				display: inline-block;
+
+				.sl-date:not(.text-danger) {
+					color: inherit;
+				}
+			}
+
+			.sl-meta.regarding-resource {
+				padding-right: 0;
+			}
+
+			// Assignee
+			.sl-assignee {
+				position: absolute;
+				top: 10px;
+				right: 20px;
+
+				.user-icon {
+					margin: 0;
+				}
+			}
+		}
+
+		.sl-item.complete {
+			color: #888;
+		}
+
+		.sl-item.active, .sl-item.complete.active {
+			color: #fff;
+
+			.sl-label .fa, a, a:link, a:visited, a:hover, a:focus {
+				color: #fff;
+			}
+
+			a:hover, a:focus {
+				text-decoration: underline;
+			}
+
+			.sl-meta .text-danger {
+				color: #eee;
+			}
+		}
+	}
+
+	#SuperSidebar {
+		.tab-content {
+			padding-top: 20px;
+		}
+
+		.comments {
+			list-style: none;
+			padding: 5px 0 0 0;
+			margin: 0;
+
+			li {
+				margin-top: 15px;
+				padding-top: 15px;
+				border-top: 1px solid #ddd;
+
+				.comment-meta {
+					font-size: 13px;
+					margin-bottom: 5px;
+
+					b {
+						margin-right: 10px;
+					}
+				}
+			}
+		}
+	}
+
+}
+
+@media screen and (max-width: 991px) {
+
+	#Tickets .panel-heading .input-group {
+		margin-bottom: 10px;
+	}
+
+}
+
+@media screen and (min-width: 992px) {
+
+	#Tickets #SuperList.full .sl-item {
+		.sl-label {
+			width: 60%;
+		}
+
+		.sl-meta {
+			width: 20%;
+			padding: 10px 74px 10px 0;
+		}
+
+		.sl-meta.regarding-resource {
+			padding: 10px 20px 10px 0;
+		}
+
+		.sl-assignee {
+			top: 4px;
+		}
+	}
+
+	#Tickets #SuperSidebar {
+		top: 62px;
+	}
+
+}
+
+@media screen and (min-width: 1200px) {
+
+	#Tickets #SuperList .sl-item {
+		.sl-label {
+			width: 60%;
+		}
+
+		.sl-meta {
+			width: 20%;
+			padding: 10px 74px 10px 0;
+		}
+
+		.sl-meta.regarding-resource {
+			padding: 10px 20px 10px 0;
+		}
+
+		.sl-assignee {
+			top: 4px;
+		}
+	}
+
+}

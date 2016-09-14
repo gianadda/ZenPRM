@@ -1,0 +1,34 @@
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <!-- Toggle & Logo -->
+        <div class="navbar-header">
+            <a href="" ng-click="toggleNav()" class="hamburger"><i class="fa fa-bars"></i></a>
+            <a ui-sref="site.home" class="navbar-brand"><img src="assets/img/template/logo_header.png" height="40" alt="ZenPRM"></a>
+        </div>
+        <!-- Navigation Bar -->
+        <nav>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" dropdown>
+                    <a href="" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false"><i class="fa fa-user"></i> {{userName}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a ng-show="isLoggedIn()" ui-sref="site.MyProfile"><i class="fa fa-user-md"></i> Profile</a></li>
+                        <li><a ng-show="isLoggedIn() && !isDelegationMode()" ui-sref="site.changePassword"><i class="fa fa-unlock-alt"></i> Change Password</a></li>
+                        <li class="divider"></li>
+                        <li ng-show="isLoggedIn()"><a ng-click="logout();"><i class="fa fa-sign-out"></i> Sign Out</a></li>
+                        <li ng-hide="isLoggedIn()"><a ui-sref="login"><i class="fa fa-sign-in"></i> Sign in</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-show="isLoggedIn() && (delegateUsers.length || isDelegationMode())">
+                <li class="dropdown" dropdown>
+                    <a href="" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false"> Log in as... <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li  ng-show="isDelegationMode()"><a ng-click="logOutAs()"><i class="fa fa-sign-in"></i> Return to My Account</a></li>
+                        <li ng-repeat="delegate in delegateUsers"><a ng-click="logInAs(delegate.ToEntityIdent)"><i class="fa fa-sign-in"></i> {{delegate.ToEntityFullName}}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <!-- end .container-fluid -->
+</nav>

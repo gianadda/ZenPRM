@@ -1,0 +1,1140 @@
+//********************************************************//
+// Customized Bootstrap (& Other Library) Styles //
+
+// UI Bootstrap Override //
+.nav a, .pagination, .carousel, .panel-heading a, .dropdown-menu a {
+	cursor: pointer;
+}
+
+.breadcrumb > li + li:before {
+	content: "/\00a0";
+}
+
+//--------------------------------------------------------//
+// Alerts //
+
+.alert {
+	box-shadow: 0 1px 5px 0 rgba(0,0,0,.1);
+
+	> :first-child {
+		margin-top: 0;
+	}
+
+	> p, > ul {
+		margin-bottom: 10.5px;
+	}
+
+	a {
+		text-decoration: underline;
+	}
+
+	> :last-child {
+		margin-bottom: 0;
+	}
+}
+
+.alert-sm {
+	font-size: 13px;
+	padding: 8px 10px;
+}
+
+//--------------------------------------------------------//
+// Backgrounds //
+
+.bg-success {
+	background-color: lighten($brand-green, 45%);
+}
+
+//--------------------------------------------------------//
+// Buttons //
+
+.btn {
+	box-shadow: inset 0 1px 1px 0 rgba(255,255,255,.2);
+}
+
+.btn-xs {
+	padding: 3px 6px;
+}
+
+.btn-sm {
+	font-size: 13px;
+	padding: 5px 8px;
+}
+
+.btn-lg {
+	font-size: 16px;
+	text-transform: uppercase;
+	padding: 6px 12px;
+}
+
+// Default
+.btn-default {
+	background-color: #f5f5f5;
+	border-color: #ccc;
+}
+
+.well .btn-default {
+	background-color: #fff;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default:focus:active {
+	background: darken(#f5f5f5, 5%);
+	border-color: #ccc;
+}
+
+// Button Toolbar //
+
+.btn-toolbar {
+	margin: 0;
+
+	> .btn, > .btn-group {
+		margin: 0 5px 5px 0;
+	}
+
+	.pull-right .btn {
+		margin: 0 0 5px 5px;
+	}
+}
+
+// Text Angular Toolbar //
+
+.ta-toolbar {
+	margin: 0;
+	padding: 5px 5px 0 5px;
+	background: #f5f5f5;
+	border: 1px solid #ccc;
+	border-radius: 4px 4px 0 0;
+
+	.btn-default {
+		background: #fff;
+	}
+}
+
+.ta-editor {
+	border-top: 0;
+	border-radius: 0 0 4px 4px;
+}
+
+//--------------------------------------------------------//
+// Close Button //
+
+.close {
+	font-size: 16px;
+}
+
+//--------------------------------------------------------//
+// Datepicker (UI Bootstrap) //
+
+// This class must be added manually.
+// There is no default class applied to the control
+// to differentiate it from other BS controls.
+.ui-datepicker {
+	.dropdown-menu {
+		padding: 5px;
+		min-width: 300px;
+		background: #f1f1f1;
+
+		table {
+			width: 100%;
+			outline: none;
+
+			thead {
+				tr:first-of-type {
+					th {
+						padding-bottom: 5px;
+					}
+				}
+
+				.btn {
+					padding: 4px 8px;
+					background: #fff;
+				}
+			}
+
+			tbody {
+				td {
+					border: 1px solid #ddd;
+
+					.btn {
+						font-size: 13px;
+						padding: 3px;
+						min-width: 35px;
+						background: #fff;
+						border-radius: 0;
+						border: 0;
+					}
+
+					.text-info {
+						color: $brand-blue;
+					}
+
+					.btn.active {
+						background: $brand-blue;
+						box-shadow: none;
+
+						span {
+							color: #fff;
+						}
+					}
+				}
+			}
+		}
+
+		li:last-of-type {
+			padding: 5px 0 0 0 !important;
+		}
+	}
+}
+
+.ui-datepicker.right .dropdown-menu {
+	left: auto !important;
+	right: 0 !important;
+}
+
+.ui-datepicker.up .dropdown-menu {
+	top: auto !important;
+	bottom: 37px;
+}
+
+//--------------------------------------------------------//
+// Dropdown Menus //
+
+.dropdown-menu {
+	font-size: 14px;
+	min-width: 250px;
+
+	li {
+		border-bottom: 1px solid #eee;
+
+		a, a:link, a:visited {
+			text-decoration: none;
+			white-space: normal;
+			padding-left: 12px;
+			padding-right: 12px;
+		}
+	}
+
+	> li:last-child {
+		border: 0;
+	}
+}
+
+@media screen and (max-width: 767px) {
+
+	.dropdown-menu {
+		max-width: 100%;
+	}
+
+}
+
+//--------------------------------------------------------//
+// Form Controls //
+
+.form-inline { 
+	label {
+		margin-right: 5px;
+	}
+
+	> .form-group:last-child {
+		margin-bottom: 0;
+	}
+}
+
+@media (min-width: 768px) {
+	.form-inline {
+		.form-group + .form-group {
+			margin-left: 10px;
+		}
+	}
+}
+
+.form-control {
+	height: 35px;
+}
+
+.input-xs {
+	font-size: 13px;
+	line-height: 27px;
+	padding: 3px 6px;
+	height: 27px;
+}
+
+.input-sm {
+	height: 31px;
+}
+
+.textarea-xs {
+	font-size: 13px;
+	padding: 3px 6px;
+}
+
+// Input Groups //
+
+.panel-primary .input-group-alt {
+	.input-group-addon {
+		color: #fff;
+		background: transparent;
+		border: 0;
+	}
+
+	.form-control {
+		border-radius: 4px;
+	}
+}
+
+// Option Lists //
+
+// This is the BS default, but seems to be getting mangled during gulp prod uglification //
+input[type="radio"], input[type="checkbox"] {
+	margin: 4px 0 0 0;
+}
+
+.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+	margin-top: 4px;
+}
+
+.radio-inline, .checkbox-inline {
+	margin-right: 20px;
+}
+
+.radio-inline + .radio-inline, .checkbox-inline + .checkbox-inline {
+	margin-left: 0;
+}
+
+//--------------------------------------------------------//
+// Growl Messaging //
+
+//\\    /\___/\    //\\
+//\\  /| >' '< |\  //\\
+//\\  /| ( ^ ) |\  //\\
+//\\   /[ v_v ]\   //\\
+
+.growl-container {
+	.alert {
+		color: #fff;
+		border: 0;
+		border-radius: 5px;
+		box-shadow: 0 0 10px 0 rgba(0,0,0,.2);
+
+		.close {
+			text-shadow: none;
+		}
+
+		.close:focus {
+			outline: none;
+		}
+
+		.growl-message {
+			padding: 0 5px;
+		}
+	}
+
+	.alert-success {
+		background: $brand-green;
+	}
+
+	.alert-info {
+		background: $brand-sky;
+	}
+
+	.alert-warning {
+		background: $brand-orange;
+	}
+
+	.alert-danger {
+		background: $brand-red;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.growl-container.growl-fixed.bottom-center {
+		left: 5%;
+		margin: 0;
+	}
+}
+
+//--------------------------------------------------------//
+// Labels //
+
+.label {
+	font-weight: 400;
+	font-size: 12px;
+	line-height: 100%;
+	vertical-align: middle;
+	padding: 0.2em 0.6em 0.3em 0.6em;
+	margin-right: 5px;
+	display: inline-block;
+}
+
+a.label:hover {
+	opacity: 0.8;
+}
+
+// Label Groups //
+// This is an extension of BS Labels in order to form 
+// groups similar to input groups
+// Used for search filters
+
+.label-group {
+	vertical-align: middle;
+	margin-right: 5px;
+	display: inline-block;
+
+	.label {
+		float: left;
+		margin: 0;
+		border-radius: 0;
+	}
+
+	> .label:first-child {
+		border-radius: .25em 0 0 .25em;
+	}
+
+	> .label:last-child {
+		border-radius: 0 .25em .25em 0;
+	}
+
+	.label + .label {
+		border-left: 1px solid rgba(255,255,255,.2);
+	}
+
+}
+
+//--------------------------------------------------------//
+// Leaflet Prune Clusters //
+
+.prunecluster-small {
+	background-color: transparentize($brand-lime, 0.4);
+}
+.prunecluster-small div {
+	background-color: transparentize($brand-lime, 0.2);
+}
+
+.prunecluster-medium {
+	background-color: transparentize($brand-yellow, 0.5);
+}
+.prunecluster-medium div {
+	background-color: transparentize($brand-yellow, 0.2);
+}
+
+.prunecluster-large {
+	background-color: transparentize($brand-pink, 0.4);
+}
+.prunecluster-large div {
+	background-color: transparentize($brand-pink, 0.2);
+}
+
+//--------------------------------------------------------//
+// Modals //
+
+.modal {
+	.modal-content {
+		//border-radius: 0;
+
+		.modal-header {
+			color: #fff;
+			background: $brand-purple;
+			border-bottom: 0;
+			border-radius: 4px 4px 0 0;
+
+			h3 {
+				color: #fff;
+			}
+
+			.modal-title {
+				line-height: 1em;
+			}
+
+			.close {
+				color: #fff;
+				text-shadow: 0 1px 0 #000;
+				margin-top: 0;
+			}
+		}
+	}
+}
+
+@media (min-width: 992px) {
+	.full .modal-dialog {
+		width: 96%;
+	}
+}
+
+//--------------------------------------------------------//
+// Nav Pills //
+
+.nav-pills {
+	margin-bottom: 20px;
+
+	> li > a {
+		padding: 6px 12px;
+	}
+
+	> li > a.active {
+		color: #fff;
+		background-color: $brand-teal;
+	}
+
+	> li > a:hover, > li > a:focus, > li > a.active:hover, > li > a.active:focus {
+		color: #fff;
+		background-color: $brand-pink;
+	}
+}
+
+//--------------------------------------------------------//
+// Pagination //
+
+.pagination {
+	margin: 0;
+}
+
+//--------------------------------------------------------//
+// Panels //
+
+.panel {
+	box-shadow: 0 1px 5px 0 rgba(0,0,0,.1);
+}
+
+.panel-heading {
+	position: relative;
+
+	h1, h2, h3 {
+		color: inherit;
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	h1 {
+		font-weight: 400;
+	}
+
+	a, a:link, a:visited {
+		text-decoration: none;
+	}
+}
+
+.panel-body {
+	> :first-child {
+		margin-top: 0;
+	}
+
+	> :last-child {
+		margin-bottom: 0;
+	}
+}
+
+.panel-body + .panel-body {
+	border-top: 1px solid #ddd;
+}
+
+// Primary Panels //
+
+.panel-primary {
+	border: 1px solid #ccc;
+	box-shadow: 0 1px 5px 0 rgba(0,0,0,.2);
+
+	> .panel-heading {
+		border: 0;
+
+		h2 {
+			text-transform: uppercase;
+
+			small {
+				color: #ccc;
+			}
+		}
+	}
+
+	// Tabs //
+	> .nav-tabs {
+		padding: 10px 20px 0 20px;
+		margin: 0;
+		background: lighten($brand-purple, 10%);
+		border: 0;
+		border-top: 1px solid rgba(255,255,255,.1);
+
+		li, li.active  {
+			margin: 0;
+
+			a {
+				color: #fff;
+				border: 0;
+			}
+
+			a:hover, a:focus {
+				background: lighten($brand-purple, 20%);
+			}
+
+			span {
+				color: rgba(255,255,255,.5);
+				padding: 10px 15px;
+				display: block;
+			}
+		}
+
+		li.active {
+			a {
+				color: inherit;
+			}
+
+			a:hover, a:focus {
+				background: #fff;
+			}
+		}
+	}
+}
+
+// List-style Panels //
+
+ul.panel-body {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+
+	> li {
+		padding: 10px 20px;
+		margin: 0;
+		border-bottom: 1px solid #ddd;
+
+		:first-child {
+			margin-top: 0;
+		}
+
+		:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	> li.row {
+		padding: 10px;
+	}
+
+	> li.sub-head {
+		background: #f5f5f5;
+
+		h3 {
+			margin: 0;
+		}
+	}
+
+	> li:last-of-type {
+		border-bottom: 0;
+	}
+}
+
+ul.panel-body.panel-nav {
+	> li {
+		padding: 0;
+
+		> a, > a.row {
+			padding: 10px 20px;
+			margin: 0;
+			display: block;
+		}
+
+		> a.row {
+			padding: 10px;
+		}
+
+		> a:hover, > a:focus {
+			background: #f5f5f5;
+		}
+	}
+}
+
+// Dashboard & Reporting Panels //
+
+.panel-alt {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+
+	> .panel-heading {
+		padding: 8px 0;
+		background: transparent;
+		border-top: 2px solid $brand-purple;
+		border-bottom: 1px solid $brand-purple;
+		border-radius: 0;
+
+		h2 {
+			font-family: $font-family-sans-serif;
+			font-weight: 700;
+			color: $brand-purple;
+			text-transform: uppercase;
+			margin: 0;
+
+			.fa {
+				color: $brand-teal;
+			}
+		}
+	}
+
+	> .panel-body {
+		padding: 20px 0 0 0;
+	}
+
+	ul.panel-body {
+		padding: 0;
+	}
+}
+
+//--------------------------------------------------------//
+// Pendo //
+
+// Tooltips
+._pendo-badge_ {
+	z-index: 999 !important;
+}
+
+.modal ._pendo-badge_ {
+	z-index: 2000 !important;
+}
+
+// Inline badges within headings
+h2 ._pendo-badge_, h3 ._pendo-badge_ {
+	vertical-align: baseline;
+	margin-left: 5px;
+}
+
+// Launcher
+._pendo-launcher-badge_ {
+	display: none !important;
+}
+
+._pendo-launcher-bottom-right_ {
+	right: 5px !important;
+	width: 320px !important;
+	height: 350px !important;
+	bottom: 34px !important;
+	z-index: 1700 !important;
+
+	._pendo-guide-container_ {
+		top: 0 !important;
+		left: 0 !important;
+		color: #fff;
+		width: 100% !important;
+		height: 350px !important;
+		background: lighten($brand-purple, 10%);
+		border: 0;
+		box-shadow: 0 0 7px 0 rgba(0,0,0,.3);
+
+		._pendo-launcher-content_ {
+			line-height: inherit;
+
+			._pendo-launcher-header_ {
+				text-align: left;
+				margin: 0;
+				padding: 10px 15px;
+				border-bottom-color: rgba(255,255,255,.2);
+
+				._pendo-launcher-title_ {
+					font-family: $font-family-sans-serif;
+					font-size: 18px;
+					color: #fff;
+					text-transform: uppercase;
+				}
+			}
+
+			._pendo-launcher-guide-listing_ {
+				padding: 8px 15px;
+				height: 247px;
+				box-sizing: border-box;
+
+				._pendo-launcher-item_ {
+					margin-bottom: 0;
+					border-top: 1px solid rgba(255,255,255,.1);
+
+					a {
+						color: #fff;
+						padding: 7px 0;
+						display: block;
+
+						.fa {
+							opacity: .5;
+						}
+					}
+
+					a:hover, a:focus {
+						color: lighten($brand-yellow, 10%);
+					}
+				}
+
+				._pendo-launcher-item_.pinned {
+					font-weight: 700;
+
+					.fa {
+						opacity: 1;
+					}
+				}
+
+				> :first-child {
+					border-top: 0;
+				}
+			}
+		}
+
+		._pendo-launcher-content_::before {
+				content: '';
+				position: absolute;
+				right: 32px;
+				bottom: 0;
+				height: 0;
+				width: 0;
+				border-width: 7px;
+				border-style: solid;
+				border-color: transparent transparent $brand-purple transparent;
+			}
+
+		._pendo-close-guide_ {
+			top: 6px;
+			color: #fff;
+			opacity: .5;
+		}
+
+		._pendo-close-guide_:hover {
+			opacity: 1;
+		}
+	}
+
+
+	._pendo-guide-arrow_, ._pendo-guide-arrow-border_ {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	._pendo-launcher-bottom-right_ {
+		display: none !important;
+	}
+}
+
+//--------------------------------------------------------//
+// Progress //
+
+.progress {
+	margin: 0;
+	display: block;
+
+	.progress-bar {
+		min-width: 30%;
+	}
+}
+
+//--------------------------------------------------------//
+// Tables //
+
+.table { 
+	font-size: 14px;
+
+	> tbody + tbody {
+		border-top: 0;
+	}
+
+	tbody:nth-of-type(even) {
+		background-color: #f9f9f9;
+	}
+
+	// Apply to row with nested table
+	.nested-data {
+		> td {
+			background: #f5f5f5;
+			box-shadow: inset 0px 7px 7px -7px rgba(0,0,0,0.15);
+		}
+
+		.table {
+			font-size: 13px;
+			margin: 0;
+
+			th, td {
+				padding: 4px 8px;
+			}
+		}
+	}
+
+	th {
+		text-align: left;
+	}
+
+	th.text-center {
+		text-align: center;
+	}
+
+	th.text-right {
+		text-align: right;
+	}
+}
+
+.table-bordered thead th {
+	background-color: #e9e9e9;
+}
+
+@media screen and (max-width: 767px) {
+
+	.table, .table thead, .table tbody, .table tfoot, .table, tr, .table tr, .table th, .table td {
+		text-align: left !important;
+		width: 100%;
+		display: block;
+	}
+	
+	.table { 
+		thead {
+			display: none;
+		}
+
+		tbody + tbody {
+			border-top: 1px solid #ddd;
+		}
+
+		tbody > tr:last-of-type {
+			border-bottom: 0;
+		}
+
+		td:before {
+			font-weight: 700;
+			content: attr(data-title);
+		}
+
+		td:after {
+			content: " ";
+			display: block;
+			clear: both;
+		}
+	}
+	
+	.table-bordered > tbody > tr > td {
+		border-width: 0;
+		border-top-width: 1px;
+	}
+}
+
+@media screen and (max-width: 479px) {
+	
+	.table td:before {
+		display: block;
+	}
+	
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+
+	.table {
+
+		td {
+			position: relative;
+			padding-left: 35%;
+		}
+	
+		td:before {
+			float: left;
+			width: 35%;
+		}
+	}
+
+}
+
+@media screen and (max-width: 767px) {
+
+	.table {
+		tr {
+			border-top: 1px solid #ddd;
+		}
+
+		tr:first-of-type {
+			border-top: 0;
+		}
+	}
+
+}
+
+@media screen and (min-width: 768px) {
+
+	.panel > .table th:first-of-type, .panel > .table td:first-of-type {
+		padding-left: 20px;
+	}
+
+	.panel > .table th:last-of-type, .panel > .table td:last-of-type {
+		padding-right: 20px;
+	}
+
+	.panel > .table .nested-data th:first-of-type, .panel > .table .nested-data td:first-of-type {
+		padding-left: 8px;
+	}
+
+	.panel > .table .nested-data th:last-of-type, .panel > .table .nested-data td:last-of-type {
+		padding-right: 8px;
+	}
+
+}
+
+// NG-TABLE //
+
+// Column headers
+.ng-table th.sortable.sort-desc, .ng-table th.sortable.sort-asc {
+	color: $brand-green;
+	background: #fff;
+}
+
+.ng-table th.sortable .sort-indicator {
+	display: block;
+}
+
+.ng-table th.sortable .sort-indicator:after, .ng-table th.sortable .sort-indicator:before {
+	top: 10px;
+}
+
+// Hide grouping header for now because the default styles suck
+.ng-table-group-header {
+	display: none;
+}
+
+// Filters
+.ng-table th.filter .input-filter {
+	font-size: 13px;
+	font-weight: normal;
+	line-height: 27px;
+	padding: 3px 6px;
+	height: 27px;
+	min-height: 0;
+}
+
+
+// Paging
+.ng-table-pager {
+	padding: 10px 20px;
+	border-top: 1px solid #ddd;
+
+	.pagination a, .ng-table-counts .btn {
+		font-size: 13px;
+		padding: 4px 8px;
+	}
+}
+
+.ng-table-pager:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.panel-body .ng-table-pager, .modal .ng-table-pager {
+	padding: 10px 0;
+}
+
+@media screen and (max-width: 767px) {
+
+	.ng-table td:before {
+		content: attr(data-title-text);
+	}
+
+	.ng-table-pager {
+		text-align: center;
+		padding: 5px 0;
+
+		.ng-table-counts, .pagination {
+			vertical-align: middle;
+			float: none !important;
+			margin: 5px;
+		}
+	}
+
+}
+
+//--------------------------------------------------------//
+// Tags //
+
+tags-input {
+	.tags {
+		.tag-item {
+			font-family: inherit;
+			color: #fff;
+			background: $brand-blue;
+			border: 1px solid darken($brand-blue, 10%);
+
+			.remove-button, .remove-button:link, .remove-button:visited, .remove-button:hover, .remove-button:focus {
+				color: #fff;
+				text-decoration: none;
+			}
+		}
+
+		.input {
+			font-family: inherit;
+		}
+	}
+
+	.autocomplete {
+		.suggestion-item {
+			font-family: inherit;
+			font-size: 14px;
+			line-height: 120%;
+			color: #333;
+			padding: 3px 10px;
+
+			em {
+				font-family: inherit;
+				font-size: inherit;
+				color: inherit;
+			}
+
+			.fa-times {
+				float: right;
+			}
+		}
+
+		.suggestion-item.selected {
+			color: #fff;
+			background: $brand-blue;
+
+			em {
+				color: #fff;
+				background: transparent;
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------//
+// TextAngular (WYSIWYG Editor) //
+
+.ta-editor.ta-html, .ta-scroll-window.form-control, .ta-scroll-window > .ta-bind {
+	min-height: 150px;
+}
+
+//--------------------------------------------------------//
+// Toggle //
+
+.toggle-switch {
+	span {
+		padding: 6px 4px;
+		height: 33px;
+	}
+
+	.switch-left {
+		background: $brand-blue;
+	}
+}
+
+//--------------------------------------------------------//
+// Wells //
+
+.well {
+	padding: 15px;
+	margin-bottom: 15px;
+	border: 2px solid #ddd;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.well-primary {
+	background: #fff;
+	border: 0;
+	border-radius: 5px;
+	box-shadow: 0 1px 5px 0 rgba(0,0,0,.2);
+}
+
+.well > :first-child {
+	margin-top: 0;
+}
+
+.well > :last-child {
+	margin-bottom: 0;
+}

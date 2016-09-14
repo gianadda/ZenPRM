@@ -1,0 +1,669 @@
+//********************************************************//
+// Layout Styles //
+
+#wrapper {
+	height: 100%;
+}
+
+//--------------------------------------------------------//
+// Navigation //
+
+// Display navigation bar horizontally by default
+
+#nav {
+	position: relative;
+	text-align: center;
+	min-height: 65px;
+	background: $brand-purple;
+	z-index: 1800;
+
+	// LOGO //
+
+	#Logo {
+		position: absolute;
+		top: 0;
+		left: 0;
+		padding: 10px;
+	}
+
+	// MENU //
+
+	> ul {
+		list-style: none;
+		vertical-align: middle;
+		padding: 0;
+		margin: 0;
+		display: inline-block;
+
+		> li {
+			display: inline-block;
+
+			> a {
+				position: relative;
+				font-size: 18px;
+				color: #fff;
+				line-height: 65px;
+				text-decoration: none;
+				text-align: center;
+				width: 34px;
+				height: 65px;
+				display: block;
+				cursor: pointer;
+
+				.text {
+					position: absolute;
+					left: -9999em;
+				}
+
+				.badge {
+					position: absolute;
+					right: 0;
+					bottom: 10px;
+					background: $brand-red;
+				}
+			}
+
+			.selected {
+				background: $brand-teal;
+			}
+
+			a:hover, a:focus {
+				background-color: $brand-pink;
+				outline: none;
+			}
+		}
+	}
+
+	// DROPDOWNS //
+
+	.dropdown {
+		position: static;
+
+		> .dropdown-menu {
+			font-size: 15px;
+			top: 65px;
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			background: lighten($brand-purple, 10%);
+			border: 0;
+			border-radius: 0;
+			display: none;
+
+			li {
+				color: #fff;
+				border-bottom: 0;
+
+				a {
+					color: #fff;
+					white-space: normal;
+					padding: 8px 10px 8px 14px;
+					border-top: 1px solid rgba(255,255,255,.1);
+
+					.fa {
+						text-align: center;
+						width: 20px;
+					}
+				}
+
+				a, a:link, a:visited {
+					text-decoration: none;
+				}
+
+				a:hover, a:focus {
+					background-color: $brand-pink;
+					outline: none;
+				}
+			}
+
+			li:first-of-type a {
+				border: 0;
+			}
+
+			.delegate, .username {
+				border-left-width: 4px;
+				border-left-style: solid;
+
+				a {
+					padding-left: 10px;
+				}
+			}
+
+			.username {
+				font-style: italic;
+				padding: 8px 10px;
+			}
+		}
+	}
+
+	.open {
+		background: lighten($brand-purple, 10%);
+
+		> .dropdown-menu {
+			display: block;
+		}
+	}
+
+	// SETTINGS MENU //
+
+	#Settings {
+
+		#Avatar {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 12px 8px 12px 12px;
+			border-right-width: 4px;
+			border-right-style: solid;
+			display: block;
+
+			.user-icon {
+				font-size: 24px;
+				line-height: 36px;
+				text-transform: uppercase;
+				margin: 0;
+				height: 41px;
+				width: 41px;
+				border-color: #fff;
+			}
+		}
+
+		#Avatar, #Avatar:link, #Avatar:visited {
+			color: #fff;
+		}
+
+		#Avatar:hover, #Avatar:focus {
+			text-decoration: none;
+
+			.user-icon:not(.img) {
+				background-color: $brand-pink;
+			}
+		}
+	}
+
+	.open #Avatar {
+		background: lighten($brand-purple, 10%);
+	}
+}
+
+// Increase navigation spacing
+@media (min-width: 360px) {
+
+	#nav > ul > li > a {
+		width: 36px;
+	}
+
+}
+@media (min-width: 414px) {
+	#nav > ul > li > a {
+		width: 42px;
+	}
+
+}
+@media (min-width: 480px) {
+
+	#nav > ul > li > a {
+		width: 48px;
+	}
+
+}
+
+// Display navigation vertically
+
+@media (min-width: 768px) {
+	
+	#nav {
+		position: fixed;
+		top: 0;
+		width: 65px;
+		height: 100%;
+
+		// LOGO //
+
+		#Logo {
+			position: static;
+			border-bottom: 1px solid rgba(255,255,255,.2);
+		}
+
+		// MENU //
+
+		> ul {
+			padding-top: 25px;
+			display: block;
+
+			> li { 
+				display: block;
+
+				> a {
+					font-size: 24px;
+					line-height: 100%;
+					padding: 12px;
+					width: 65px;
+					height: auto;
+					display: block;
+					cursor: pointer;
+
+					.text:before {
+						position: absolute;
+						left: -14px;
+						content: " ";
+						height: 0;
+						width: 0;
+						border-width: 7px;
+						border-color: transparent $brand-pink transparent transparent;
+						border-style: solid;
+					}
+
+					.badge {
+						right: 10px;
+					}
+				}
+
+				a:hover .text {
+					top: 9px;
+					left: 72px;
+					font-size: 15px;
+					line-height: 100%;
+					white-space: nowrap;
+					padding: 8px 12px;
+					background: $brand-pink;
+					border-radius: 3px;
+					box-shadow: 2px 2px 5px 0 rgba(0,0,0,.25);
+					display: block;
+				}
+			}
+		}
+
+		.dropdown {
+			> .dropdown-menu {
+				top: auto;
+				left: 65px;
+				margin-top: -49px;
+				width: 300px;
+			}
+		}
+
+		// PROFILE //
+
+		#Settings {
+			position: fixed;
+			top: auto;
+			right: auto;
+			left: 0;
+			bottom: 0;
+			border-top: 1px solid rgba(255,255,255,.2);
+
+			#Avatar {
+				position: static;
+				padding: 12px 12px 12px 8px;
+				border-right: 0;
+				border-left-width: 4px; 
+				border-left-style: solid;
+			}
+
+			> .dropdown-menu {
+				bottom: 0;
+				margin: 0;
+
+			}
+			
+		}
+	}
+}
+
+//--------------------------------------------------------//
+// Main Content Area //
+
+#content {
+	> .container-fluid, > .container {
+		padding: 10px 10px 40px 10px;
+	}
+}
+
+@media screen and (min-width: 768px) {
+
+	#content {
+		margin-left: 65px;
+
+		> .container-fluid, > .container {
+			padding: 25px;
+		}
+	}
+
+}
+
+// PAGE TITLE //
+
+#Title {
+	padding: 10px 10px 0 10px;
+	background: #fff;
+	box-shadow: 0 0 5px 0 rgba(0,0,0,.2);
+	z-index: 1200;
+
+	h1 {
+		font-weight: 400;
+		margin: 0 0 10px 0;
+
+		.fa {
+			color: $brand-teal;
+		}
+
+		.registered {
+			position: relative;
+			padding-right: 9px;
+			display: inline-block;
+
+			.fa-check-circle {
+				position: absolute;
+				right: 0;
+				bottom: 2px;
+				font-size: 21px;
+				line-height: 18px;
+				color: $brand-green;
+				background: #fff;
+				border-radius: 50%;
+			}
+		}
+
+		small {
+			text-transform: uppercase;
+		}
+	}
+
+	.header-action {
+		margin: 0 0 10px 0;
+		clear: both;
+	}
+
+	.header-action:not(.btn-group) {
+		> .btn + .btn, > .btn + .btn-group, > .btn-group + .btn, > .btn-group + .btn-group {
+			margin-left: 5px;
+		}
+	}
+
+	.btn-group .dropdown-menu {
+		a {
+			position: relative;
+			padding-left: 36px;
+
+			.fa {
+				position: absolute;
+				top: 5px;
+				left: 12px;
+				text-align: center;
+				margin-right: 4px;
+				width: 18px;
+				opacity: .75;
+			}
+		}
+	}
+
+	// TOGGLE LINK //
+
+	.nav-toggle, .nav-toggle:link, .nav-toggle:visited {
+		font-weight: 700;
+		text-decoration: none;
+		padding: 10px;
+		margin: 0 -10px;
+		border-top: 1px solid #e1e1e1;
+		display: block;
+		clear: both;
+	}
+
+	.nav-toggle + .nav-tabs {
+		display: none;
+	}
+
+	.nav-tabs.toggled {
+		display: block;
+	}
+
+	// TABS //
+
+	.nav-tabs {
+		font-size: 16px;
+		border-top: 1px solid #e1e1e1;
+		clear: both;
+
+		> li {
+			> a {
+				margin: 0;
+				border: 0;
+				border-radius: 0;
+			}
+
+			a, a:link, a:visited, a:hover, a:focus {
+				text-decoration: none;
+			}
+
+			span {
+				color: #888;
+			}
+
+			ul {
+				display: none;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+
+	#Title {
+		.btn-group .dropdown-menu-right {
+			right: auto;
+		}
+
+		.nav-tabs {
+			margin: 0 -10px;
+			padding: 0;
+
+			li {
+				float: none;
+				margin: 0;
+				display: block;
+
+				a, span {
+					padding: 5px 10px;
+					border-bottom: 1px solid #e1e1e1;
+					display: block;
+				}
+
+				a:hover, a:focus {
+					background: #f5f5f5;
+				}
+
+				a.active {
+					color: $brand-teal;
+					background: transparent;
+				}
+
+				a.active:hover, a.active:focus {
+					color: $brand-blue;
+					border: 0;
+					border-bottom: 1px solid #e1e1e1;
+				}
+			}
+		}
+
+		.nav-toggle .fa, .nav-tabs .fa {
+			text-align: center;
+			margin-right: 5px;
+			width: 18px;
+		}
+	}
+
+}
+
+@media screen and (min-width: 768px) {
+
+	#Title {
+		padding: 16px 25px 0 25px;
+
+		h1, .header-action {
+			margin-bottom: 16px;
+		}
+
+		.nav-toggle {
+			display: none;
+		}
+
+		// TABS //
+		.nav-tabs {
+			margin: 0 -25px;
+			padding: 0 25px;
+			border-top: 1px solid #e1e1e1;
+			display: block !important;
+
+			li {
+				margin: 0 25px 0 0;
+
+				a {
+					padding: 12px 0 9px 0;
+					border-bottom: 3px solid #fff;
+				}
+
+				a:hover, a:focus {
+					background: transparent;
+					border: 0;
+					border-bottom: 3px solid $brand-pink;
+				}
+
+				a.active {
+					background: transparent;
+					border-color: $brand-teal;
+				}
+
+				a.active:hover, a.active:focus {
+					color: $brand-blue;
+					border-color: $brand-teal;
+				}
+
+				span {
+					padding: 12px 0;
+					display: block;
+				}
+
+				ul {
+					position: absolute;
+					left: -999em;
+					list-style: none;
+					font-size: 14px;
+					padding: 7px 14px;
+					margin-left: -14px;
+					width: 200px;
+					background: #fff;
+					border-top: 1px solid $brand-pink;
+					border-radius: 0 0 5px 5px;
+					box-shadow: 0 5px 5px 0 rgba(0,0,0,.2);
+					display: block;
+
+					li {
+						margin: 0;
+
+						a {
+							padding: 7px 0;
+							border-bottom: 1px solid #ddd;
+							display: block;
+						}
+
+						a:hover, a:focus {
+							border-bottom: 1px solid #ddd;
+						}
+					}
+
+					li:last-child {
+						a {
+							border-bottom: 0;
+						}
+					}
+				}
+			}
+
+			li:hover ul {
+				left: auto;
+			}
+
+			> li:last-of-type {
+				margin: 0;
+			}
+		}
+	}
+
+}
+
+@media screen and (min-width: 992px) {
+
+	#Title {
+		position: relative;
+		padding-bottom: 0;
+		min-height: 65px;
+
+		h1 {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			width: 75%;
+			overflow: hidden;
+		}
+
+		.header-action {
+			position: absolute;
+			top: 14px;
+			right: 25px;
+			margin: 0;
+			clear: none;
+			z-index: 200;
+		}
+	}
+
+}
+
+// USERNAME //
+
+.stickers {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	text-align: left;
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		li {
+			position: relative;
+			margin-right: 5px;
+			display: inline-block;
+
+			.sticker {
+				position: relative;
+				font-size: 13px;
+				line-height: 100%;
+				padding: 10px 20px;
+				margin: 0;
+				background: rgba(255,255,255,.9);
+				border: 1px solid #ddd;
+				border-bottom: 0;
+				display: inline-block;
+			
+			}
+
+			.help {
+				color: #fff;
+				background: transparentize($brand-purple, .1);
+				border-color: $brand-purple;
+			}
+
+			.help.active {
+				background: $brand-purple;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.stickers ul li .help {
+		display: none;
+	}
+}

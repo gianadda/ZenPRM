@@ -1,0 +1,149 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-cloud-upload"></i> Add Private Resources</h1>
+</header>
+
+<div class="container-fluid">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Add Private Resources to Your Network</h2>
+        </div>
+        <div class="panel-body">
+            <div id="ImportHolder" class="dropzone" ng-class="{'active': dropImportActive}" ng-show="!HeadersProcessed">
+                <div class="text" ng-show="UploadCount == 0">
+                    <p>Bulk add a new set of private resources into your network</p>
+                    <p>Drag and drop a CSV here</p>
+                </div>
+                <div class="dropicon"><i class="fa fa-cloud-upload"></i></div>
+            </div>
+
+            <!-- Upload notes -->
+            <div ng-show="HeadersProcessed && !VerificationComplete">
+                
+                <h2 class="margtop">There are {{ImportData.data.length}} resources listed in the file.</h2>
+                <p>Please review the column mapping below, and when correct, press commit. If the Profile Field is marked as "N/A" it will be ignored from the import.</p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Profile Field</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="header in ImportData.FileHeaders">
+                            <td>{{header.label}}</td>
+                            <td>
+                                <select class="form-control" name="importColumn" id="importColumn" ng-model="header.ColumnIdent" 
+                                    ng-change="addColumnLabelToHeader(header)" ng-options="column.Ident as column.Label for column in ImportColumns">
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn btn-primary" ng-click="VerifyFile()">
+                    <i class="fa fa-check"></i> Verify File
+                </button>
+                <button type="button" class="btn btn-danger" ng-click="init()">
+                    <i class="fa fa-times"></i> Cancel
+                </button>
+            </div>
+
+            <div ng-show="VerificationComplete && !ImportComplete">
+
+                <h2 class="margtop">{{ImportResources.length}} resources validated - Results below</h2>
+                <p><strong>Importing Columns</strong></p>
+                <ul>
+                    <li ng-repeat="h in ImportData.FileHeaders" ng-if="h.ColumnIdent > 0"><em>{{h.label}}</em> imports into <em>{{h.ColumnLabel}}</em></li>
+                </ul>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Resource From File</th>
+                            <th>Import Action</th>
+                            <th>Resource Type</th>
+                            <th>Matched Resource</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="result in ImportResources | orderBy: ['ImportAction', 'OrganizationName', 'LastName', 'FirstName']">
+                            <td><input type="checkbox" class="bulk-check" ng-model="result.selected"></td>
+                            <td>
+                                <span ng-if="result.OrganizationName">{{result.OrganizationName}}</span>
+                                <span ng-if="!result.OrganizationName">{{result.LastName}}, {{result.FirstName}}</span>
+                            </td>
+                            <td>{{result.ImportAction}}</td>
+                            <td>
+                                <span ng-if="result.EntityTypeIdent == 6">Private Resource</span>
+                                <span ng-if="result.EntityTypeIdent == 8">Other (Private)</span>
+                            </td>
+                            <td>
+                                <zen-resource-name ng-if="result.MatchCount == 1 && result.Ident > 0" name="result.MatchedEntities[0].DisplayName" ident="result.Ident" 
+                                        photo="result.MatchedEntities[0].ProfilePhoto">
+                                </zen-resource-name>
+                                <select ng-if="result.MatchCount > 1 || (result.MatchCount == 0 && result.MatchedEntities.length > 0)" class="form-control" name="matchedEntity" id="matchedEntity"
+                                    ng-model="result.Ident" ng-options="match.Ident as match.DisplayName for match in result.MatchedEntities" ng-change="updateImportStatus(result, 'Update', true)">
+                                </select>
+                            </td>
+                            <td>
+                                <button ng-if="result.MatchCount > 0" type="button" class="btn btn-link btn-sm" ng-click="UnMapResource(result)" title="Unmatch and Add New Resource"
+                                    ng-confirm-click="Are you sure you want to unmatch this resource? If so, this resource will be marked as an Add when the import is committed.">
+                                    <i class="fa fa-chain-broken"></i> Unmap
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn btn-primary" ng-click="Commit()">
+                    <i class="fa fa-check"></i> Commit
+                </button>
+                <button type="button" class="btn btn-danger" ng-click="init()">
+                    <i class="fa fa-times"></i> Cancel
+                </button>
+
+            </div>
+
+            <div ng-show="ImportComplete">
+
+                <h2 class="margtop">{{ImportResources.length}} resources imported - Results below</h2>
+                <p><strong>Imported Columns</strong></p>
+                <ul>
+                    <li ng-repeat="h in ImportData.FileHeaders" ng-if="h.ColumnIdent > 0"><em>{{h.label}}</em> imports into <em>{{h.ColumnLabel}}</em></li>
+                </ul>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Resource From File</th>
+                            <th>Import Action</th>
+                            <th>Import Successful?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="result in ImportResources | orderBy: ['ImportAction', 'OrganizationName', 'LastName', 'FirstName']">
+                            <td>
+                                <span ng-if="result.OrganizationName">{{result.OrganizationName}}</span>
+                                <span ng-if="!result.OrganizationName">{{result.LastName}}, {{result.FirstName}}</span>
+                            </td>
+                            <td>{{result.ImportAction}}</td>
+                            <td>
+                                <i ng-show="result.ImportStatus" class="fa fa-check-square-o"></i> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            
+        </div>
+    </div>
+     <!-- Loading icon -->
+    <div class="loading" ng-show="ImportLoading">
+        <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+    </div>
+</div>
+<!-- end container -->

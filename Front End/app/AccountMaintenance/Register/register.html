@@ -1,0 +1,58 @@
+<div id="BrandBar">
+    <img src="assets/img/template/logo.png" height="60" alt="ZenPRM">
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-offset-2 col-sm-8 col-lg-offset-4 col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading text-center">
+                    <h2>Register for ZenPRM</h2>
+                </div>
+                <div class="panel-body">
+                    <zen-cookie-warning></zen-cookie-warning>
+                    <form ng-submit="register()" name="registerForm">
+                        <div class="form-group">
+                            <label class="required" for="username">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" id="username" class="immediate-help form-control" ng-model="username" placeholder="Username" ng-minlength="1" ng-maxlength="75" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="newPassword">New Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" id="newPassword" class="immediate-help form-control" ng-model="newPassword" placeholder="New Password" ng-minlength="1" required="" password-validate>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="confirmNewPassword">Confirm Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" class="form-control" id="confirmNewPassword" ng-model="confirmNewPassword" placeholder="Confirm New Password" ng-minlength="1" required="">
+                            </div>
+                        </div>
+                        <div class="well">
+                            <h4>Password must meet the following requirements:</h4>
+                            <ul>
+                                <li ng-class="pwdHasLetter">At least <strong>one letter</strong>
+                                </li>
+                                <li ng-class="pwdHasNumber">At least <strong>one number</strong>
+                                </li>
+                                <li ng-class="pwdValidLength">At least <strong>8 characters long</strong>
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-primary" type="submit" ng-disabled="registerForm.$invalid"><i class="fa fa-user-plus"></i> Register</button>
+                    </form>
+                </div>
+                <!-- end .panel-body -->
+            </div>
+            <!-- end .panel -->
+        
+        </div>
+        <!-- end .col -->
+    </div>
+    <!-- end .row -->
+</div>
+<!-- end .container -->

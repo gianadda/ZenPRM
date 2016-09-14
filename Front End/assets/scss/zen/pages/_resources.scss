@@ -1,0 +1,588 @@
+//********************************************************//
+// Resources //
+
+#Title.Resources {
+	.segment-menu {
+		margin-bottom: 5px;
+
+		> .btn-group:first-child > .segment-btn {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0
+		}
+
+		> .btn-group:last-child > .segment-btn {
+			border-left: 0;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0
+		}
+
+		.segment-btn {
+			font-size: 15px;
+			color: #777;
+			line-height: 1;
+			text-align: left;
+			padding: 6px;
+			height: 31px;
+			background: #fff;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			outline: none;
+
+			.ellipsis {
+				width: 100%;
+				display: inline-block;
+			}
+		}
+
+		.segment-btn:hover, .segment-btn:focus {
+			border-color: $brand-pink;
+		}
+
+		.dropdown-menu {
+			max-height: 360px;
+			overflow-y: auto;
+
+			.segment-filter {
+				padding: 5px 10px 10px 10px;
+				border-bottom: 1px solid #ddd;
+			}
+
+			.fa-bookmark {
+				color: #ccc;
+			}
+
+			.manage-link {
+				margin-top: -1px;
+				border-top: 1px solid #ddd;
+			}
+		}
+	}
+
+	.segment-menu.open {
+		.segment-btn {
+			box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+		}
+	}
+}
+
+@media (min-width: 768px) {
+	#Title.Resources {
+		h1 {
+			float: left;
+			width: auto;
+		}
+
+		.segment-menu {
+			position: relative;
+			float: left;
+			margin: 4px 0 0 12px;
+
+			.segment-btn .ellipsis {
+				width: 250px;
+			}
+		}
+	}
+}
+
+@media (min-width: 992px) {
+	// #Title.Resources .btn-group {
+	// 	clear: none;
+	// }
+}
+
+#Resources .panel {
+	margin-bottom: 0;
+}
+
+//--------------------------------------------------------//
+// GRID //
+
+// SEARCH BAR //
+#SearchBar {
+	padding-bottom: 10px;
+
+	.row > div {
+		padding-bottom: 10px;
+	}
+
+	.row > :last-child {
+		padding-bottom: 0;
+	}
+
+	.btn-group {
+		margin-right: 5px;
+	}
+}
+
+// COUNT & FILTERS //
+#SearchCount {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #ddd;
+}
+
+// TOOLBAR //
+.toolbar {
+	position: relative;
+	padding: 10px 20px;
+	min-height: 47px;
+
+	// Bulk Controls //
+	.bulk-controls {
+		.btn, .form-control {
+			margin-bottom: 5px;
+			width: 100%;
+		}
+	}
+
+	// View Options //
+	.view-controls {
+		position: absolute;
+		bottom: 10px;
+		right: 20px;
+		display: none;
+
+		.btn:focus {
+			outline: 0;
+		}
+	}
+}
+
+.toolbar.global {
+	display: none;
+}
+
+// RESULTS //
+#SearchResults {
+	min-height: 250px;
+
+	.panel {
+		font-size: 13px;
+		margin-bottom: 0;
+		border-left: 0;
+		border-right: 0;
+		border-radius: 0;
+		box-shadow: none;
+
+		.panel-heading {
+			padding: 10px 20px 10px 20px;
+			background: transparent;
+
+			.row {
+				> div {
+					padding-top: 8px;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
+				}
+
+				.username {
+					padding-top: 0;
+
+					.bulk-check {
+						margin-right: 10px;
+					}
+
+					strong {
+						font-size: 15px;
+						margin-right: 5px;
+					}
+				}
+
+				.compact-only {
+					display: none;
+				}
+			}
+		}
+
+		.details {
+			padding: 10px 20px 0px 20px;
+
+			p {
+				margin: 0 0 5px 0;
+			}
+
+			section {
+				margin-bottom: 10px;
+			}
+		}
+
+		.filter-matches {
+			padding: 5px 20px;
+
+			.match {
+				font-size: 12px;
+				color: $brand-blue;
+				margin-right: 10px;
+				display: inline-block;
+			}
+		}
+	}
+
+	> .panel:nth-of-type(even) {
+		background: #f9f9f9;
+	}
+
+	// More Button //
+	.more {
+		padding: 15px 20px;
+	}
+}
+
+// FILTERS MODAL //
+#modFilters {
+	.checkbox {
+		margin-bottom: 0;
+
+		label {
+			padding: 5px 10px 5px 30px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			display: block;
+		}
+	}
+}
+
+@media screen and (min-width: 768px) {
+
+	#SearchCount {
+		.count {
+			float: left;
+			margin-right: 20px;
+		}
+
+		.filters {
+			float: left;
+			padding-left: 20px;
+			border-left: 1px solid #ddd;
+		}
+	}
+
+	.toolbar {
+		.bulk-controls {
+			.btn {
+				margin: 0 10px 0 0;
+				width: auto;
+			}
+
+			.form-control {
+				margin: 0 5px 0 0;
+				max-width: 200px;
+				width: auto;
+			}
+		}
+	}
+
+	#modFilters {
+		.filter-options > div:nth-of-type(odd) {
+			clear: left;
+		}
+	}
+
+}
+
+@media screen and (min-width: 992px) {
+
+	.toolbar {
+		.view-controls {
+			display: inline-block;
+		}
+	}
+
+	.toolbar.global {
+		display: block;
+	}
+
+	// Compact View //
+	#SearchResults.compact {
+		.panel-heading {
+			border-bottom: 0;
+
+			> .row .compact-only {
+				display: block;
+			}
+		}
+
+		.details {
+			display: none;
+		}
+	}
+
+}
+
+@media screen and (min-width: 1200px) {
+
+	#SearchBar {
+		.row > div {
+			padding-bottom: 0;
+		}
+	}
+
+}
+
+//--------------------------------------------------------//
+// GEO MAP //
+
+#GeoMap, #NetworkMap {
+	position: relative;
+	min-height: 250px;
+}
+
+#GeoMap {
+	.unmapped {
+		position: absolute;
+		font-size: 13px;
+		color: $brand-rust;
+		text-align: center;
+		padding: 10px 20px;
+		width: 100%;
+		background: rgba(255,255,255,.75);
+		z-index: 800;
+	}
+
+	.center-point {
+		background: $brand-red;
+		border: 5px solid transparentize(#fff, 0.75);
+		border-radius: 50%;
+	}
+
+	// Display over zoom controls
+	.loading {
+		z-index: 1001;
+	}
+
+	.loading-bar {
+		position: absolute;
+		left: 1px;
+		right: 1px;
+		bottom: 1px;
+		white-space: nowrap;
+		background: #aaa;
+		overflow: hidden;
+		z-index: 1002;
+
+		> div {
+			position: relative;
+			font-size: 14px;
+			color: #fff;
+			vertical-align: middle;
+			padding: 4px 20px;
+			width: 0px;
+			background: $brand-green;
+			display: inline-block;
+			overflow: visible;
+			-webkit-transition: width .25s;
+			transition: width .25s;
+			z-index: 100;
+		}
+
+		.cancel-btn {
+			font-size: 12px;
+			color: #fff;
+			margin-left: 20px;
+			opacity: .75;
+		}
+
+		.cancel-btn:link, .cancel-btn:visited, .cancel-btn:hover {
+			color: #fff;
+		}
+	}
+}
+
+//--------------------------------------------------------//
+// INSIGHTS //
+
+#Insights {
+	#Sidebar {
+		font-size: 13px;
+
+		h3 {
+			font-family: $font-family-sans-serif;
+			font-weight: 700;
+			font-size: 14px;
+			margin-top: 15px;
+			margin-bottom: 10px;
+		}
+
+		h3:first-of-type {
+			margin-top: 0;
+		}
+
+		.form-group {
+			margin-bottom: 10px;
+
+			.control-label {
+				padding-top: 5px;
+			}
+
+			.form-control {
+				font-size: 13px;
+				line-height: 25px;
+				padding: 4px 8px;
+				height: 25px;
+			}
+		}
+	}
+
+	#InsightGraph {
+		position: relative;
+
+		svg {
+			position: relative;
+			height: 600px;
+			z-index: 900;
+		}
+
+		.quadrants {
+			position: absolute;
+			top: 50px;
+			left: 50px;
+			bottom: 50px;
+			right: 50px;
+			z-index: 800;
+
+			.x-line, .y-line {
+				position: absolute;
+				background: #555;
+				z-index: 900;
+			}
+
+			.x-line {
+				top: 250px;
+				left: 0;
+				width: 100%;
+				height: 2px;
+			}
+
+			.y-line {
+				top: 0;
+				left: 50%;
+				width: 2px;
+				height: 100%;
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------//
+// DEMOGRAPHICS //
+
+#Demographics {
+	.panel {
+		font-size: 13px;
+
+		.panel-body > .row {
+			margin-bottom: 30px;
+		}
+
+		a, a:link, a:visited {
+			color: #000;
+		}
+
+		a:hover, a:focus {
+			.fa {
+				opacity: 1;
+			}
+		}
+	
+		.top {
+			color: #fff;
+			text-align: center;
+			padding: 20px;
+			background: $brand-purple;
+
+			h4 {
+				font-size: 48px;
+				color: #fff;
+				margin: 0 0 20px 0;
+			}
+
+			h5 {
+				font-size: 30px;
+				font-weight: 400;
+				color: #fff;
+				text-transform: uppercase;
+				margin: 0 0 20px 0;
+			}
+
+			.bar-chart {
+				margin-bottom: 20px;
+				background: rgba(255,255,255,.2);
+			}
+
+			p {
+				font-size: 24px;
+				margin: 0;
+
+				small {
+					font-size: 14px;
+					color: transparentize(#fff, .3);
+				}
+			}
+
+			a, a:link, a:visited {
+				color: #fff;
+			}
+		}
+
+		.gender {
+			color: #fff;
+			padding: 1px 5px;
+			margin-bottom: 10px;
+			background: $brand-pink;
+
+			h4 {
+				font-size: 30px;
+				font-weight: 400;
+				margin-bottom: 10px;
+			}
+
+			h5 {
+				font-size: 30px;
+				font-weight: 700;
+				margin-bottom: 10px;
+			}
+
+			p {
+				font-size: 16px;
+			}
+
+			a, a:link, a:visited {
+				color: #fff;
+			}
+		}
+
+		.fa-external-link-square {
+			font-size: 12px;
+			opacity: .5;
+		}
+		
+		div > .gender:nth-of-type(2) {
+			background: $brand-blue;
+		}
+		div > .gender:nth-of-type(3) {
+			background: $brand-sky;
+		}
+	}
+}
+
+@media screen and (min-width: 768px) {
+
+	#Demographics .bar-label {
+		text-align: right;
+	}
+
+}
+
+//--------------------------------------------------------//
+// ACTIVITY //
+
+#Activity {
+	.panel-alt {
+		margin-bottom: 31px;
+
+		.chart {
+			width: 100%;
+		}
+	}
+}

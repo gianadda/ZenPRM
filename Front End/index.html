@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="App" ng-controller="MainController" ng-cloak>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="ZenPRM is a collaboration platform for improving healthcare administration.">
+    <meta name="author" content="Algonquin">
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <title ng-bind="PageTitle + ' | ZenPRM'"></title>
+    <!-- Google Font -->
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <!-- CSS -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <style type="text/css">
+    [ng-cloak] {
+        display: none;
+    }
+    </style>
+    <noscript><meta http-equiv="refresh" content="0; url=JavascriptDisabled.html" /></noscript>
+</head>
+
+<body ng-class="[{'login': !isLoggedIn() || isMustChangePassword()}, SiteClass]">
+    <div ui-view="login"></div>
+    <!-- Meat & Potatoes -->
+    <main id="main" ng-show="isLoggedIn()" ng-class="{toggled: navToggled}">
+        <!-- Navigation View for ui.router -->
+        <nav id="nav" class="clearfix" ng-class="SiteClass" ui-view="navigation"></nav>
+        <!-- End Navigation -->
+        <!-- Main Content  View for ui.router -->
+        <div id="content" ui-view="content" class="mainview-animation">
+        </div>
+        <!-- end #content -->
+    </main>
+    <footer class="stickers" ng-if="!isLoggedIn()">
+        <ul>
+            <li><span class="sticker">ZenPRM %%GULP_INJECT_VERSION%%</span></li>
+        </ul>
+    </footer>
+    <div growl></div>
+    <!-- Angular JS -->
+    <!-- inject:js -->
+    <!-- endinject -->
+</body>
+</html>

@@ -1,0 +1,48 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-cloud-upload"></i> Import Resources</h1>
+
+    <a class="btn btn-primary header-action" ui-sref="site.ImportAddPrivate"><i class="fa fa-cloud-upload"></i> Import Private Resources</a>
+</header>
+
+<div class="container-fluid">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Import Network Resources</h2>
+        </div>
+        <div class="panel-body">
+            <div id="ImportHolder" class="dropzone" ng-class="{'active': dropImportActive}">
+                <div class="loading" ng-show="ImportLoading">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                </div>
+                <div class="text" ng-show="UploadCount > 0">
+                    <h2>There are {{UploadCount}} NPIs listed in the file.</h2>
+                    <button type="button" class="btn btn-primary" ng-click="Commit()">
+                        <i class="fa fa-check"></i> Commit
+                    </button>
+                </div>
+                <div class="text" ng-show="UploadCount == 0">
+                    <h2>Bulk import resources from the Global list into your Network based on NPI</h2>
+                    <p><a target="_blank" href="/assets/files/sample.csv"><i class="fa fa-file-excel-o"></i> Sample CSV file</a></p>
+                </div>
+                <div class="dropicon"><i class="fa fa-cloud-upload"></i></div>
+            </div>
+            <h3 class="text" ng-show="ImportedData.length > 0"><i class="fa fa-user-md"></i> Imported</h3>
+            <table class="table" ng-show="ImportedData.length > 0">
+                <tr>
+                    <th>NPI</th>
+                    <th>Name</th>
+                    <th>Found NPI?</th>
+                    <th>Link Created</th>
+                </tr>
+                <tr ng-repeat="entity in ImportedData" ng-class="{'danger': entity.Ident === 0}">
+                    <td>{{entity.NPI}}</td>
+                    <td>{{entity.FullName}}</td>
+                    <td><i ng-show="entity.Found" class="fa fa-check-square-o"></i> <i ng-show="!entity.Found" class="fa fa-square-o"></i></td>
+                    <td><i ng-show="entity.Ident !== 0" class="fa fa-check-square-o"></i> <i ng-show="entity.Ident === 0" class="fa fa-square-o"></i></td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+<!-- end container -->

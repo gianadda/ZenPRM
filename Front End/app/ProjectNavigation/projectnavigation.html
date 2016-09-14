@@ -1,0 +1,26 @@
+<a class="nav-toggle" ng-click="toggleMenu = !toggleMenu"><i class="fa fa-bars"></i> Toggle Navigation</a>
+<ul class="nav nav-tabs" ng-class="{'toggled': toggleMenu == true}">
+    <li>
+        <a ng-if="currentProjectIdent && currentProjectIdent > 0" ui-sref="site.ProjectDetail({ident: currentProjectIdent})" ui-sref-active="active"><i class="fa fa-line-chart"></i> Overview</a>
+        <span ng-if="currentProjectIdent && currentProjectIdent == 0"><i class="fa fa-line-chart"></i> Overview</span>
+    </li>
+    <li>
+        <a ui-sref="site.ProjectEdit({ident: currentProjectIdent})" ui-sref-active="active"><i class="fa fa-cog" aria-hidden="true"></i> Settings</a>
+    </li>
+    <li>
+        <a ng-if="currentProjectIdent && currentProjectIdent > 0" ui-sref="site.ProjectParticipants({ident: currentProjectIdent})" ui-sref-active="active"><i class="fa fa-user-md"></i> Participants</a>
+        <span ng-if="currentProjectIdent && currentProjectIdent ==  0"><i class="fa fa-user-md"></i> Participants</span>
+    </li>
+    <li>
+        <a ng-if="currentProjectIdent && currentProjectIdent > 0" ui-sref="site.ProjectQuestions({ident: currentProjectIdent})" ui-sref-active="active"><i class="fa fa-asterisk"></i> Questions</a>
+        <span ng-if="currentProjectIdent && currentProjectIdent ==  0"><i class="fa fa-asterisk"></i> Questions</span>
+    </li>
+    <li>
+        <a ng-if="currentProjectIdent && currentProjectIdent > 0" ui-sref="site.ProjectImport({ident: currentProjectIdent})" ui-sref-active="active"><i class="fa fa-upload"></i> Import/Export</a>
+        <span ng-if="currentProjectIdent && currentProjectIdent ==  0"><i class="fa fa-upload"></i> Import/Export</span>
+    </li>
+    <li>
+        <a ng-if="currentProjectIdent && currentProjectIdent > 0" ui-sref="site.ProjectAudit({ident: currentProjectIdent})" ui-sref-active="active"><i class="fa fa-history"></i> Audit</a>
+        <span ng-if="currentProjectIdent && currentProjectIdent ==  0"><i class="fa fa-history"></i> Audit</span>
+    </li>
+</ul>

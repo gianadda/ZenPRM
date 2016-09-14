@@ -1,0 +1,88 @@
+//********************************************************//
+// Bar Chart //
+
+// Horizontal Bar
+.h-bar {
+	position: relative;
+	line-height: 10px;
+	text-align: left;
+	white-space: nowrap;
+	margin-top: 5px;
+	height: 10px;
+	background: #ddd;
+	overflow: hidden;
+
+	> .fill {
+		line-height: 10px;
+		width: 0px;
+		height: 10px;
+		background: $brand-pink;
+		display: inline-block;
+	}
+
+	> .range {
+		position: absolute;
+		margin-left: -1px;
+		height: 10px;
+		width: 0;
+		border-right: 2px solid #fff;
+	}
+}
+
+// Horizontal Bar Chart
+.h-bar-chart {
+	list-style: none;
+	font-size: 13px;
+	color: #666;
+	margin: 0;
+	padding: 0;
+
+	// Set up layout using BS cols
+	.row {
+		padding: 8px 0;
+
+		// Default colors
+		.h-bar {
+			> .fill:nth-of-type(2) {
+				background: $brand-blue;
+			}
+			> .fill:nth-of-type(3) {
+				background: $brand-teal;
+			}
+		}
+
+		// Nested data //
+		// For showing individual values
+		.h-bar-chart {
+			font-size: 12px;
+			padding-top: 8px;
+
+			.row {
+				padding: 4px 0;
+
+				.bar-label {
+					color: #666;
+				}
+
+				.h-bar {
+					margin-top: 3px;
+					background: transparent;
+					opacity: .75;
+				}
+			}
+
+			// Match default colors
+			li:nth-of-type(2) .h-bar > .fill {
+				background: $brand-blue;
+			}
+			li:nth-of-type(3) .h-bar > .fill {
+				background: $brand-teal;
+			}
+		}
+	}
+
+	// Expand nested data
+	.expand {
+		cursor: pointer;
+	}
+}

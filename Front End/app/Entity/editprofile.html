@@ -1,0 +1,1065 @@
+<header id="Title" class="clearfix">
+    <h1>Edit Details <small ng-bind="Profile.FullName"></small></h1>
+
+    <div class="btn-group header-action">
+        <!-- org version save button -->
+        <button type="button" ng-click="SaveData();" ng-class="{'btn-success': !ProfileOrganizationBasicInfoForm.$invalid , 'btn-danger': ProfileOrganizationBasicInfoForm.$invalid }" ng-disabled="ProfileOrganizationBasicInfoForm.$invalid " ng-if="Profile && IsOrganization()" class="btn">
+            <i class="fa fa-floppy-o"></i> Save
+        </button>
+        <!-- provider version save button -->
+        <button type="button" ng-click="SaveData();" ng-class="{'btn-success': !ProfileBasicInfoForm.$invalid && !ProfileAddressesForm.$invalid && !ProfileAdditionalDetailsForm.$invalid, 'btn-danger': ProfileBasicInfoForm.$invalid || ProfileAddressesForm.$invalid || ProfileAdditionalDetailsForm.$invalid }" ng-disabled="ProfileBasicInfoForm.$invalid || ProfileAddressesForm.$invalid || ProfileAdditionalDetailsForm.$invalid || NPIeditorEnabled" ng-if="Profile && IsProvider()" class="btn">
+            <i class="fa fa-floppy-o"></i> Save
+        </button>
+    </div>
+    
+    <zen-entity-nav entity="Profile" ng-if="!loading"></zen-entity-nav>
+</header>
+
+<!-- ### PERSONS ### -->
+<div class="container-fluid" ng-if="IsProvider()" ng-class="'theme-' + Profile.EntityTypeIdent">
+    <form name="ProfileBasicInfoForm">
+        
+        <!-- ### BASIC INFO ### -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Basic Information</h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group" ng-show="Profile.EntityTypeIdent == 3">
+                            <label>NPI: </label>
+                            <div class="input-group" ng-show="Profile.NPI && !NPIeditorEnabled">
+                                <label>{{Profile.NPI}}</label>
+                            </div>
+                            <div class="input-group" ng-show="!Profile.NPI || NPIeditorEnabled">
+                                <input class="form-control" ng-model="Profile.NPI" ng-readonly="!NPIeditorEnabled" ui-validate="'ValidateNPI($value)'" id="npi">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-primary" ng-if="!NPIeditorEnabled" ng-click="enableNPIEditor()">
+                                        <i class="fa fa-pencil"></i> Add
+                                    </button>
+                                    <button type="submit" class="btn btn-success" ng-if="NPIeditorEnabled" ng-click="EditEntityNPI()" ng-disabled="!NPIValid">
+                                        <i class="fa fa-floppy-o"></i> Save
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-if="NPIeditorEnabled" ng-click="disableNPIEditor()">
+                                        <i class="fa fa-ban"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            <span class="text-danger" ng-hide="NPIValid">You must enter a valid NPI.</span>
+                        </div>
+                        <!-- end .row -->
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label" for="prefix">Prefix:</label>
+                                    <input id="prefix" ng-model="Profile.Prefix" name="prefix" type="text" ng-minlength="2" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="(ProfileBasicInfoForm.prefix.$error.validator || ProfileBasicInfoForm.prefix.$error.minlength || ProfileBasicInfoForm.prefix.$error.maxlength)">You must enter a valid Prefix.</span>
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.prefix.$error.maxlength">The Prefix must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label" for="title">Title:</label>
+                                    <input id="title" ng-model="Profile.Title" name="title" type="text" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="(ProfileBasicInfoForm.title.$error.validator || ProfileBasicInfoForm.title.$error.maxlength)">You must enter a valid Title.</span>
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.title.$error.maxlength">The Title must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-9 col-sm-8">
+                                <div class="form-group">
+                                    <label class="control-label" for="firstName">First Name:</label>
+                                    <input id="firstName" ng-model="Profile.FirstName" name="firstName" ng-minlength="2" ng-maxlength="255" type="text" class="form-control">
+                                    <span class="text-danger" ng-show="(ProfileBasicInfoForm.firstName.$error.validator || ProfileBasicInfoForm.firstName.$error.minlength)">You must enter a valid First Name.</span>
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.firstName.$error.maxlength">The First Name must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-3 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label" for="middleInitial">MI:</label>
+                                    <input id="middleInitial" ng-model="Profile.MiddleName" name="middleInitial" ng-maxlength="255" type="text" class="form-control">
+                                    <span class="text-danger" ng-show="(ProfileBasicInfoForm.middleInitial.$error.validator || ProfileBasicInfoForm.middleInitial.$error.maxlength)">You must enter a valid Middle Initial.</span>
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.middleInitial.$error.maxlength">The Middle Initial must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-9 col-sm-8">
+                                <div class="form-group">
+                                    <label class="control-label" for="lastName">Last Name:</label>
+                                    <input id="lastName" ng-model="Profile.LastName" name="lastName" type="text" ng-minlength="2" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="(ProfileBasicInfoForm.lastName.$error.validator || ProfileBasicInfoForm.lastName.$error.minlength || ProfileBasicInfoForm.lastName.$error.maxlength)">You must enter a valid Last Name.</span>
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.lastName.$error.maxlength">The Last Name must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-3 col-sm-2">
+                                <div class="form-group">
+                                    <label class="control-label" for="suffix">Suffix:</label>
+                                    <input id="suffix" ng-model="Profile.Suffix" name="suffix" type="text" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="(ProfileBasicInfoForm.suffix.$error.validator || ProfileBasicInfoForm.suffix.$error.maxlength)">You must enter a valid Suffix.</span>
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.suffix.$error.maxlength">The Suffix must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .col -->
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="gender">Gender:</label>
+                                    <select class="form-control" name="gender" id="gender" ng-model="Profile.GenderIdent" ng-options="option.Ident as option.Name1 for option in LookupTables.Gender">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="birthDate">Birth Date:</label>
+                                    <zen-date-picker date-value="Profile.BirthDate" id="birthDate" name="birthDate"></zen-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                        <div class="form-group">
+                            <label class="control-label">Profile Photo:</label>
+                            <zen-photo-upload photo="Profile.ProfilePhoto" image-size="400" image-quality="0.8"></zen-photo-upload>
+                        </div>
+                    </div>
+                    <!-- end .col -->
+                </div>
+                <!-- end .row -->
+            </div>
+            <!-- end .panel-body -->
+        </div>
+        <!-- end .panel -->
+
+        <!-- ### PHONE & FAX ### -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Phone &amp; Fax Numbers</h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <label class="control-label" for="phoneNumber">Primary Phone Number:</label>
+                                    <input id="phoneNumber" ng-model="Profile.PrimaryPhone" name="phoneNumber" type="text" ui-validate="'ZenValidation.ValidPhoneNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.phoneNumber.$error.validator">You must enter a valid Phone Number.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="extension">Extension:</label>
+                                    <input id="extension" ng-model="Profile.PrimaryPhoneExtension" name="extension" type="text" ui-validate="'ZenValidation.ValidNumericSymbols($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.extension.$error.validator">You must enter a valid Extension.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <label class="control-label" for="phoneNumber2">Secondary Phone Number:</label>
+                                    <input id="phoneNumber2" ng-model="Profile.PrimaryPhone2" name="phoneNumber2" type="text" ui-validate="'ZenValidation.ValidPhoneNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.phoneNumber2.$error.validator">You must enter a valid Phone Number.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="extension">Extension:</label>
+                                    <input id="extension" ng-model="Profile.PrimaryPhone2Extension" name="extension" type="text" ui-validate="'ZenValidation.ValidNumericSymbols($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.extension.$error.validator">You must enter a valid Extension.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <label class="control-label" for="faxNumber">Primary Fax Number:</label>
+                                    <input id="faxNumber" ng-model="Profile.PrimaryFax" name="faxNumber" type="text" ui-validate="'ZenValidation.ValidPhoneNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.faxNumber.$error.validator">You must enter a valid Fax Number.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="faxNumber2">Secondary Fax Number:</label>
+                                    <input id="faxNumber2" ng-model="Profile.PrimaryFax2" name="faxNumber2" type="text" ui-validate="'ZenValidation.ValidPhoneNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.faxNumber2.$error.validator">You must enter a valid Fax Number.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end .col -->
+                </div>
+                <!-- end .row -->
+            </div>
+            <!-- end .panel-body -->
+        </div>
+        <!-- end .panel -->
+    </form>
+
+    <!-- ### EMAIL ADDRESSES ### -->
+    <div class="panel panel-primary" ng-show="!Profile.Registered || IsMyProfile()">
+        <div class="panel-heading">
+            <h2>Email Addresses</h2>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th ng-if="Profile.EntityTypeIdent !== 6">Receive Notifications</th>
+                    <th ng-if="Profile.EntityTypeIdent !== 6">Verified</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tr ng-repeat="email in EntityEmail">
+                <td data-title="Email">
+                    {{email.Email}}
+                </td>
+                <td data-title="Notify" ng-if="Profile.EntityTypeIdent !== 6">
+                    <i ng-show="email.Notify === true" class="fa fa-check-square-o"></i>
+                </td>
+                <td data-title="Verified" ng-if="Profile.EntityTypeIdent !== 6">
+                    <i ng-show="email.Verified === true" class="fa fa-check-square-o"></i><span ng-show="email.Verified === true">&nbsp;&nbsp;({{email.VerifiedDateTime}})</span>
+                </td>
+                <td data-title="Actions">
+                    <button type="button" ng-click="markEmailAsNotify(email, $index)" class="btn btn-primary btn-xs" ng-show="email.Verified === true && email.Notify === false" ng-if="Profile.EntityTypeIdent !== 6">
+                        <i class="fa fa-check-circle"></i> Turn On Notifications
+                    </button>
+                    <button type="button" ng-click="markEmailAsNonNotify(email, $index)" class="btn btn-warning btn-xs" ng-show="email.Verified === true && email.Notify === true" ng-if="Profile.EntityTypeIdent !== 6">
+                        <i class="fa fa-times"></i> Turn Off Notifications
+                    </button>
+                    <button type="button" ng-click="sendVerificationEmail(email.Ident)" class="btn btn-primary btn-xs" ng-show="email.Verified === false && Profile.Registered == true" ng-if="Profile.EntityTypeIdent !== 6">
+                        <i class="fa fa-envelope-o"></i> Send Verification Email
+                    </button>
+                    <button type="button" ng-click="registerEntity(email.Ident)" class="btn btn-primary btn-xs" ng-show="Profile.Registered == false" ng-if="Profile.EntityTypeIdent !== 6">
+                        <i class="fa fa-envelope"></i> Send Invitation to ZenPRM</a>
+                    </button>
+                    
+                    <button type="button" ng-hide="(Profile.Registered && EntityEmail.length == 1) || (email.ExternalLoginEmail)"
+                        ng-click="deleteEntityEmail(email.Ident, $index)" ng-confirm-click="Are you sure you want to remove this email address?" class="btn btn-danger btn-xs">
+                        <i class="fa fa-trash-o"></i> Delete Address
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div class="panel-body">
+            <div class="alert alert-danger" ng-if="emailAlert">
+                <span ng-bind-html="emailAlert"></span>
+            </div>
+            <form ngform name="EmailForm" ng-submit="AddEntityEmail()" class="row">
+                <div class="col-md-6" ng-class="{ 'has-error' : EmailForm.newEmailAddress.$invalid }">
+                    <input type="email" ng-model="newEmail.email" class="form-control ipnut-sm" required="" placeholder="Add email address">
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" ng-disabled="EmailForm.$invalid" class="btn btn-primary btn-sm">
+                        <i class="fa fa-plus"></i> Add Email
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- end .panel-body-->
+    </div>
+
+    <!-- ### ADDRESSES ### -->
+    <form name="ProfileAddressesForm">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Addresses</h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3 class="margtop">Primary Address</h3>
+                        <div class="form-group">
+                            <label class="control-label" for="primaryaddress1">Address 1:</label>
+                            <input id="primaryaddress1" ng-model="Profile.PrimaryAddress1" name="primaryaddress1" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.primaryaddress1.$error.validator">You must enter a valid Address 1.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.primaryaddress1.$error.maxlength">The Address 1 must be less than 255 characters.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="primaryaddress2">Address 2:</label>
+                            <input id="primaryaddress2" ng-model="Profile.PrimaryAddress2" name="primaryaddress2" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.primaryaddress2.$error.validator">You must enter a valid Address 2.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.primaryaddress2.$error.maxlength">The Address 2 must be less than 255 characters.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="primaryaddress3">Address 3:</label>
+                            <input id="primaryaddress3" ng-model="Profile.PrimaryAddress3" name="primaryaddress3" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.primaryaddress3.$error.validator">You must enter a valid Address 3.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.primaryaddress3.$error.maxlength">The Address 3 must be less than 255 characters.</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="control-label" for="primarycity">City:</label>
+                                    <input id="primarycity" ng-model="Profile.PrimaryCity" name="primarycity" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.primarycity.$error.validator">You must enter a valid City.</span>
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.primarycity.$error.maxlength">The City must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="primarystate">State:</label>
+                                    <select class="form-control" name="primarystate" id="primarystate" ng-model="Profile.PrimaryStateIdent" ng-options="option.Ident as option.Name1 for option in LookupTables.States">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="primarypostalCode">Zip:</label>
+                                    <input id="primarypostalCode" ng-model="Profile.PrimaryZip" name="primarypostalCode" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.primarypostalCode.$error.validator">You must enter a valid Zip.</span>
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.primarypostalCode.$error.maxlength">The Zip must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .col -->
+                    <div class="col-md-4">
+                        <h3 class="margtop">Mailing Address</h3>
+                        <div class="form-group">
+                            <label class="control-label" for="mailingaddress1">Address 1:</label>
+                            <input id="mailingaddress1" ng-model="Profile.MailingAddress1" name="mailingaddress1" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.mailingaddress1.$error.validator">You must enter a valid Address 1.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.mailingaddress1.$error.maxlength">The Address 1 must be less than 255 characters.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="practiceaddress2">Address 2:</label>
+                            <input id="mailingaddress2" ng-model="Profile.MailingAddress2" name="mailingaddress2" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.mailingaddress2.$error.validator">You must enter a valid Address 2.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.mailingaddress2.$error.maxlength">The Address 2 must be less than 255 characters.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="practiceaddress3">Address 3:</label>
+                            <input id="mailingaddress3" ng-model="Profile.MailingAddress3" name="mailingaddress3" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.mailingaddress3.$error.validator">You must enter a valid Address 3.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.mailingaddress3.$error.maxlength">The Address 3 must be less than 255 characters.</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="control-label" for="mailingcity">City:</label>
+                                    <input id="mailingcity" ng-model="Profile.MailingCity" name="mailingcity" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.mailingcity.$error.validator">You must enter a valid City.</span>
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.mailingcity.$error.maxlength">The City must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="practicestate">State:</label>
+                                    <select class="form-control" name="mailingstate" id="mailingstate" ng-model="Profile.MailingStateIdent" ng-options="option.Ident as option.Name1 for option in LookupTables.States"></select>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="mailingpostalCode">Zip:</label>
+                                    <input id="mailingpostalCode" ng-model="Profile.MailingZip" name="mailingpostalCode" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" type="text" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.mailingpostalCode.$error.validator">You must enter a valid Zip.</span>
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.mailingpostalCode.$error.maxlength">The Zip must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .col -->
+                    <div class="col-md-4">
+                        <h3 class="margtop">Practice Address</h3>
+                        <div class="form-group">
+                            <label class="control-label" for="practiceaddress1">Address 1:</label>
+                            <input id="practiceaddress1" ng-model="Profile.PracticeAddress1" name="practiceaddress1" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.practiceaddress1.$error.validator">You must enter a valid Address 1.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.practiceaddress1.$error.maxlength">The Address 1 must be less than 255 characters.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="practiceaddress2">Address 2:</label>
+                            <input id="practiceaddress2" ng-model="Profile.PracticeAddress2" name="practiceaddress2" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.practiceaddress2.$error.validator">You must enter a valid Address 2.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.practiceaddress2.$error.maxlength">The Address 2 must be less than 255 characters.</span></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="practiceaddress3">Address 3:</label>
+                            <input id="practiceaddress3" ng-model="Profile.PracticeAddress3" name="practiceaddress3" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileAddressesForm.practiceaddress3.$error.validator">You must enter a valid Address 3.</span>
+                            <span class="text-danger" ng-show="ProfileAddressesForm.practiceaddress3.$error.maxlength">The Address 3 must be less than 255 characters.</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="control-label" for="practicecity">City:</label>
+                                    <input id="practicecity" ng-model="Profile.PracticeCity" name="practicecity" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.practicecity.$error.validator">You must enter a valid City.</span>
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.practicecity.$error.maxlength">The City must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="practicestate">State:</label>
+                                    <select class="form-control" name="practicestate" id="practicestate" ng-model="Profile.PracticeStateIdent" ng-options="option.Ident as option.Name1 for option in LookupTables.States"></select>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="practicepostalCode">Zip:</label>
+                                    <input id="practicepostalCode" ng-model="Profile.PracticeZip" name="practicepostalCode" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.practicepostalCode.$error.validator">You must enter a valid Zip.</span>
+                                    <span class="text-danger" ng-show="ProfileAddressesForm.practicepostalCode.$error.maxlength">The Zip must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .col -->
+                </div>
+                <!-- end .row -->
+            </div>
+            <!-- end .panel-body -->
+        </div>
+        <!-- end .panel -->
+    </form>
+
+
+    <!-- ### ORGANIZATION STRUCTURE ### -->
+    <div class="panel panel-primary" ng-if="IsCustomer()">
+        <div class="panel-heading">
+            <h2>Organization Structure</h2>
+        </div>
+        <div class="panel-body">
+            <div class="form-group" ng-repeat="type in HierarchyType | orderBy: 'ReverseName1'">
+                <label class="control-label">{{type.ReverseName1}}:</label>
+                <tags-input on-tag-removed="RemoveOrganization($tag)" on-tag-Added="AddOrganization($tag, type.Ident)" class="ti-input-sm" placeholder="Add an Organization" ng-model="hierarchyTags[type.Ident].tags" display-property="Organization" key-property="EntityHierarchyIdent" add-from-autocomplete-only="true" add-on-paste="true">
+                    <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="loadHierarchyTags($query, networkOrgs);"></auto-complete>
+                </tags-input>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ### ADDITIONAL DETAILS ### -->
+    <form name="ProfileAdditionalDetailsForm" ng-show="Profile.EntityTypeIdent == 3"><!--provider only-->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Additional Details</h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="DEANumber">DEA #:</label>
+                                    <input id="DEANumber" ng-model="Profile.DEANumber" name="DEANumber" type="text" ui-validate="'ZenValidation.ValidDEANumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAdditionalDetailsForm.DEANumber.$error.validator">You must enter a valid DEA Number.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="DEANumberExpirationDate">DEA Expiration:</label>
+                                    <zen-date-picker date-value="Profile.DEANumberExpirationDate" id="DEANumberExpirationDate" name="DEANumberExpirationDate"></zen-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="PrescriptionLicenseNumber">Prescription License #:</label>
+                                    <input id="PrescriptionLicenseNumber" ng-model="Profile.PrescriptionLicenseNumber" name="PrescriptionLicenseNumber" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="PrescriptionLicenseNumberExpirationDate">PL Expiration:</label>
+                                    <zen-date-picker date-value="Profile.PrescriptionLicenseNumberExpirationDate" id="PrescriptionLicenseNumberExpirationDate" 
+                                    name="PrescriptionLicenseNumberExpirationDate"></zen-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="MedicareUPIN">Medicare UPIN:</label>
+                                    <input id="MedicareUPIN" ng-model="Profile.MedicareUPIN" name="MedicareUPIN" type="text" ui-validate="'ZenValidation.ValidMedicareUPIN($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAdditionalDetailsForm.MedicareUPIN.$error.validator">Your Medicare UPIN must be 6 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="CAQHID">CAQH ID:</label>
+                                    <input id="CAQHID" ng-model="Profile.CAQHID" name="CAQHID" type="text" ng-maxlength="10" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAdditionalDetailsForm.CAQHID.$error.maxlength">The CAQH ID must be less than 10 characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .col -->
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="TaxIDNumber">Tax ID #:</label>
+                                    <input id="TaxIDNumber" ng-model="Profile.TaxIDNumber" name="TaxIDNumber" ng-maxlength="100" type="text" ui-validate="'ZenValidation.ValidTaxIDNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileAdditionalDetailsForm.TaxIDNumber.$error.validator">You must enter a valid Tax ID #.</span>
+                                    <span class="text-danger" ng-show="ProfileAdditionalDetailsForm.TaxIDNumber.$error.maxlength">The Tax ID # must be less than 100 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="TaxIDNumberExpirationDate">Tax ID Expiration:</label>
+                                    <zen-date-picker date-value="Profile.TaxIDNumberExpirationDate" id="TaxIDNumberExpirationDate" name="TaxIDNumberExpirationDate"></zen-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="acceptingNewPatients">Accepting New Patients:</label>
+                                    <br/>
+                                    <toggle-switch id="acceptingNewPatients" name="acceptingNewPatients" on-label="Yes" off-label="No" ng-model="Profile.AcceptingNewPatients"></toggle-switch>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="soleProvider">Sole Provider:</label>
+                                    <br/>
+                                    <toggle-switch id="soleProvider" name="soleProvider" on-label="Yes" off-label="No" ng-model="Profile.SoleProvider"></toggle-switch>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label" for="meaningfulUse">Meaningful Use:</label>
+                                    <select class="form-control" name="meaningfulUse" id="meaningfulUse" ng-model="Profile.MeaningfulUseIdent" ng-options="option.Ident as option.Name1 for option in LookupTables.MeaningfulUse">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .col -->
+                </div>
+                <!-- end .row -->
+            </div>
+            <!-- end .panel-body -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Payors</label>
+                            <tags-input on-tag-removed="RemovePayor($tag)" on-tag-Added="AddPayor($tag)" class="ti-input-sm" placeholder="Add a Payor" ng-model="Payors" display-property="Name1" key-property="Ident" add-from-autocomplete-only="true" add-on-paste="true">
+                                <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="loadTags($query, LookupTables.Payor);"></auto-complete>
+                            </tags-input>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Languages</label>
+                            <tags-input on-tag-removed="RemoveLanguage($tag)" on-tag-Added="AddLanguage($tag)" class="ti-input-sm" placeholder="Add a Language" ng-model="Languages" display-property="Name1" key-property="Ident" add-from-autocomplete-only="true" add-on-paste="true">
+                                <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="loadTags($query, LookupTables.Language);"></auto-complete>
+                            </tags-input>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Degrees</label>
+                            <tags-input on-tag-removed="RemoveDegree($tag)" on-tag-Added="AddDegree($tag)" class="ti-input-sm" placeholder="Add a Degree" min-length="1" ng-model="Degrees" display-property="Name1" key-property="Ident" add-from-autocomplete-only="true" add-on-paste="true">
+                                <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="loadTags($query, LookupTables.Degree);"></auto-complete>
+                            </tags-input>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Specialties</label>
+                            <tags-input on-tag-removed="RemoveSpeciality($tag)" on-tag-Added="AddSpeciality($tag)" class="ti-input-sm" placeholder="Add a Specialty" ng-model="Specialities" display-property="Name1" key-property="Ident" add-from-autocomplete-only="true" add-on-paste="true">
+                                <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="loadTags($query, LookupTables.Speciality);"></auto-complete>
+                            </tags-input>
+                        </div>
+                    </div>
+                </div>
+                <!-- end .row -->
+            </div>
+            <!-- end .panel-body -->
+        </div>
+    </form>
+
+
+    <!-- ### LICENSES ### -->
+    <form name="LicenseForm" ng-submit="saveLicense(Profile, EntityLicense.length)" novalidate ng-show="Profile.EntityTypeIdent == 3"><!--provider only-->
+        <div class="panel panel-primary" id="Licenses">
+            <div class="panel-heading">
+                <h2>Licenses</h2>
+            </div>
+            <table class="table" ng-if="EntityLicense.length > 0">
+                <thead>
+                    <tr>
+                        <th>State</th>
+                        <th>License Number</th>
+                        <th>Expiration Date</th>
+                        <th class="text-right">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="license in EntityLicense">
+                        <td data-title="State">
+                            {{ showState(license) }}
+                        </td>
+                        <td data-title="License Number">
+                            {{ license.LicenseNumber }}
+                        </td>
+                        <td data-title="Expiration Date">
+                            <span ng-if="license.LicenseNumberExpirationDate != '01/01/1900'">{{ (license.LicenseNumberExpirationDate | date:"MM/dd/yyyy") }}</span>
+                        </td>
+                        <td class="text-right" data-title="Delete">
+                            <button type="button" ng-click="removeLicense(license.Ident, $index)" class="btn btn-danger btn-xs">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="LicenseStatesIdent">State:</label>
+                            <select class="form-control input-sm" id="LicenseStatesIdent" ng-model="Profile.LicenseStatesIdent" ng-options="state.Ident as state.Name1 for state in  LookupTables.States" required></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="LicenseNumber">License Number:</label>
+                            <input class="form-control input-sm" id="LicenseNumber" name="LicenseNumber" type="text" ng-model="Profile.LicenseNumber" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="LicenseDate">Expiration Date:</label>
+                            <zen-date-picker date-class="input-group-sm" date-value="Profile.LicenseDate" id="LicenseDate" name="LicenseDate"></zen-date-picker>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="hidden-xs">&nbsp;</label>
+                        <br class="hidden-xs">
+                        <button type="submit" class="btn btn-primary btn-sm" ng-disabled="LicenseForm.$invalid">
+                            <i class="fa fa-plus"></i> Add License
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- end .panel-body-->
+        </div>
+        <!-- end .panel -->
+    </form>
+
+
+    <!-- ### OTHER IDS ### -->
+    <form name="OtherIDForm" ng-submit="saveOtherID(Profile, EntityOtherID.length)" ng-show="Profile.EntityTypeIdent == 3"><!--provider only-->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Other IDs</h2>
+            </div>
+            <table class="table" ng-if="EntityOtherID.length > 0">
+                <thead>
+                    <tr>
+                        <th>ID Type</th>
+                        <th>ID Number</th>
+                        <th class="text-right">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="otherID in EntityOtherID">
+                        <td data-title="ID Type">
+                            {{ otherID.IDType }}
+                        </td>
+                        <td data-title="ID Number">
+                            {{ otherID.IDNumber }}
+                        </td>
+                        <td class="text-right" data-title="Delete">
+                            <button type="button" ng-click="removeOtherID(otherID.Ident, $index)" class="btn btn-danger btn-xs">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="IDType">ID Type:</label>
+                            <input class="form-control input-sm" id="IDType" type="text" ng-model="Profile.OtherIDType" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="IDType">ID Number:</label>
+                            <input class="form-control input-sm" id="IDNumber" type="text" ng-model="Profile.OtherIDNumber" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="hidden-xs">&nbsp;</label>
+                        <br class="hidden-xs">
+                        <button type="submit" ng-disabled="OtherIDForm.$invalid" class="btn btn-primary btn-sm">
+                            <i class="fa fa-plus"></i> Add Other ID
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- end .panel-body -->
+        </div>
+        <!-- end .panel -->
+    </form>
+
+
+    <!-- provider version save button -->
+    <button type="button" ng-click="SaveData();" ng-class="{'btn-success': !ProfileBasicInfoForm.$invalid && !ProfileAddressesForm.$invalid && !ProfileAdditionalDetailsForm.$invalid, 'btn-danger': ProfileBasicInfoForm.$invalid || ProfileAddressesForm.$invalid || ProfileAdditionalDetailsForm.$invalid }" ng-disabled="ProfileBasicInfoForm.$invalid || ProfileAddressesForm.$invalid || ProfileAdditionalDetailsForm.$invalid || NPIeditorEnabled" ng-if="Profile && IsProvider()" class="btn">
+        <i class="fa fa-floppy-o"></i> Save
+    </button>
+
+</div>
+<!-- end PERSONS -->
+
+
+<!-- ### NON-PERSONS ### -->
+<div class="container-fluid" ng-if="IsOrganization()" ng-class="'theme-' + Profile.EntityTypeIdent">
+    <form name="ProfileOrganizationBasicInfoForm">
+        
+        <!-- ### BASIC INFO ### -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Basic Information</h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6" ng-show="Profile.EntityTypeIdent != 7 && Profile.EntityTypeIdent != 8 && (!Profile.NPI && !NPIeditorEnabled)">
+                        <div class="form-group">
+                            <label>NPI: </label>
+                            <div class="input-group">
+                                <input class="form-control" ng-model="Profile.NPI" ng-readonly="!NPIeditorEnabled" ui-validate="'ValidateNPI($value)'" id="npi">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-primary" ng-if="!NPIeditorEnabled" ng-click="enableNPIEditor()">
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </button>
+                                    <button type="submit" class="btn btn-success" ng-if="NPIeditorEnabled" ng-click="EditEntityNPI()" ng-disabled="!NPIValid">
+                                        <i class="fa fa-floppy-o"></i> Save
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-if="NPIeditorEnabled" ng-click="disableNPIEditor()">
+                                        <i class="fa fa-ban"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            <span class="text-danger" ng-hide="NPIValid">You must enter a valid NPI.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- This is the Organization view of the first Name section -->
+                        <div class="form-group">
+                            <label class="control-label" for="organizationName">Organization Name:</label>
+                            <input id="organizationName" ng-model="Profile.OrganizationName" name="organizationName" ng-maxlength="255" type="text" class="form-control">
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.organizationName.$error.validator">You must enter a valid Organization Name.</span>
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.organizationName.$error.maxlength">The Organization Name must be less than 255 characters.</span>
+                        </div>
+                    </div>
+                    <!-- end .col -->
+                    <div class="col-md-6">
+                        <!-- This is the Organization view of the DBA section -->
+                        <div class="form-group">
+                            <label class="control-label" for="DBA">DBA:</label>
+                            <input id="DBA" ng-model="Profile.DBA" name="DBA" ng-maxlength="255" type="text" class="form-control">
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.DBA.$error.validator">You must enter a valid DBA.</span>
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.DBA.$error.maxlength">The DBA must be less than 255 characters.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label" for="profilePhoto">Profile Photo:</label>
+                        <zen-photo-upload photo="Profile.ProfilePhoto" image-size="400" image-quality="0.8"></zen-photo-upload>
+                    </div>
+                </div>
+                <!-- end .row -->
+            </div>
+            <!-- end .panel-body -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="margtop">Phone Numbers</h3>
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <label class="control-label" for="phoneNumber">Primary Phone Number:</label>
+                                    <input id="phoneNumber" ng-model="Profile.PrimaryPhone" name="phoneNumber" type="text" ui-validate="'ZenValidation.ValidPhoneNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.phoneNumber.$error.validator">You must enter a valid Phone Number.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="extension">Extension:</label>
+                                    <input id="extension" ng-model="Profile.PrimaryPhoneExtension" name="extension" type="text" ui-validate="'ZenValidation.ValidNumericSymbols($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.extension.$error.validator">You must enter a valid Extension.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <label class="control-label" for="phoneNumber2">Secondary Phone Number:</label>
+                                    <input id="phoneNumber2" ng-model="Profile.PrimaryPhone2" name="phoneNumber2" type="text" ui-validate="'ZenValidation.ValidPhoneNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.phoneNumber2.$error.validator">You must enter a valid Phone Number.</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="extension">Extension:</label>
+                                    <input id="extension" ng-model="Profile.PrimaryPhone2Extension" name="extension" type="text" ui-validate="'ZenValidation.ValidNumericSymbols($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.extension.$error.validator">You must enter a valid Extension.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 class="margtop">Fax Numbers</h3>
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <label class="control-label" for="faxNumber">Primary Fax Number:</label>
+                                    <input id="faxNumber" ng-model="Profile.PrimaryFax" name="faxNumber" type="text" ui-validate="'ZenValidation.ValidPhoneNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.faxNumber.$error.validator">You must enter a valid Fax Number.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="faxNumber2">Secondary Fax Number:</label>
+                                    <input id="faxNumber2" ng-model="Profile.PrimaryFax2" name="faxNumber2" type="text" ui-validate="'ZenValidation.ValidPhoneNumber($value)'" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileBasicInfoForm.faxNumber2.$error.validator">You must enter a valid Fax Number.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end .col -->
+                </div>
+                <!-- end .row -->
+            </div>
+            <!-- end .panel-body -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="margtop">Primary Address</h3>
+                        <div class="form-group">
+                            <label class="control-label" for="primaryaddress1">Address 1:</label>
+                            <input id="primaryaddress1" ng-model="Profile.PrimaryAddress1" name="primaryaddress1" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primaryaddress1.$error.validator">You must enter a valid Address 1.</span>
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primaryaddress1.$error.maxlength">The Address 1 must be less than 255 characters.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="primaryaddress2">Address 2:</label>
+                            <input id="primaryaddress2" ng-model="Profile.PrimaryAddress2" name="primaryaddress2" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primaryaddress2.$error.validator">You must enter a valid Address 2.</span>
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primaryaddress2.$error.maxlength">The Address 2 must be less than 255 characters.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="primaryaddress3">Address 3:</label>
+                            <input id="primaryaddress3" ng-model="Profile.PrimaryAddress3" name="primaryaddress3" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primaryaddress3.$error.validator">You must enter a valid Address 3.</span>
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primaryaddress3.$error.maxlength">The Address 3 must be less than 255 characters.</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="control-label" for="primarycity">City:</label>
+                                    <input id="primarycity" ng-model="Profile.PrimaryCity" name="primarycity" type="text" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primarycity.$error.validator">You must enter a valid City.</span>
+                                    <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primarycity.$error.maxlength">The City must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="primarystate">State:</label>
+                                    <select class="form-control" name="primarystate" id="primarystate" ng-model="Profile.PrimaryStateIdent" ng-options="option.Ident as option.Name1 for option in LookupTables.States">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="primarypostalCode">Zip:</label>
+                                    <input id="primarypostalCode" ng-model="Profile.PrimaryZip" name="primarypostalCode" ui-validate="'ZenValidation.ValidAlphaNumericSymbols($value)'" ng-maxlength="255" type="text" class="form-control">
+                                    <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primarypostalCode.$error.validator">You must enter a valid Zip.</span>
+                                    <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.primarypostalCode.$error.maxlength">The Zip must be less than 255 characters.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .col -->
+                    <div class="col-md-6">
+                        <h3 class="margtop">Additional Details</h3>
+                        <div class="form-group">
+                            <label class="control-label" for="Website">Website:</label>
+                            <input id="DEANuWebsitember" ng-model="Profile.Website" name="Website" type="url" ui-validate="'ZenValidation.ValidURL($value)'" class="form-control">
+                            <span class="text-danger" ng-show="ProfileOrganizationBasicInfoForm.Website.$error.validator">You must enter a valid Website URL.</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="EIN">EIN:</label>
+                                    <input id="EIN" ng-model="Profile.EIN" name="EIN" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="PCMHStatus">PCMH Status:</label>
+                            <select class="form-control" name="PCMHStatus" id="PCMHStatus" ng-model="Profile.PCMHStatusIdent" ng-options="option.Ident as option.Name1 for option in LookupTables.PCMHStatus">
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="TaxIDNumber">Tax ID #:</label>
+                                    <input id="TaxIDNumber" ng-model="Profile.TaxIDNumber" name="TaxIDNumber" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="TaxIDNumberExpirationDate">Tax ID Expiration:</label>
+                                    <zen-date-picker date-value="Profile.TaxIDNumberExpirationDate" id="TaxIDNumberExpirationDate" name="TaxIDNumberExpirationDate"></zen-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end .row -->
+                    </div>
+                    <!-- end .col -->
+                </div>
+                <!-- end .row -->
+            </div>
+            <!-- end .panel-body -->
+            <div class="panel-body"  ng-show="Profile.EntityTypeIdent != 7 && Profile.EntityTypeIdent != 8">
+                <div class="form-group">
+                    <label class="control-label">Taxonomies</label>
+                    <tags-input on-tag-removed="RemoveTaxonomy($tag)" on-tag-Added="AddTaxonomy($tag)" class="ti-input-sm" placeholder="Add a Taxonomy" ng-model="Taxonomies" display-property="Name1" key-property="Ident" add-from-autocomplete-only="true" add-on-paste="true">
+                        <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="loadTags($query, LookupTables.Taxonomy);"></auto-complete>
+                    </tags-input>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Services</label>
+                    <tags-input on-tag-removed="RemoveService($tag)" on-tag-Added="AddService($tag)" class="ti-input-sm" placeholder="Add a Service" ng-model="Services" display-property="Name1" key-property="Ident" add-from-autocomplete-only="true" add-on-paste="true">
+                        <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="loadTags($query, LookupTables.Services);"></auto-complete>
+                    </tags-input>
+                </div>
+            </div>
+            <!-- end .panel-body -->
+        </div>
+        <!-- end .panel -->
+    </form>
+
+    <!-- ### ORGANIZATION STRUCTURE ### -->
+    <div class="panel panel-primary" ng-if="IsCustomer()">
+        <div class="panel-heading">
+            <h2>Organization Structure</h2>
+        </div>
+        <div class="panel-body">
+            <div class="form-group" ng-repeat="type in HierarchyType | orderBy: 'ReverseName1'">
+                <label class="control-label">{{type.ReverseName1}}:</label>
+                <tags-input on-tag-removed="RemoveOrganization($tag)" on-tag-Added="AddOrganization($tag, type.Ident)" class="ti-input-sm" placeholder="Add an Organization" ng-model="hierarchyTags[type.Ident].tags" display-property="Organization" key-property="EntityHierarchyIdent" add-from-autocomplete-only="true" add-on-paste="true">
+                    <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="loadHierarchyTags($query, networkOrgs);"></auto-complete>
+                </tags-input>
+            </div>
+        </div>
+    </div>
+
+    <!-- ### SYSTEMS ### -->
+    <form name="SystemForm" ng-submit="saveSystem(Profile, EntitySystem.length)" novalidate ng-show="Profile.EntityTypeIdent != 7 && Profile.EntityTypeIdent != 8">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Systems</h2>
+            </div>
+            <table class="table" ng-if="EntitySystem.length > 0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>System Type</th>
+                        <th>Installation Date</th>
+                        <th>Go Live Date</th>
+                        <th>Decommission Date</th>
+                        <th class="text-right">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="system in EntitySystem">
+                        <td data-title="Name">
+                            {{ system.Name1 }}
+                        </td>
+                        <td data-title="System Type">
+                            {{ showSystemType(system) }}
+                        </td>
+                        <td data-title="Installation Date">
+                            <span ng-if="system.InstalationDate != '01/01/1900'">{{ (system.InstalationDate | date:"MM/dd/yyyy") }}</span>
+                        </td>
+                        <td data-title="Go Live Date">
+                            <span ng-if="system.GoLiveDate != '01/01/1900'">{{ (system.GoLiveDate | date:"MM/dd/yyyy") }}</span>
+                        </td>
+                        <td data-title="Decommission Date">
+                            <span ng-if="system.DecomissionDate != '01/01/1900'">{{ (system.DecomissionDate | date:"MM/dd/yyyy") }}</span>
+                        </td>
+                        <td data-title="Delete" class="text-right">
+                            <button type="button" ng-click="removeSystem(system.Ident, $index)" class="btn btn-danger btn-xs">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="panel-body">
+                <h3>Add New System</h3>
+                <div class="row">
+                    <div class="col-sm-4 col-md-3">
+                        <div class="form-group">
+                            <label for="SystemName">Name:</label>
+                            <input type="text" class="form-control input-sm" ng-model="Profile.SystemName" name="SystemName" id="SystemName" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-3">
+                        <div class="form-group">
+                            <label for="SystemType">System Type:</label>
+                            <select class="form-control input-sm" ng-model="Profile.SystemType" name="SystemType" id="SystemType" ng-options="systemType.Ident as systemType.Name1 for systemType in LookupTables.SystemType" required></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-3">
+                        <div class="form-group">
+                            <label for="SystemInstallationDate">Installation Date:</label>
+                            <zen-date-picker date-class="input-group-sm" date-value="Profile.SystemInstallationDate" id="SystemInstallationDate" name="SystemInstallationDate"></zen-date-picker>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-3">
+                        <div class="form-group">
+                            <label for="SystemGoLiveDate">Go Live Date:</label>
+                            <zen-date-picker date-class="input-group-sm" date-value="Profile.SystemGoLiveDate" id="SystemGoLiveDate" name="SystemGoLiveDate"></zen-date-picker>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-3">
+                        <div class="form-group">
+                            <label for="SystemDecommissionDate">Decommission Date:</label>
+                            <zen-date-picker date-class="input-group-sm" date-value="Profile.SystemDecommissionDate" id="SystemDecommissionDate" name="SystemDecommissionDate"></zen-date-picker>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="hidden-xs">&nbsp;</label>
+                        <br class="hidden-xs">
+                        <button type="submit" ng-disabled="SystemForm.$invalid" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add System</button>
+                    </div>
+                </div>
+            </div>
+            <!-- end .panel-body -->
+        </div>
+        <!-- end .panel -->
+    </form>
+
+
+    <!-- org version save button -->
+    <button type="button" ng-click="SaveData();" ng-class="{'btn-success': !ProfileOrganizationBasicInfoForm.$invalid , 'btn-danger': ProfileOrganizationBasicInfoForm.$invalid }" ng-disabled="ProfileOrganizationBasicInfoForm.$invalid " ng-if="Profile && IsOrganization()" class="btn">
+        <i class="fa fa-floppy-o"></i> Save
+    </button>
+
+</div>
+<!-- end NON-PERSON -->
+
+<div class="loading" ng-show="loading"">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

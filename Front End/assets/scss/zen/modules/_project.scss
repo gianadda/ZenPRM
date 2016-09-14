@@ -1,0 +1,133 @@
+// Container
+// Place on .panel-body
+.Projects {
+	padding-bottom: 0;
+
+	> .row > .col-md-6:nth-of-type(odd) {
+		clear: left;
+	}
+
+	.alert {
+		margin-bottom: 20px;
+	}
+}
+
+.project {
+	background: #fff;
+	margin-bottom: 20px;
+
+	.project-progress {
+		position: relative;
+		height: 5px;
+		background: #ccc;
+		overflow: hidden;
+
+		.done {
+			position: absolute;
+			height: 5px;
+			background: $brand-teal;
+			display: inline-block;
+			z-index: 100;
+		}
+	}
+
+	.project-body {
+		position: relative;
+		padding: 15px;
+		border: 1px solid #ddd;
+		border-top: 0;
+
+		.org-name {
+			font-size: 13px;
+			color: #888;
+			text-transform: uppercase;
+			margin-bottom: 5px;
+		}
+
+		h3 {
+			font-family: $font-family-sans-serif;
+			font-size: 21px;
+			margin: 0 0 8px 0;
+
+			.fa-bookmark {
+				font-size: 14px;
+				color: $brand-yellow;
+				margin-right: 5px;
+			}
+
+			.badge {
+				font-weight: 400;
+				font-size: 12px;
+				text-transform: none;
+			}
+		}
+
+		.btn {
+			float: right;
+			margin-left: 10px;
+		}
+
+		.metric {
+			h4 {
+				font-size: 48px;
+				font-weight: 700;
+				color: $brand-teal;
+				line-height: 100%;
+				margin: 0;
+
+				small {
+					color: $brand-teal;
+					opacity: .5;
+				}
+			}
+		}
+
+		.context {
+			p {
+				color: #777;
+				margin: 5px 0 0 0;
+			}
+		}
+	}
+}
+
+.project-empty {
+	.project-progress {
+		.done {
+			background: #888;
+		}
+	}
+
+	.project-body .metric {
+		h4, h4 small {
+			color: #888;
+		}
+	}
+}
+
+// Not currently used //
+.project-danger {
+	.project-progress {
+		.done {
+			background: $brand-red;
+		}
+	}
+
+	.project-body .metric {
+		h4, h4 small {
+			color: $brand-red;
+		}
+	}
+}
+
+.project-success {
+	.project-progress .done {
+		background: $brand-green;
+	}
+
+	.project-body .metric {
+		h4, h4 small {
+			color: $brand-green;
+		}
+	}
+}

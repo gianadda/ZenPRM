@@ -1,0 +1,361 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-user-md"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        Details <small ng-bind="EntityDetails.FullName"></small>
+    </h1>
+
+    <a ng-if="IsCustomer() || IsMyProfile(EntityIdent)" ui-sref="site.EditProfile({ident: EntityIdent})" class="btn btn-primary header-action"><i class="fa fa-pencil"></i> Edit Details</a>
+
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+
+<!-- ### PROVIDER, PUBLIC CONTACT & PRIVATE CONTACT ### -->
+<div id="Profile" class="container-fluid" ng-if="EntityLoaded && EntityDetails.Person" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+
+    <!-- ### BASIC INFO ### -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2><i class="fa fa-info-circle" aria-hidden="true"></i> Basic Information</h2>
+        </div>
+        <ul class="panel-body">
+            <li class="row">
+                <div class="col-sm-4"><strong>Name:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.Prefix}} {{EntityDetails.Title}} {{EntityDetails.FirstName}} {{EntityDetails.MiddleName}} {{EntityDetails.LastName}} {{EntityDetails.Suffix}}</div>
+            </li>
+            <li class="row" ng-if="EntityDetails.EntityTypeIdent == 3">
+                <div class="col-sm-4"><strong>NPI:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.NPI}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Gender:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.Gender}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Date of Birth:</strong></div>
+                <div class="col-sm-8"><span ng-if="EntityDetails.BirthDate != '01/01/1900'">{{EntityDetails.BirthDate}}</span></div>
+            </li>
+            <li class="row" ng-if="EntityDetails.EntityTypeIdent == 3">
+                <div class="col-sm-4"><strong>Specialties:</strong></div>
+                <div class="col-sm-8">
+                    <p ng-repeat="speciality in EntityData.Speciality" ng-show="speciality.Name1 !== '' && speciality.Active == true">
+                        <i class="fa fa-stethoscope"></i> {{speciality.Name1}}
+                    </p>
+                </div>
+            </li>
+            <li class="sub-head"><h3>Phone, Fax &amp; Email</h3></li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Primary Phone Number:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.PrimaryPhone}} <span ng-if="EntityDetails.PrimaryPhoneExtension !== ''">x{{EntityDetails.PrimaryPhoneExtension}}</span></div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Secondary Phone Number:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.PrimaryPhone2}} <span ng-if="EntityDetails.PrimaryPhone2Extension !== ''">x{{EntityDetails.PrimaryPhone2Extension}}</span></div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Primary Fax:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.PrimaryFax}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Secondary Fax:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.SecondaryFax}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Email:</strong></div>
+                <div class="col-sm-8">
+                    <ul class="emails">
+                        <li class="ellipsis" ng-repeat="email in EntityData.EntityEmail">
+                            <i ng-if="email.Verified" class="fa fa-check-circle text-success" aria-hidden="true" title="Verified"></i>
+                            <i ng-if="!email.Verified" class="fa fa-ban" aria-hidden="true" title="Not Verified"></i>
+                            <i ng-if="email.Notify" class="fa fa-paper-plane text-success" aria-hidden="true" title="Receives Notifications"></i>
+                            <i ng-if="!email.Notify" class="fa fa-ban" aria-hidden="true" title="Do Not Receive Notifications"></i>
+                            <a href="mailto:{{email.Email}}">{{email.Email}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="sub-head"><h3>Addresses</h3></li>
+            <li class="row">
+                <div class="col-sm-4">
+                    <h4>Primary Address:</h4>
+                    <div ng-show="EntityDetails.PrimaryAddress1 !== ''">{{EntityDetails.PrimaryAddress1}}</div>
+                    <div ng-show="EntityDetails.PrimaryAddress2 !== ''">{{EntityDetails.PrimaryAddress2}}</div>
+                    <div ng-show="EntityDetails.PrimaryAddress3 !== ''">{{EntityDetails.PrimaryAddress3}}</div>
+                    <div ng-show="EntityDetails.PrimaryCounty !== ''">{{EntityDetails.PrimaryCounty}}</div>
+                    <div><span ng-show="EntityDetails.PrimaryCity !== ''">{{EntityDetails.PrimaryCity}}</span><span ng-show="EntityDetails.PrimaryCity !== '' && EntityDetails.PrimaryState !== ''">, {{EntityDetails.PrimaryState}}</span> <span ng-show="EntityDetails.PrimaryZip !== ''">{{EntityDetails.PrimaryZip}}</span></div>
+                </div>
+                <div class="col-sm-4">
+                    <h4>Mailing Address:</h4>
+                    <div ng-show="EntityDetails.MailingAddress1 !== ''">{{EntityDetails.MailingAddress1}}</div>
+                    <div ng-show="EntityDetails.MailingAddress2 !== ''">{{EntityDetails.MailingAddress2}}</div>
+                    <div ng-show="EntityDetails.MailingAddress3 !== ''">{{EntityDetails.MailingAddress3}}</div>
+                    <div ng-show="EntityDetails.MailingCounty !== ''">{{EntityDetails.MailingCounty}}</div>
+                    <div><span ng-show="EntityDetails.MailingCity !== ''">{{EntityDetails.MailingCity}}</span><span ng-show="EntityDetails.MailingCity !== '' && EntityDetails.MailingState !== ''">, {{EntityDetails.MailingState}}</span> <span ng-show="EntityDetails.MailingZip !== ''">{{EntityDetails.MailingZip}}</span></div>
+                </div>
+                <div class="col-sm-4">
+                    <h4>Practice Address:</h4>
+                    <div ng-show="EntityDetails.PracticeAddress1 !== ''">{{EntityDetails.PracticeAddress1}}</div>
+                    <div ng-show="EntityDetails.PracticeAddress2 !== ''">{{EntityDetails.PracticeAddress2}}</div>
+                    <div ng-show="EntityDetails.PracticeAddress3 !== ''">{{EntityDetails.PracticeAddress3}}</div>
+                    <div ng-show="EntityDetails.PracticeCounty !== ''">{{EntityDetails.PracticeCounty}}</div>
+                    <div><span ng-show="EntityDetails.PracticeCity !== ''">{{EntityDetails.PracticeCity}}</span><span ng-show="EntityDetails.PracticeCity !== '' && EntityDetails.PracticeState !== ''">, {{EntityDetails.PracticeState}}</span> <span ng-show="EntityDetails.PracticeZip !== ''">{{EntityDetails.PracticeZip}}</span></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ### ORG STRUCTURE ### -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2><i class="fa fa-sitemap" aria-hidden="true"></i> Organization Structure</h2>
+        </div>
+        <ul class="panel-body">
+            <li class="row" ng-repeat="type in HierarchyType | orderBy: 'ReverseName1'">
+                <div class="col-sm-4"><strong>{{type.ReverseName1}}:</strong></div>
+                <div class="col-sm-8">
+                    <p ng-repeat="item in EntityHierarchy[type.Ident].tags">
+                        <zen-resource-name name="item.Organization" ident="item.OrganizationIdent"></zen-resource-name>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ### ADDITIONAL INFO ### -->
+    <div class="panel panel-primary" ng-if="EntityDetails.EntityTypeIdent == 3">
+        <div class="panel-heading">
+            <h2><i class="fa fa-info-circle" aria-hidden="true"></i> Additional Information</h2>
+        </div>
+        <ul class="panel-body">
+            <li class="row">
+                <div class="col-sm-4"><strong>DEA #:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.DEANumber}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>DEA Expiration:</strong></div>
+                <div class="col-sm-8"><span ng-if="EntityDetails.DEANumberExpirationDate != '01/01/1900'">{{EntityDetails.DEANumberExpirationDate}}</span></div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Prescription License #:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.PrescriptionLicenseNumber}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Prescription License Expiration:</strong></div>
+                <div class="col-sm-8"><span ng-if="EntityDetails.PrescriptionLicenseNumberExpirationDate != '01/01/1900'">{{EntityDetails.PrescriptionLicenseNumberExpirationDate}}</span></div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Medicare UPIN:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.MedicareUPIN}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>CAQH ID:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.CAQHID}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Tax ID #:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.TaxIDNumber}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Tax ID Expiration:</strong></div>
+                <div class="col-sm-8"><span ng-if="EntityDetails.TaxIDNumberExpirationDate != '01/01/1900'">{{EntityDetails.TaxIDNumberExpirationDate}}</span></div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Meaningful Use:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.MeaningfulUse}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Accepting New Patients:</strong></div>
+                <div class="col-sm-8">
+                    <span ng-if="EntityDetails.AcceptingNewPatients === true">Yes</span>
+                    <span ng-if="EntityDetails.AcceptingNewPatients === false">No</span>
+                </div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Other IDs:</strong></div>
+                <div class="col-sm-8">
+                    <div ng-repeat="otherID in EntityData.EntityOtherID" ng-if="otherID.IDNumber !== '' && otherID.Active == true">
+                        <strong>{{otherID.IDType}}:</strong> <span>{{otherID.IDNumber}}</span>
+                    </div>
+                </div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Payors:</strong></div>
+                <div class="col-sm-8">
+                    <span ng-repeat="payor in EntityData.Payor">{{payor.Name1}}{{$last ? '' : ', '}}</span>
+                </div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Languages:</strong></div>
+                <div class="col-sm-8">
+                    <span ng-repeat="language in EntityData.Language">{{language.Name1}}{{$last ? '' : ', '}}</span>
+                </div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Degrees:</strong></div>
+                <div class="col-sm-8">
+                    <span ng-repeat="degree in EntityData.Degree">{{degree.Name1}}{{$last ? '' : ', '}}</span>
+                </div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Licenses:</strong></div>
+                <div class="col-sm-8">
+                    <p ng-repeat="licenses in EntityData.EntityLicense" ng-if="licenses.LicenseNumber !== '' && licenses.Active == true">{{licenses.LicenseNumber}} <span ng-if="licenses.State !== ''">(State: {{licenses.State}})</span> <span ng-show="licenses.LicenseNumberExpirationDate !== '' && licenses.LicenseNumberExpirationDate !== '01/01/1900'"> Expires: {{licenses.LicenseNumberExpirationDate}}</span></p>
+                </div>
+            </li>
+        </ul>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+
+</div>
+<!-- end .container -->
+
+
+
+<!-- ### ORGANIZATION, FACILITY, COMMITTEE & OTHER (PRIVATE) ### -->
+<div id="Profile" class="container-fluid" ng-if="EntityLoaded && !EntityDetails.Person" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+
+    <!-- ### BASIC INFO ### -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2><i class="fa fa-info-circle" aria-hidden="true"></i> Basic Information</h2>
+        </div>
+        <ul class="panel-body">
+            <li class="row">
+                <div class="col-sm-4"><strong>Organization Name:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.OrganizationName}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>DBA:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.DBA}}</div>
+            </li>
+            <li class="row" ng-if="EntityDetails.EntityTypeIdent == 2 || EntityDetails.EntityTypeIdent == 4">
+                <div class="col-sm-4"><strong>NPI:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.NPI}}</div>
+            </li>
+            <li class="sub-head"><h3>Contact Information</h3></li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Primary Address:</strong></div>
+                <div class="col-sm-8">
+                    <div ng-show="EntityDetails.PrimaryAddress1 !== ''">{{EntityDetails.PrimaryAddress1}}</div>
+                    <div ng-show="EntityDetails.PrimaryAddress2 !== ''">{{EntityDetails.PrimaryAddress2}}</div>
+                    <div ng-show="EntityDetails.PrimaryAddress3 !== ''">{{EntityDetails.PrimaryAddress3}}</div>
+                    <div ng-show="EntityDetails.PrimaryCounty !== ''">{{EntityDetails.PrimaryCounty}}</div>
+                    <div><span ng-show="EntityDetails.PrimaryCity !== ''">{{EntityDetails.PrimaryCity}}</span><span ng-show="EntityDetails.PrimaryCity !== '' && EntityDetails.PrimaryState !== ''">, {{EntityDetails.PrimaryState}}</span> <span ng-show="EntityDetails.PrimaryZip !== ''">{{EntityDetails.PrimaryZip}}</span></div>
+                </div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Primary Phone Number:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.PrimaryPhone}} <span ng-if="EntityDetails.PrimaryPhoneExtension !== ''">x{{EntityDetails.PrimaryPhoneExtension}}</span></div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Secondary Phone Number:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.PrimaryPhone2}} <span ng-if="EntityDetails.PrimaryPhone2Extension !== ''">x{{EntityDetails.PrimaryPhone2Extension}}</span></div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Primary Fax:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.PrimaryFax}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Secondary Fax:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.SecondaryFax}}</div>
+            </li>
+            <li class="sub-head" ng-if="EntityDetails.EntityTypeIdent == 2 || EntityDetails.EntityTypeIdent == 4">
+                <h3>Taxonomies &amp; Services</h3>
+            </li>
+            <li class="row" ng-if="EntityDetails.EntityTypeIdent == 2 || EntityDetails.EntityTypeIdent == 4">
+                <div class="col-sm-4"><strong>Taxonomies:</strong></div>
+                <div class="col-sm-8">
+                    <p ng-repeat="speciality in EntityData.Speciality" ng-show="speciality.Name1 !== '' && speciality.Active == true">
+                        <i class="fa fa-stethoscope"></i> {{speciality.Name1}}
+                    </p>
+                </div>
+            </li>
+            <li class="row" ng-if="EntityDetails.EntityTypeIdent == 2 || EntityDetails.EntityTypeIdent == 4">
+                <div class="col-sm-4"><strong>Services:</strong></div>
+                <div class="col-sm-8">
+                    <p ng-repeat="service in EntityData.Services" ng-show="service.Name1 !== '' && service.Active == true">
+                        <i class="fa fa-stethoscope"></i> {{service.Name1}}
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ### ORG STRUCTURE ### -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2><i class="fa fa-sitemap" aria-hidden="true"></i> Organization Structure</h2>
+        </div>
+        <ul class="panel-body">
+            <li class="row" ng-repeat="type in HierarchyType | orderBy: 'ReverseName1'">
+                <div class="col-sm-4"><strong>{{type.ReverseName1}}:</strong></div>
+                <div class="col-sm-8">
+                    <p ng-repeat="item in EntityHierarchy[type.Ident].tags">
+                        <zen-resource-name name="item.Organization" ident="item.EntityHierarchyIdent"></zen-resource-name>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ### ADDITIONAL INFO ### -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2><i class="fa fa-table" aria-hidden="true"></i> Additional Information</h2>
+        </div>
+        <ul class="panel-body">
+            <li class="row">
+                <div class="col-sm-4"><strong>Website:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.Website}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>EIN:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.EIN}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Tax ID #:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.TaxIDNumber}}</div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>Tax ID Expiration:</strong></div>
+                <div class="col-sm-8"><span ng-if="EntityDetails.TaxIDNumberExpirationDate !== '01/01/1900'">{{EntityDetails.TaxIDNumberExpirationDate}}</span></div>
+            </li>
+            <li class="row">
+                <div class="col-sm-4"><strong>PCMH Status:</strong></div>
+                <div class="col-sm-8">{{EntityDetails.PCMHStatus}}</div>
+            </li>
+        </ul>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+
+    <!-- ### SYSTEMS ### -->
+    <div class="panel panel-primary" ng-if="EntityData.EntitySystem.length > 0 && (EntityDetails.EntityTypeIdent == 2 || EntityDetails.EntityTypeIdent == 4)">
+        <div class="panel-heading">
+            <h2>Systems</h2>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6" ng-repeat="system in EntityData.EntitySystem" ng-show="system.Name1 !== '' && system.Active == true">
+                    <p><strong>{{system.Name1}}</strong>
+                    <span ng-if="system.SystemType"><br>System Type: {{system.SystemType}}</span>
+                    <span ng-if="system.InstalationDate"><br>Installation Date: {{system.InstalationDate}}</span>
+                    <span ng-if="system.GoLiveDate"><br>Go Live Date: {{system.GoLiveDate}}</span>
+                    <span ng-if="system.DecomissionDate"><br>Decommission Date: {{system.DecomissionDate}}</span></p>
+                </div>
+            </div>
+        </div>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+
+</div>
+<!-- end .container -->
+
+
+<div class="loading" ng-show="!EntityLoaded">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

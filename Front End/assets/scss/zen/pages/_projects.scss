@@ -1,0 +1,654 @@
+//********************************************************//
+// Projects //
+
+//--------------------------------------------------------//
+// *** CUSTOMERS *** //
+//--------------------------------------------------------//
+
+//--------------------------------------------------------//
+// Project Overview //
+
+#ProjectDetail {
+	.h-bar-chart {
+		.bar-label h3 {
+			font-size: 14px;
+			margin-top: 0;
+			margin-bottom: 3px;
+
+			small {
+				font-size: 11px;
+				margin-left: 3px;
+			}
+		}
+
+		.h-bar {
+			margin-top: 5px;
+
+			> .fill {
+				background: $brand-teal;
+			}
+
+			> .fill.full {
+				background: $brand-green;
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------//
+// Project Settings //
+
+#ShareLink {
+	.btn {
+		transition: background .25s;
+	}
+
+	.alert {
+		margin-top: 10px;
+	}
+}
+
+//--------------------------------------------------------//
+// Project Question Drilldown  //
+
+#ProjectQuestion {
+	#SwapQuestion .btn-toolbar {
+		margin-top: 10px;
+
+		.btn {
+			margin-bottom: 0;
+			min-width: 90px;
+		}
+
+		.pull-right {
+			margin-right: 0;
+		}
+	}
+
+	#QuestionTotals .row > :last-child .dial {
+		margin-bottom: 0;
+	}
+}
+
+//--------------------------------------------------------//
+// Project Participants //
+
+// Apply small screen styles due to number of columns //
+@media screen and (min-width: 768px) and (max-width: 991px) {
+
+	#ProjectParticipants {
+		.table, .table thead, .table tbody, .table tfoot, .table, tr, .table tr, .table th, .table td {
+			text-align: left !important;
+			display: block;
+		}
+
+		.table { 
+			thead {
+				display: none;
+			}
+
+			tbody > tr:last-of-type {
+				border-bottom: 0;
+			}
+
+			td {
+				position: relative;
+			}
+
+			td:before {
+				float: left;
+				font-weight: 700;
+				width: 35%;
+				content: attr(data-title-text);
+			}
+
+			td:after {
+				content: " ";
+				display: block;
+				clear: both;
+			}
+		}
+
+		.panel .table td:first-of-type {
+			padding-left: 8px;
+		}
+	}
+}
+
+@media screen and (min-width: 992px) {
+
+	#ProjectParticipants .heading-form {
+		text-align: right;
+	}
+
+}
+
+//--------------------------------------------------------//
+// Project Questions //
+
+// This builds of _super-list.scss
+
+#FormBuilder {
+	// Question row
+	.sl-item {
+		span {
+			display: block;
+		}
+
+		// Sort icon
+		.sl-action {
+			position: absolute;
+			height: 100%;
+			padding: 10px 20px;
+			border-right: 1px solid #ddd;
+			cursor: move;
+
+			.fa {
+				color: #888;
+			}
+
+			.fa:hover {
+				color: $brand-green;
+			}
+		}
+
+		.sl-label {
+			padding-left: 74px;
+		}
+
+		.sl-meta {
+			float: left;
+			padding-left: 74px;
+		}
+
+		// Expand/collapse toggle
+		.sl-expando {
+			position: absolute;
+			top: 0;
+			right: 0;
+			font-size: 16px;
+			height: 100%;
+			line-height: 100%;
+			vertical-align: middle;
+			padding: 10px 5px;
+			border-left: 1px solid rgba(255,255,255,.3);
+			cursor: pointer;
+		}
+
+		.sl-expando:hover {
+			background: rgba(255,255,255,.3);
+		}
+	}
+
+	// Active row
+	.sl-item.active {
+		.sl-action {
+			border-color: rgba(255,255,255,.3);
+
+			.fa {
+				color: #fff;
+			}
+		}
+
+		.sl-item-body {
+			padding-right: 10px;
+		}
+	}
+
+	// Sorting
+	
+	.as-sortable-placeholder {
+		background: transparentize($brand-pink, .5);
+		border: 3px dashed $brand-pink;
+	}
+
+	// Allow for scrolling on touch devices
+	.as-sortable-item {
+		-ms-touch-action: auto;
+		touch-action: auto;
+
+		.as-sortable-item-handle {
+			-ms-touch-action: none;
+			touch-action: none;
+		}
+	}
+
+	.as-sortable-dragging {
+		position: absolute;
+		opacity: 0;
+		z-index: 900;
+	}
+
+	// Sorting buttons
+	.sort-buttons {
+		margin: 0;
+		padding: 2px;
+		background: #eee;
+		border-bottom: 1px solid #ddd;
+
+		> div {
+			padding: 2px;
+		}
+	}
+
+	// Sidebar
+
+	#SuperSidebar {
+		.as-sortable-item, .as-sortable-placeholder {
+			margin-bottom: 10px;
+		}
+
+		.nav-pills {
+			font-size: 13px;
+			margin-bottom: 10px;
+		}
+	}
+
+	#SuperList.full #SuperSidebar {
+		display: none;
+	}
+}
+
+@media screen and (min-width: 992px) {
+
+	#FormBuilder .sort-buttons {
+		display: none;
+	}
+
+}
+
+@media screen and (min-width: 1200px) {
+
+	#FormBuilder .sl-item .sl-meta {
+		padding-left: 0;
+	}
+
+}
+
+
+//--------------------------------------------------------//
+// Project Audit //
+
+@media screen and (max-width: 767px) {
+
+	#ProjectAudit .panel-body .row > div:not(:last-child) {
+		padding-bottom: 10px;
+	}
+
+}
+
+
+//--------------------------------------------------------//
+// *** RESOURCES *** //
+//--------------------------------------------------------//
+
+//--------------------------------------------------------//
+// Participant Project //
+
+#Project {
+	.form-group {
+		margin: 0;
+
+		// Question
+		.question-group {
+			padding-bottom: 20px;
+			margin-bottom: 18px;
+			border-bottom: 2px dashed #eee;
+
+			// History, clear buttons
+			> a {
+				float: right;
+				font-size: 12px;
+				margin-left: 10px;
+			}
+			
+			.clear, .clear:link, .clear:visited {
+				color: #888;
+			}
+			.clear:hover {
+				color: $brand-red;
+			}
+
+			// Label
+			.question {
+				font-weight: 400;
+				font-size: 16px;
+				color: $brand-blue;
+				margin: 0 0 10px 0;
+				display: block;
+			}
+
+			// Description
+			.desc {
+				font-size: 14px;
+				color: #666;
+				margin: 0 0 10px 0;
+
+				> :first-child {
+					margin-top: 0;
+				}
+
+				> :last-child {
+					margin-bottom: 0;
+				}
+			}
+
+			// Field
+			.answer {
+				font-size: 14px;
+
+				.address {
+					.form-group {
+						margin-bottom: 15px;
+					}
+				}
+
+				// Radio Buttons & Checkboxes //
+				.option-list {
+					margin-top: 10px;
+				}
+
+				.radio, .checkbox {
+					margin: 0;
+				}
+
+				.radio + .radio, .checkbox + .checkbox {
+					margin-top: 5px;
+				}
+
+				// Yes/No Toggle //
+				.switch input {
+					display: none;
+				}
+
+				// Dates //
+				.ui-datepicker {
+					max-width: 200px;
+				}
+
+				// Hours of Operation //
+				.hours {
+					margin-bottom: 5px;
+					
+					> div:not(:first-child) {
+						margin-bottom: 10px;
+					}
+				}
+
+				// Uploads //
+				.dropzone {
+					margin-bottom: 10px;
+				}
+
+				.upload-thumb {
+					img {
+						max-width: 300px;
+						height: auto;
+					}
+				}
+
+				// Ratings //
+				.rating {
+					label {
+						position: relative;
+						margin-right: 20px;
+						height: 36px;
+						width: 36px;
+						display: inline-block;
+						cursor: pointer;
+
+						input[type=radio] {
+							margin: 0;
+							height: 36px;
+							width: 36px;
+							z-index: 1;
+							visibility: hidden;
+						}
+
+						.rating-num {
+							position: absolute;
+							left: 0;
+							top: 0;
+							font-size: 18px;
+							color: #fff;
+							line-height: 32px;
+							text-align: center;
+							height: 36px;
+							width: 36px;
+							background-color: #ccc;
+							border-radius: 50%;
+							border: 2px solid #ccc;
+							box-shadow: inset 0 0 0 2px #fff;
+							display: block;
+							z-index: 2;
+						}
+
+						input:checked + .rating-num {
+							background-color: $brand-teal;
+							border-color: $brand-teal;
+							outline: none;
+						}
+
+						.fa {
+							display: none;
+						}
+
+						&:hover, &:focus {
+							.rating-num {
+								background-color: $brand-teal;
+								border-color: $brand-teal;
+								display: none;
+							}
+
+							.fa {
+								display: block;
+							}
+						}
+					}
+				}
+
+				// Slider (Range)
+				// Requires styles to be specified for each browser
+				.range {
+					.range-slider {
+						-webkit-appearance: none;
+						appearance: none;
+						background: transparent;
+						outline: none;
+						cursor: pointer;
+
+						// Webkit/Chromium
+						&::-webkit-slider-runnable-track {
+							margin-top: 7px;
+							height: 10px;
+							background-color: #ccc;
+							border-radius: 5px;
+						}
+
+						&::-webkit-slider-thumb {
+							-webkit-appearance: none;
+							appearance: none;
+							margin-top: -5px;
+							width: 20px;
+							height: 20px;
+							border-radius: 50%;
+							background-color: $brand-teal;
+						}
+
+						// Mozilla
+						&::-moz-range-track {
+							height: 10px;
+							background-color: #ccc;
+							border-radius: 5px;
+						}
+
+						&::-moz-range-thumb {
+							-webkit-appearance: none;
+							appearance: none;
+							width: 20px;
+							height: 20px;
+							border: 0;
+							border-radius: 50%;
+							background-color: $brand-teal;
+							cursor: pointer;
+						}
+
+						// IE
+						&::-ms-track {
+							color: transparent;
+							width: 100%;
+							height: 10px;
+							background: transparent;
+							border-color: transparent;
+							border-width: 5px 0;
+							cursor: pointer;
+						}
+
+						&::-ms-fill-lower {
+							background-color: #ccc;
+							border-radius: 5px 0 0 5px;
+						}
+
+						&::-ms-fill-upper {
+							background-color: #ddd;
+							border-radius: 0 5px 5px 0;
+						}
+
+						&::-ms-thumb {
+							-webkit-appearance: none;
+							appearance: none;
+							width: 20px;
+							height: 20px;
+							border-radius: 50%;
+							background-color: $brand-teal;
+							cursor: pointer;
+							outline: none;
+						}
+					}
+
+					.range-label {
+						color: #fff;
+						padding: 2px 6px;
+						background-color: $brand-teal;
+						border-radius: 3px;
+						display: inline-block;
+					}
+				}
+			}
+
+			// History
+			.table {
+				font-size: 13px;
+				color: #000;
+				margin: 10px 0 0 0;
+			}
+
+			.alert {
+				font-size: 13px;
+				margin: 10px 0 0 0;
+				padding: 8px 15px;
+			}
+		}
+
+		// Heading
+		.heading {
+			margin-bottom: 0;
+			border: 0;
+
+			h1, h2, h3, h4 {
+				font-weight: 400;
+				margin: 0;
+			}
+
+			h3 {
+				font-size: 21px;
+			}
+
+			h4 {
+				font-size: 18px;
+				color: $brand-purple;
+			}
+
+			.desc {
+				margin: 10px 0 0 0;
+			}
+		}
+	}
+
+	.panel-body > div:last-child .question-group {
+		padding-bottom: 0;
+		margin-bottom: 0;
+		border-bottom: 0;
+	}
+
+	// Completed questions
+	.question-group.complete {
+		.question {
+			color: $brand-green;
+		}
+
+		.answer {
+			.rating label {
+				input:checked + .rating-num {
+					background-color: $brand-green;
+					border-color: $brand-green;
+				}
+			}
+
+			.range {
+				.range-label {
+					background-color: $brand-green;
+				}
+				.range-slider::-webkit-slider-thumb {
+					background-color: $brand-green;
+				}
+				.range-slider::-moz-range-thumb {
+					background-color: $brand-green;
+				}
+				.range-slider::-ms-thumb {
+					background-color: $brand-green;
+				}
+			}
+		}
+	}
+}
+
+// Project Preview & Quick Answer modals //
+.modal #Project {
+	padding: 0;
+	min-height: 200px;
+
+	.panel {
+		box-shadow: none;
+		border: 0;
+
+		.panel-body {
+			padding: 0;
+		}
+	}
+}
+
+@media screen and (min-width: 768px) {
+
+	#Project .number {
+		max-width: 50%;
+	}
+
+}
+
+@media screen and (min-width: 992px) {
+
+	#Project .hours label {
+		margin-top: 8px;
+	}
+
+}
+
+@media screen and (min-width: 1200px) {
+
+	#Project {
+		margin: 0 auto;
+		max-width: 1000px;
+	}
+
+}

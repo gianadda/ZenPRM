@@ -1,0 +1,20 @@
+<a ng-if="IsCustomer()" class="nav-toggle" ng-click="toggleMenu()"><i class="fa fa-bars"></i> Toggle Navigation</a>
+<ul ng-if="IsCustomer()" class="nav nav-tabs" ng-class="{'toggled': showMenu}">
+    <li><a ui-sref="site.Profile({ident: entity.Ident})" ui-sref-active="active"><i class="fa fa-home"></i> Profile</a></li>
+    <li ng-hide="IsCustomer() && IsMyProfile(entity.Ident)"><a ui-sref="site.EntityProjects({ident: entity.Ident})" ui-sref-active="active"><i class="fa fa-briefcase"></i> Projects</a></li>
+    <li><a ui-sref="site.EntityDetails({ident: entity.Ident})" ui-sref-active="active"><i class="fa fa-user"></i> Details</a></li>
+    <li><a ui-sref="site.AuditHistory({ident: entity.Ident})" ui-sref-active="active"><i class="fa fa-history"></i> Audit History</a></li>
+    <li ng-if="!entity.Person"><a ui-sref="site.Hierarchy({FromEntityIdent: entity.Ident})" ui-sref-active="active"><i class="fa fa-sitemap"></i> Org Structure</a></li>
+    <li ng-if="entity.EntityTypeIdent == 2 || entity.EntityTypeIdent == 3 || entity.EntityTypeIdent == 4">
+    	<a ui-sref="site.EntityInsights({ident: entity.Ident})" ui-sref-active="active"><i class="fa fa-bar-chart"></i> Insights</a>
+    	<ul>
+			<li><a ui-sref="site.EntityInsights({ident: entity.Ident, '#':'referrals'})">Top Referrals</a></li>
+			<li><a ui-sref="site.EntityInsights({ident: entity.Ident, '#':'physician-summary'})">Medicare Physician &amp; Other Supplier Summary</a></li>
+            <li><a ui-sref="site.EntityInsights({ident: entity.Ident, '#':'physician-details'})">Medicare Physician &amp; Other Supplier Details</a></li>
+			<li><a ui-sref="site.EntityInsights({ident: entity.Ident, '#':'prescriber-summary'})">Medicare Part D Prescriber Summary</a></li>
+			<li><a ui-sref="site.EntityInsights({ident: entity.Ident, '#':'prescriber-details'})">Medicare Part D Prescriber Details</a></li>
+		</ul>
+	</li>
+    <li><a ui-sref="site.Repository({entityIdent: entity.Ident})" ui-sref-active="active"><i class="fa fa-files-o"></i> Files</a></li>
+    <li><a ui-sref="site.Notes({ident: entity.Ident})" ui-sref-active="active"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> Notes</a></li>
+</ul>

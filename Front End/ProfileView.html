@@ -1,0 +1,245 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+				Community Network Profile {{CurrentEntity.Entity.}}
+			</h3>
+            <button type="button" class="btn btn-default">
+                Edit Profile
+            </button>
+            <button type="button" class="btn btn-default">
+                View or Add Comments
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <h3><span ng-show="CurrentEntity.Entity.Title !== ''">{{CurrentEntity.Entity.Title}}) </span>{{CurrentEntity.Entity.FullName}} <span ng-show="CurrentEntity.Entity.DBA !== ''">(DBA: {{CurrentEntity.Entity.DBA}})</span></h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p ng-show="CurrentEntity.Entity.NPI !== ''">NPI: {{CurrentEntity.Entity.NPI}}</p>
+                            <div ng-repeat="emailAddress in CurrentEntity.EntityEmail">
+                                <p ng-show="emailAddress.Email !== '' && emailAddress.Active == true">{{emailAddress.Email}}</p>
+                            </div>
+                            <p ng-show="CurrentEntity.Entity.PrimaryPhone !== ''">P: {{CurrentEntity.Entity.PrimaryPhone}} <span ng-show="CurrentEntity.Entity.PrimaryPhoneExtension !== ''">x{{CurrentEntity.Entity.PrimaryPhoneExtension}}</span></p>
+                            <p ng-show="CurrentEntity.Entity.PrimaryPhone2 !== ''">P: {{CurrentEntity.Entity.PrimaryPhone2}} <span ng-show="CurrentEntity.Entity.PrimaryPhone2Extension !== ''">x{{CurrentEntity.Entity.PrimaryPhone2Extension}}</span></p>
+                            <p ng-show="CurrentEntity.Entity.PrimaryFax !== ''">F: {{CurrentEntity.Entity.PrimaryFax}}</p>
+                            <p ng-show="CurrentEntity.Entity.PrimaryFax2 !== ''">F: {{CurrentEntity.Entity.PrimaryFax2}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <p ng-show="CurrentEntity.Entity.Gender !== ''">Gender: {{CurrentEntity.Entity.Gender}}</p>
+                                    <p ng-show="CurrentEntity.Entity.BirthDate !== ''">DOB: {{CurrentEntity.Entity.BirthDate}}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <img ng-show="CurrentEntity.Entity.ProfilePhoto !== ''" alt="{{CurrentEntity.Entity.FullName}}" ng-src=" {{CurrentEntity.Entity.ProfilePhoto}}" />
+                                    <a href="{{CurrentEntity.Entity.Website}}" ng-show="CurrentEntity.Entity.Website !== ''">Website</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Addresses</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <i class="fa fa-home fa-6"></i>
+                                </div>
+                                <div class="col-md-8">
+                                    <h4>Primary Address</h4>
+                                    <p ng-show="CurrentEntity.Entity.PrimaryAddress1 !== ''">{{CurrentEntity.Entity.PrimaryAddress1}}</p>
+                                    <p ng-show="CurrentEntity.Entity.PrimaryAddress2 !== ''">{{CurrentEntity.Entity.PrimaryAddress2}}</p>
+                                    <p ng-show="CurrentEntity.Entity.PrimaryAddress3 !== ''">{{CurrentEntity.Entity.PrimaryAddress3}}</p>
+                                    <p ng-show="CurrentEntity.Entity.PrimaryCounty !== ''">{{CurrentEntity.Entity.PrimaryCounty}}</p>
+                                    <p><span ng-show="CurrentEntity.Entity.PrimaryCity !== ''">{{CurrentEntity.Entity.PrimaryCity}}</span><span ng-show="CurrentEntity.Entity.PrimaryState !== ''">, {{CurrentEntity.Entity.PrimaryState}}</span> <span ng-show="CurrentEntity.Entity.PrimaryZip !== ''">{{CurrentEntity.Entity.PrimaryZip}}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <i class="fa fa-envelope fa-6"></i>
+                                </div>
+                                <div class="col-md-8">
+                                    <h4>Mailing Address</h4>
+                                    <p ng-show="CurrentEntity.Entity.MailingAddress1 !== ''">{{CurrentEntity.Entity.MailingAddress1}}</p>
+                                    <p ng-show="CurrentEntity.Entity.MailingAddress2 !== ''">{{CurrentEntity.Entity.MailingAddress2}}</p>
+                                    <p ng-show="CurrentEntity.Entity.MailingAddress3 !== ''">{{CurrentEntity.Entity.MailingAddress3}}</p>
+                                    <p ng-show="CurrentEntity.Entity.MailingCounty !== ''">{{CurrentEntity.Entity.MailingCounty}}</p>
+                                    <p><span ng-show="CurrentEntity.Entity.MailingCity !== ''">{{CurrentEntity.Entity.MailingCity}}</span><span ng-show="CurrentEntity.Entity.MailingState !== ''">, {{CurrentEntity.Entity.MailingState}}</span> <span ng-show="CurrentEntity.Entity.MailingZip !== ''">{{CurrentEntity.Entity.MailingZip}}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <i class="fa fa-hospital fa-6"></i>
+                                </div>
+                                <div class="col-md-8">
+                                    <h4>Practice Address</h4>
+                                    <p ng-show="CurrentEntity.Entity.PracticeAddress1 !== ''">{{CurrentEntity.Entity.PracticeAddress1}}</p>
+                                    <p ng-show="CurrentEntity.Entity.PracticeAddress2 !== ''">{{CurrentEntity.Entity.PracticeAddress2}}</p>
+                                    <p ng-show="CurrentEntity.Entity.PracticeAddress3 !== ''">{{CurrentEntity.Entity.PracticeAddress3}}</p>
+                                    <p ng-show="CurrentEntity.Entity.PracticeCounty !== ''">{{CurrentEntity.Entity.PracticeCounty}}</p>
+                                    <p><span ng-show="CurrentEntity.Entity.PracticeCity !== ''">{{CurrentEntity.Entity.PracticeCity}}</span><span ng-show="CurrentEntity.Entity.PracticeState !== ''">, {{CurrentEntity.Entity.PracticeState}}</span> <span ng-show="CurrentEntity.Entity.PracticeZip !== ''">{{CurrentEntity.Entity.PracticeZip}}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Additional Details</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p ng-show="CurrentEntity.Entity.DEANumber !== ''">DEA #: {{CurrentEntity.Entity.DEANumber}}</p>
+                            <p ng-show="CurrentEntity.Entity.DEANumberExpirationDate !== ''">DEA Expiration: {{CurrentEntity.Entity.DEANumberExpirationDate}}</p>
+                            <p ng-show="CurrentEntity.Entity.PrescriptionLicenseNumber !== ''">Prescription License #:{{CurrentEntity.Entity.PrescriptionLicenseNumber}}</p>
+                            <p ng-show="CurrentEntity.Entity.PrescriptionLicenseNumberExpirationDate !== ''">Prescription License Expiration: {{CurrentEntity.Entity.PrescriptionLicenseNumberExpirationDate}}</p>
+                            <p ng-show="CurrentEntity.Entity.EIN !== ''">EIN: {{CurrentEntity.Entity.EIN}}</p>
+                            <p ng-show="CurrentEntity.Entity.MedicareUPIN !== ''">Medicare UPIN: {{CurrentEntity.Entity.MedicareUPIN}}</p>
+                            <p ng-show="CurrentEntity.Entity.CAQHID !== ''">CAQH ID: {{CurrentEntity.Entity.CAQHID}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p ng-show="CurrentEntity.Entity.TaxIDNumber !== ''">Tax ID #:{{CurrentEntity.Entity.TaxIDNumber}}</p>
+                            <p ng-show="CurrentEntity.Entity.TaxIDNumberExpirationDate !== ''">Tax ID Expiration: {{CurrentEntity.Entity.TaxIDNumberExpirationDate}}</p>
+                            <p ng-show="CurrentEntity.Entity.MeaningfulUse !== ''">Meaningful Use: {{CurrentEntity.Entity.MeaningfulUse}}</p>
+                            <p ng-show="CurrentEntity.Entity.PCMHStatus !== ''">PCMH Status: {{CurrentEntity.Entity.PCMHStatus}}</p>
+                            <p>Accepting New Patients: <i ng-show="CurrentEntity.Entity.AcceptingNewPatients === true" class="fa fa-check-square-o"></i><i ng-show="CurrentEntity.Entity.AcceptingNewPatients === false" class="fa fa-square-o"></i></p>
+                            <div ng-repeat="otherID in CurrentEntity.EntityOtherID">
+                                <p ng-show="otherID.IDNumber !== '' && otherID.Active == true">{{otherID.IDType}}: {{otherID.IDNumber}}</p>
+                            </div>
+
+                            <p ng-show="CurrentEntity.Entity.Role1 !== ''">Role: {{CurrentEntity.Entity.Role1}}</p>
+                            <p ng-show="CurrentEntity.Entity.Version1 !== ''">Version: {{CurrentEntity.Entity.Version1}}</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Extended Profile</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div ng-show="CurrentEntity.Taxonomy.length > 0">
+                                <h3>Taxonomy:</h3>
+                                <div ng-repeat="taxonomy in CurrentEntity.Taxonomy">
+                                    <p ng-show="taxonomy.Name1 !== '' && taxonomy.Active == true">{{taxonomy.Name1}}</p>
+                                </div>
+                            </div>
+
+                            <div ng-show="CurrentEntity.Payor.length > 0">
+                                <h3>Payor:</h3>
+                                <div ng-repeat="payor in CurrentEntity.Payor">
+                                    <p ng-show="payor.Name1 !== '' && payor.Active == true">{{payor.Name1}}</p>
+                                </div>
+                            </div>
+                            <div ng-show="CurrentEntity.Language.length > 0">
+                                <h3>Language:</h3>
+                                <div ng-repeat="language in CurrentEntity.Language">
+                                    <p ng-show="language.Name1 !== '' && language.Active == true">{{language.Name1}}</p>
+                                </div>
+                            </div>
+                            <div ng-show="CurrentEntity.Degree.length > 0">
+                                <h3>Degree:</h3>
+                                <div ng-repeat="degree in CurrentEntity.Degree">
+                                    <p ng-show="degree.Name1 !== '' && degree.Active == true">{{degree.Name1}}</p>
+                                </div>
+                            </div>
+                            <div ng-show="CurrentEntity.EntityLicense.length > 0">
+                                <h3>Licenses:</h3>
+                                <div ng-repeat="licenses in CurrentEntity.EntityLicense">
+                                    <p ng-show="licenses.LicenseNumber !== '' && licenses.Active == true">{{licenses.LicenseNumber}} <span ng-show="licenses.State !== ''">(State: {{licenses.State}})</span> <span ng-show="licenses.LicenseNumberExpirationDate !== ''"> Expires: {{licenses.LicenseNumberExpirationDate}}</span></p>
+                                </div>
+                            </div>
+                            <div ng-show="CurrentEntity.EntitySystem.length > 0">
+                                <h3>Systems:</h3>
+                                <div ng-repeat="system in CurrentEntity.EntitySystem">
+                                    <div ng-show="system.Name1 !== '' && system.Active == true">
+                                        Name: {{system.Name1}}
+                                        <p ng-show="system.InstalationDate !== ''">Instalation Date: {{system.InstalationDate}}</p>
+                                        <p ng-show="system.GoLiveDate !== ''">Go Live Date: {{system.GoLiveDate}}</p>
+                                        <p ng-show="system.DecomissionDate !== ''">Decomission Date: {{system.DecomissionDate}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+						My Connected Projects
+					</h3>
+                    <div class="tabbable" id="tabs-623933">
+                        <ul class="nav nav-tabs">
+                            <li>
+                                <a href="#panelOpenProjects" data-toggle="tab">Open Projects</a>
+                            </li>
+                            <li class="active">
+                                <a href="#panelArchivedProjects" data-toggle="tab">Archived Projects</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane" id="panelOpenProjects">
+                                <p>
+                                    Open Projects
+                                </p>
+                            </div>
+                            <div class="tab-pane active" id="panelArchivedProjects">
+                                <p>
+                                    Archived Projects
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Specialities and Services -->
+                    <div ng-show="CurrentEntity.Services.length > 0">
+                        <h3>Services:</h3>
+                        <div ng-repeat="service in CurrentEntity.Services">
+                            <p ng-show="service.Name1 !== '' && service.Active == true">{{service.Name1}}</p>
+                        </div>
+                    </div>
+                    <div ng-show="CurrentEntity.Speciality.length > 0">
+                        <h3>Speciality:</h3>
+                        <div ng-repeat="speciality in CurrentEntity.Speciality">
+                            <p ng-show="speciality.Name1 !== '' && speciality.Active == true">{{speciality.Name1}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Connections</h3>
+                    <div ng-repeat="(key, value) in CurrentEntity.EntityConnection | groupBy: 'EntityType' | orderBy 'EntityType ASC'">
+                        <h3>{{ key }}</h3>
+                        <li ng-repeat="connection in value">
+                            {{ connection.ToEntityFullName }}
+                            <small>{{connection.FromEntityFullName}} {{connection.ConnectionTypeName}} {{connection.ToEntityFullName}}</small>
+                        </li>
+                    </div>
+                    <button type="button" class="btn btn-default">
+                        View Relationship Map
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

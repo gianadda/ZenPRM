@@ -1,0 +1,61 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-home"></i> Dashboard</h1>
+    <button class="btn btn-primary header-action" ui-sref="site.Import"><i class="fa fa-cloud-upload"></i> Import Resources</button>
+</header>
+
+<div id="Dashboard" class="container-fluid">
+
+    <!-- Dials -->
+    <div class="panel panel-primary" id="panel-Measures">
+        <div class="panel-heading">
+            <h2><i class="fa fa-pie-chart" aria-hidden="true"></i> Key Performance Measures</h2>
+            <div class="heading-form heading-form-sm">
+                <button type="button" class="btn btn-primary btn-sm" ng-click="ToggleMeasures()">
+                    <span ng-if="!MeasuresToggled"><i class="fa fa-eye" aria-hidden="true"></i> View All Measures</span>
+                    <span ng-if="MeasuresToggled"><i class="fa fa-eye-slash" aria-hidden="true"></i> View Dashboard Measures</span>
+                </button>
+                <zen-dial-modal reload-dials="GetMeasuresData"></zen-dial-modal>
+            </div>
+        </div>
+        <div class="panel-body loader">
+            <div class="row" ng-if="MeasuresData.length > 0">
+                <div zen-dial measure="measure" reload-dials="GetMeasuresData" allow-edit="{{true}}" dial-click="MeasureClick" dial-class="{{'col-sm-6 col-md-3'}}" ng-repeat="measure in MeasuresData"></div>
+            </div>
+
+            <div class="alert alert-info text-center" ng-if="MeasuresData.length == 0 && !LoadingMeasures">
+                <h3>Get Started With Measures! <i class="fa fa-smile-o" aria-hidden="true"></i></h3>
+                <p>Key Performance Measures allow you to report on specific Project Questions and gain insights right on the Dashboard. Click the <b>New Measure</b> button above to create your first measure!</p>
+            </div>
+
+            <div class="loading" ng-show="LoadingMeasures">
+                <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+            </div>
+        </div>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+
+
+    <!-- Projects -->
+    <div class="panel panel-primary" id="panel-Projects">
+        <div class="panel-heading">
+            <h2><i class="fa fa-briefcase"></i> My Projects <a ui-sref="site.Projects({Tab: 'archivedprojects'})"><small>Archived Projects</small></a></h2>
+        </div>
+        <div class="panel-body loader clearfix">
+            <div class="row">
+                <div class="col-md-6" ng-repeat="project in EntityProject | filter: {Archived: false}">
+                    <zen-project project="project" show-archive="false" show-bookmark="true" admin-mode="true"></zen-project>
+                </div>
+                <!-- end .col -->
+            </div>
+            <!-- end .row -->
+            <div class="loading" ng-show="LoadingProjects">
+                <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+            </div>
+        </div>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+
+</div>
+<!-- end container -->

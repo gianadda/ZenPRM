@@ -1,0 +1,1077 @@
+<header id="Title" class="clearfix">
+	<h1><i class="fa fa-paint-brush"></i> Style Guide</h1>
+
+	<ul class="nav nav-tabs">
+		<li><a ui-sref="site.styleguide({'#':'sg-CoreStyles'})">Core Styles</a>
+			<ul>
+				<li><a ui-sref="site.styleguide({'#':'sg-colors'})">Colors</a></li>
+				<li><a ui-sref="site.styleguide({'#':'sg-fonts'})">Fonts</a></li>
+				<li><a ui-sref="site.styleguide({'#':'sg-icons'})">Icons</a></li>
+				<li><a ui-sref="site.styleguide({'#':'sg-zindex'})">Z-Index</a></li>
+			</ul>
+		</li>
+		<li><a ui-sref="site.styleguide({'#':'sg-BootstrapElements'})">Bootstrap Elements</a>
+			<ul>
+				<li><a ui-sref="site.styleguide({'#':'sg-alerts'})">Alerts</a></li>
+				<li><a ui-sref="site.styleguide({'#':'sg-buttons'})">Buttons</a></li>
+				<li><a ui-sref="site.styleguide({'#':'sg-progressbars'})">Progress Bars</a></li>
+				<li><a ui-sref="site.styleguide({'#':'sg-panels'})">Panels</a></li>
+			</ul>
+		</li>
+		<li><a ui-sref="site.styleguide({'#':'sg-CustomElements'})">Custom Elements</a>
+			<ul>
+				<li><a ui-sref="site.styleguide({'#':'sg-avatars'})">Avatars</a></li>
+				<li><a ui-sref="site.styleguide({'#':'sg-dropzones'})">Drop Zones</a></li>
+				<li><a ui-sref="site.styleguide({'#':'sg-linklists'})">Link Lists</a></li>
+			</ul>
+		</li>
+	</ul>
+</header>
+
+<div class="container-fluid">
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h2 id="sg-CoreStyles">Core Styles</h2>
+		</div>
+		<div class="panel-body">
+			<section id="sg-colors">
+				<h3 class="sub-title margtop"><i class="fa fa-bookmark"></i> Colors</h3>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Color</th>
+							<th>SASS Variable</th>
+							<th>Hex</th>
+							<th>Primary Uses</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #4d5177;"></div></td>
+							<td class="nowrap">$brand-purple</td>
+							<td>#4d5177</td>
+							<td>Headings, links, navigation bar</td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #5d8ca9;"></div></td>
+							<td class="nowrap">$brand-blue</td>
+							<td>#5d8ca9</td>
+							<td>Link hover state, avatars, <code>.panel-primary</code>, tag controls</td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #93d3ea;"></div></td>
+							<td class="nowrap">$brand-sky</td>
+							<td>#93d3ea</td>
+							<td><code>.alert-info</code></td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #67c0ce;"></div></td>
+							<td class="nowrap">$brand-teal</td>
+							<td>#67c0ce</td>
+							<td><code>.btn-primary</code>, navigation selected state, page title icons, drop zones, progress bars, <code>.panel-default</code> (lightened)</td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #4ea66a;"></div></td>
+							<td class="nowrap">$brand-green</td>
+							<td>#4ea66a</td>
+							<td><code>.*-success</code>, completed questions, sorted column header</td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #94c371;"></div></td>
+							<td class="nowrap">$brand-lime</td>
+							<td>#94c371</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #e9cc33;"></div></td>
+							<td class="nowrap">$brand-yellow</td>
+							<td>#e9cc33</td>
+							<td>Stars</td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #e29e0a;"></div></td>
+							<td class="nowrap">$brand-orange</td>
+							<td>#e29e0a</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #e97630;"></div></td>
+							<td class="nowrap">$brand-burnt</td>
+							<td>#e97630</td>
+							<td>Code</td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #af4723;"></div></td>
+							<td class="nowrap">$brand-rust</td>
+							<td>#af4723</td>
+							<td>Code</td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #ce605a;"></div></td>
+							<td class="nowrap">$brand-red</td>
+							<td>#ce605a</td>
+							<td><code>.*-danger</code>, To-Do count</td>
+						</tr>
+						<tr>
+							<td><div style="height:20px; width:20px; background-color: #d47ba7;"></div></td>
+							<td class="nowrap">$brand-pink</td>
+							<td>#d47ba7</td>
+							<td>Navigation hover state</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section id="sg-fonts">
+				<h3 class="sub-title"><i class="fa fa-bookmark"></i> Fonts</h3>
+				<h4>Body Font: Source Sans Pro</h4>
+				<p><b>Source Sans Pro</b> is a Google Font. It should be used for all text by default, excluding some headings.</p>
+				<pre>font-family: 'Source Sans Pro', 'Helvetica', 'Arial', serif;</pre>
+				<h4>Icons</h4>
+				<p>All icons should be drawn from the <a href="http://fontawesome.io" target="_blank">Font Awesome</a> icon font library. For consistency, please avoid using Bootstrap's glyphicons.</p>
+			</section>
+
+			<section id="sg-icons">
+				<h3 class="sub-title"><i class="fa fa-bookmark"></i> Icons</h3>
+				<p>All the <a href="http://fontawesome.com" target="_blank">FontAwesome</a> icons that we use throughout ZenPRM.</p>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Icon</th>
+							<th>Class Name</th>
+							<th>Symbology</th>
+							<th>Location</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><i class="fa fa-archive"></i></td>
+							<td><code>.fa-archive</code></td>
+							<td>Archive</td>
+							<td>Projects</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-arrow-down"></i></td>
+							<td><code>.fa-arrow-down</code></td>
+							<td>Sort down</td>
+							<td>Project Questions > options</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-arrow-left"></i></td>
+							<td><code>.fa-arrow-left</code></td>
+							<td>Previous</td>
+							<td>Project Participants</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-arrow-right"></i></td>
+							<td><code>.fa-arrow-right</code></td>
+							<td>Next</td>
+							<td>Project Participants</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-arrow-up"></i></td>
+							<td><code>.fa-arrow-up</code></td>
+							<td>Sort up</td>
+							<td>Project Questions > options</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-asterisk"></i></td>
+							<td><code>.fa-asterisk</code></td>
+							<td>Project questions/answers</td>
+							<td>Project Participants, Project nav</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-ban"></i></td>
+							<td><code>.fa-ban</code></td>
+							<td>Clear</td>
+							<td>Resources > search, filter modal, Project answers</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-bar-chart"></i></td>
+							<td><code>.fa-bar-chart</code></td>
+							<td>Insights</td>
+							<td>Resources nav</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-bars"></i></td>
+							<td><code>.fa-bars</code></td>
+							<td>Actions</td>
+							<td>Profile menu button, Resources menu button</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-bars"></i></td>
+							<td><code>.fa-bars</code></td>
+							<td>Reorder</td>
+							<td>Project Questions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-book"></i></td>
+							<td><code>.fa-book</code></td>
+							<td>Project details</td>
+							<td>Project nav, page title</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-briefcase"></i></td>
+							<td><code>.fa-briefcase</code></td>
+							<td>Projects</td>
+							<td>Nav, page title</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-calendar"></i></td>
+							<td><code>.fa-calendar</code></td>
+							<td>Datepicker</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-check-circle"></i></td>
+							<td><code>.fa-check-circle</code></td>
+							<td>Registered</td>
+							<td>Project Participants, Profile title</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-check-circle"></i></td>
+							<td><code>.fa-check-circle</code></td>
+							<td>Mark as notify</td>
+							<td>Edit profile</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-check-circle-o"></i></td>
+							<td><code>.fa-check-circle-o</code></td>
+							<td>Answer submitted, To-Do complete</td>
+							<td>Project, To-Do</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-check-square-o"></i></td>
+							<td><code>.fa-check-square-o</code></td>
+							<td>Deselect</td>
+							<td>Resources > Deselect all, Project > Deselect all</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-cloud-upload"></i></td>
+							<td><code>.fa-cloud-upload</code></td>
+							<td>Import</td>
+							<td>Resources > Actions menu</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-comments-o"></i></td>
+							<td><code>.fa-comments-o</code></td>
+							<td>Interactions</td>
+							<td>Profile nav, page title</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-download"></i></td>
+							<td><code>.fa-download</code></td>
+							<td>Export</td>
+							<td>Resources > Actions menu</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-envelope-o"></i></td>
+							<td><code>.fa-envelope-o</code></td>
+							<td>Email</td>
+							<td>System-wide</td>
+						</tr>
+						<tr class="bg-danger">
+							<td><i class="fa fa-envelope-o"></i></td>
+							<td><code>.fa-envelope-o</code></td>
+							<td>Mailing address</td>
+							<td>Profile</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-exclamation-triangle"></i></td>
+							<td><code>.fa-exclamation-triangle</code></td>
+							<td>Warning</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-external-link-square"></i></td>
+							<td><code>.fa-external-link-square</code></td>
+							<td>Concept: link to more</td>
+							<td>Demographics</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-fax"></i></td>
+							<td><code>.fa-fax</code></td>
+							<td>Fax</td>
+							<td>Profile</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-file-archive-o"></i></td>
+							<td><code>.fa-file-archive-o</code></td>
+							<td>Generate export file</td>
+							<td>Project detail</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-files-o"></i></td>
+							<td><code>.fa-files-o</code></td>
+							<td>Repository</td>
+							<td>Nav, page title</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-filter"></i></td>
+							<td><code>.fa-filter</code></td>
+							<td>Filter</td>
+							<td>Resources > search bar</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-floppy-o"></i></td>
+							<td><code>.fa-floppy-o</code></td>
+							<td>Save</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-globe"></i></td>
+							<td><code>.fa-globe</code></td>
+							<td>Global Resources</td>
+							<td>Nav, page title</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-heart"></i></td>
+							<td><code>.fa-heart</code></td>
+							<td>Improving Patient Experince (interaction type)</td>
+							<td>Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-history"></i></td>
+							<td><code>.fa-history</code></td>
+							<td>Audit</td>
+							<td>Profile nav, page title</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-history"></i></td>
+							<td><code>.fa-history</code></td>
+							<td>Activity</td>
+							<td>Dashboard</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-home"></i></td>
+							<td><code>.fa-home</code></td>
+							<td>Home (Dasboard or Profile)</td>
+							<td>Nav, page title</td>
+						</tr>
+						<tr class="bg-danger">
+							<td><i class="fa fa-home"></i></td>
+							<td><code>.fa-home</code></td>
+							<td>Primary address</td>
+							<td>Profile</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-hospital-o"></i></td>
+							<td><code>.fa-hospital-o</code></td>
+							<td>Address, pracitce address</td>
+							<td>Profile</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-info-circle"></i></td>
+							<td><code>.fa-info-circle</code></td>
+							<td>Informational tooltip</td>
+							<td>Profile</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-line-chart"></i></td>
+							<td><code>.fa-line-chart</code></td>
+							<td>Project overview</td>
+							<td>Project nav</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-list-ol"></i></td>
+							<td><code>.fa-list-ol</code></td>
+							<td>To-Do</td>
+							<td>Nav, page title, Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-lock"></i></td>
+							<td><code>.fa-lock</code></td>
+							<td>Private project</td>
+							<td>Dashboard, Projects</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-long-arrow-left"></i></td>
+							<td><code>.fa-long-arrow-left</code></td>
+							<td>Back</td>
+							<td>Maintence Forms</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-map-marker"></i></td>
+							<td><code>.fa-map-marker</code></td>
+							<td>Geographic map</td>
+							<td>Resources nav</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-mars"></i></td>
+							<td><code>.fa-mars</code></td>
+							<td>Male</td>
+							<td>Demographics</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-medkit"></i></td>
+							<td><code>.fa-medkit</code></td>
+							<td>Care Coordination (interaction type)</td>
+							<td>Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-money"></i></td>
+							<td><code>.fa-money</code></td>
+							<td>VBP (interaction type)</td>
+							<td>Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-neuter"></i></td>
+							<td><code>.fa-neuter</code></td>
+							<td>N/A (gender)</td>
+							<td>Demographics</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-pencil"></i></td>
+							<td><code>.fa-pencil</code></td>
+							<td>Edit</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-phone"></i></td>
+							<td><code>.fa-phone</code></td>
+							<td>Phone</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-phone"></i></td>
+							<td><code>.fa-phone</code></td>
+							<td>Phone Call (interaction type)</td>
+							<td>Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-pie-chart"></i></td>
+							<td><code>.fa-pie-chart</code></td>
+							<td>Demographics</td>
+							<td>Resources nav</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-plus"></i></td>
+							<td><code>.fa-plus</code></td>
+							<td>Add</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-question-circle"></i></td>
+							<td><code>.fa-question-circle</code></td>
+							<td>Help</td>
+							<td>Stickers</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-refresh"></i></td>
+							<td><code>.fa-refresh</code></td>
+							<td>Re-Admissions (interaction type)</td>
+							<td>Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-search"></i></td>
+							<td><code>.fa-search</code></td>
+							<td>Search</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-sign-in"></i></td>
+							<td><code>.fa-sign-in</code></td>
+							<td>Switch context</td>
+							<td>Settings menu</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-sign-out"></i></td>
+							<td><code>.fa-sign-out</code></td>
+							<td>Sign out</td>
+							<td>Settings menu</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-sitemap"></i></td>
+							<td><code>.fa-sitemap</code></td>
+							<td>Network Map, Connections</td>
+							<td>Resources nav, profile nav, page title, Save Connection button</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-spinner"></i></td>
+							<td><code>.fa-spinner</code></td>
+							<td>Loading</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-square-o"></i></td>
+							<td><code>.fa-square-o</code></td>
+							<td>Select</td>
+							<td>Resources > select visible, Project > deselect all</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-star"></i></td>
+							<td><code>.fa-star</code></td>
+							<td>Quick Hits</td>
+							<td>Dashboard</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-star"></i></td>
+							<td><code>.fa-star</code></td>
+							<td>Favorited interactions</td>
+							<td>Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-stethoscope"></i></td>
+							<td><code>.fa-stethoscope</code></td>
+							<td>Specialty</td>
+							<td>Profile</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-th"></i></td>
+							<td><code>.fa-th</code></td>
+							<td>Compact View</td>
+							<td>Resources</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-th-large"></i></td>
+							<td><code>.fa-th-large</code></td>
+							<td>Full View</td>
+							<td>Resources</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-times"></i></td>
+							<td><code>.fa-times</code></td>
+							<td>Close, remove</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-trash-o"></i></td>
+							<td><code>.fa-trash-o</code></td>
+							<td>Delete</td>
+							<td>System-wide</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-unlock-alt"></i></td>
+							<td><code>.fa-unlock-alt</code></td>
+							<td>Change password</td>
+							<td>Settings menu</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-usd"></i></td>
+							<td><code>.fa-usd</code></td>
+							<td>Contract Discussions (interaction type)</td>
+							<td>Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-user"></i></td>
+							<td><code>.fa-user</code></td>
+							<td>Current context, person</td>
+							<td>Stickers, user icons</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-user-md"></i></td>
+							<td><code>.fa-user-md</code></td>
+							<td>Concept: a generic resource</td>
+							<td>Settings menu, Profile, My Resources, Project Participants</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-user-plus"></i></td>
+							<td><code>.fa-user-plus</code></td>
+							<td>Add delegate</td>
+							<td>Delegates</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-user-plus"></i></td>
+							<td><code>.fa-user-plus</code></td>
+							<td>New Membership (interaction type)</td>
+							<td>Interactions</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-users"></i></td>
+							<td><code>.fa-users</code></td>
+							<td>Delegates</td>
+							<td>Nav, page title</td>
+						</tr>
+						<tr>
+							<td><i class="fa fa-venus"></i></td>
+							<td><code>.fa-venus</code></td>
+							<td>Female</td>
+							<td>Demographics</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section id="sg-zindex">
+				<h3 class="sub-title"><i class="fa fa-bookmark"></i> Z-Index</h3>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Value</th>
+							<th>Element</th>
+							<th>Notes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>100</td>
+							<td><code>.project-progress > .done</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>200</td>
+							<td><code>.title > .btn/.btn-group</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>400</td>
+							<td><code>.progress-marker > .num</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>400</td>
+							<td><code>.dropzone > .dropicon</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>402</td>
+							<td><code>.dropzone > .text</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>404</td>
+							<td><code>.dropzone > .loading</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>800</td>
+							<td><code>.bar-chart > .tip</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>800</td>
+							<td><code>.unmapped</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>850</td>
+							<td><code>.map-tooltip</code></td>
+							<td>Network map tooltip</td>
+						</tr>
+						<tr>
+							<td>900</td>
+							<td><code>.loader > .loading</code></td>
+							<td>In-element loading icon</td>
+						</tr>
+						<tr>
+							<td>900</td>
+							<td><code>.loader > .loading-sm</code></td>
+							<td>In-element loading icon</td>
+						</tr>
+						<tr>
+							<td>900</td>
+							<td><code>.as-sortable-dragging</code></td>
+							<td>Project Questions / To-Do List</td>
+						</tr>
+						<tr>
+							<td>999</td>
+							<td><code>._pendo-badge_</code></td>
+							<td>Make sure Pendo stuff appears below modals and loader</td>
+						</tr>
+						<tr>
+							<td>1200</td>
+							<td><code>.title</code></td>
+							<td>Page title</td>
+						</tr>
+						<tr>
+							<td>1700</td>
+							<td><code>.loading</code></td>
+							<td>Full screen loader</td>
+						</tr>
+						<tr>
+							<td>1800</td>
+							<td><code>#nav</code></td>
+							<td>Needs to appear over loader and under modal</td>
+						</tr>
+						<tr>
+							<td>1900</td>
+							<td><code>.modal-backdrop</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>1950</td>
+							<td><code>.modal</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>1999</td>
+							<td><code>.sticky-btn</code></td>
+							<td>Needs to be above modal layer</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</div>
+	</div>
+	<!-- end .panel -->
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h2 id="sg-BootstrapElements">Bootstrap Elements</h2>
+		</div>
+		<div class="panel-body">
+			<section id="sg-alerts">
+				<h3 class="sub-title margtop"><i class="fa fa-bookmark"></i> Alerts</h3>
+				<p class="alert alert-success">
+					Alert Primary
+				</p>
+				<p class="alert alert-info">
+					Alert Info
+				</p>
+				<p class="alert alert-warning">
+					Alert Warning
+				</p>
+				<p class="alert alert-danger">
+					Alert Danger
+				</p>
+			</section>
+
+			<section id="sg-buttons">
+				<h3 class="sub-title"><i class="fa fa-bookmark"></i> Buttons</h3>
+				<h4>Default Size</h4>
+				<div class="btn-toolbar">
+					<button class="btn btn-default" type="button">Default</button>
+					<button class="btn btn-primary" type="button">Primary</button>
+					<button class="btn btn-success" type="button">Success</button>
+					<button class="btn btn-info" type="button">Info</button>
+					<button class="btn btn-warning" type="button">Warning</button>
+					<button class="btn btn-danger" type="button">Danger</button>
+					<button class="btn btn-link" type="button">Link</button>
+				</div>
+				<h4>Large</h4>
+				<div class="btn-toolbar">
+					<button class="btn btn-lg btn-default" type="button">Default</button>
+					<button class="btn btn-lg btn-primary" type="button">Primary</button>
+					<button class="btn btn-lg btn-success" type="button">Success</button>
+					<button class="btn btn-lg btn-info" type="button">Info</button>
+					<button class="btn btn-lg btn-warning" type="button">Warning</button>
+					<button class="btn btn-lg btn-danger" type="button">Danger</button>
+					<button class="btn btn-lg btn-link" type="button">Link</button>
+				</div>
+				<h4>Small</h4>
+				<div class="btn-toolbar">
+					<button class="btn btn-sm btn-default" type="button">Default</button>
+					<button class="btn btn-sm btn-primary" type="button">Primary</button>
+					<button class="btn btn-sm btn-success" type="button">Success</button>
+					<button class="btn btn-sm btn-info" type="button">Info</button>
+					<button class="btn btn-sm btn-warning" type="button">Warning</button>
+					<button class="btn btn-sm btn-danger" type="button">Danger</button>
+					<button class="btn btn-sm btn-link" type="button">Link</button>
+				</div>
+				<h4>Disabled</h4>
+				<div class="btn-toolbar">
+					<button class="btn btn-default" type="button" disabled>Default</button>
+					<button class="btn btn-primary" type="button" disabled>Primary</button>
+					<button class="btn btn-success" type="button" disabled>Success</button>
+					<button class="btn btn-info" type="button" disabled>Info</button>
+					<button class="btn btn-warning" type="button" disabled>Warning</button>
+					<button class="btn btn-danger" type="button" disabled>Danger</button>
+					<button class="btn btn-link" type="button" disabled>Link</button>
+				</div>
+				<h4>Links</h4>
+				<div class="btn-toolbar">
+					<a href="#" class="btn btn-default">Default</a>
+					<a href="#" class="btn btn-primary">Primary</a>
+					<a href="#" class="btn btn-success">Success</a>
+					<a href="#" class="btn btn-info">Info</a>
+					<a href="#" class="btn btn-warning">Warning</a>
+					<a href="#" class="btn btn-danger">Danger</a>
+					<a href="#" class="btn btn-link">Link</a>
+				</div>
+				<h4>Common Buttons</h4>
+				<div class="btn-toolbar">
+					<button class="btn btn-success" type="button"><i class="fa fa-floppy-o"></i> Save</button>
+					<button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
+					<button class="btn btn-primary" type="button"><i class="fa fa-pencil"></i> Edit</button>
+					<button class="btn btn-primary" type="button">Submit</button>
+					<button class="btn btn-default" type="button"><i class="fa fa-ban"></i> Cancel</button>
+					<button class="btn btn-default" type="button"><i class="fa fa-archive"></i> Archive</button>
+					<button class="btn btn-warning" type="button"><i class="fa fa-times"></i> Remove</button>
+					<button class="btn btn-danger" type="button"><i class="fa fa-trash-o"></i> Delete</button>
+				</div>
+			</section>
+
+			<section id="sg-progressbars">
+				<h3 class="sub-title"><i class="fa fa-bookmark"></i> Progress Bars</h3>
+				<h4>Bootstrap</h4>
+				<ul>
+					<li>We use the standard Bootstrap progress bar on the Project Participants screen.</li>
+					<li>When you write in the percentage, make sure you use the <code>ng-style</code> attribute for compatability in IE.</li>
+					<li>Progress bars have a minimum width of 30%.</li>
+				</ul>
+				<h5>Examples</h5>
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': '60%'}">
+						60%
+					</div>
+				</div>
+				<br>
+				<div class="progress">
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': '100%'}">
+						100%
+					</div>
+				</div>
+				<br>
+				<div class="progress">
+					<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': '80%'}">
+						80%
+					</div>
+				</div>
+				<br>
+				<div class="progress">
+					<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': '40%'}">
+						40%
+					</div>
+				</div>
+				<br>
+				<div class="progress">
+					<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': '0%'}">
+						0%
+					</div>
+				</div>
+				<h6>Striped</h6>
+				<div class="progress">
+					<div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': '0%'}">
+						0%
+					</div>
+				</div>
+				<h4>Custom</h4>
+				<p>Used on the profile screen.</p>
+				<h2 class="progress-marker">
+					<span class="num">75%</span>
+					<span class="done" ng-style="{'height': '75%'}"></span>
+				</h2>
+				<p>Label text</p>
+			</section>
+
+			<section id="sg-panels">
+				<h3 class="sub-title"><i class="fa fa-bookmark"></i> Panels</h3>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h2>Default</h2>
+						<button class="btn btn-primary heading-form" type="button">Heading Button</button>
+					</div>
+					<div class="panel-body">
+						This is the panel body. You can put a <code>.table</code> in a panel as well. It can be inside the <code>.panel-body</code>, after, or instead of.
+					</div>
+					<table class="table">
+						<tr>
+							<th>Col 1</th>
+							<th>Col 2</th>
+							<th>Col 3</th>
+							<th>Col 4</th>
+						</tr>
+						<tr>
+							<td>Data 1</td>
+							<td>Data 2</td>
+							<td>Data 3</td>
+							<td>Data 4</td>
+						</tr>
+						<tr>
+							<td>Data 1</td>
+							<td>Data 2</td>
+							<td>Data 3</td>
+							<td>Data 4</td>
+						</tr>
+						<tr>
+							<td>Data 1</td>
+							<td>Data 2</td>
+							<td>Data 3</td>
+							<td>Data 4</td>
+						</tr>
+					</table>
+					<div class="panel-footer text-right">
+						<button class="btn btn-primary" type="button">Button</button>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h2>Primary (with cols)</h2>
+						<div class="input-group heading-form">
+							<span class="input-group-addon"><i class="fa fa-search"></i></span>
+							<input class="form-control" type="text">
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-4">
+								Col 1
+							</div>
+							<div class="col-sm-4">
+								Col 2
+							</div>
+							<div class="col-sm-4">
+								Col 3
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<h2>Success</h2>
+						<div class="form-inline heading-form">
+							<label for="AddText">Add Something:</label>
+							<input class="form-control" id="AddText" type="text">
+							<button class="btn btn-success" type="button">Add</button>
+						</div>
+					</div>
+					<div class="panel-body">
+						Content
+					</div>
+				</div>
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h2>Info (Multiple bodies)</h2>
+						<div class="btn-group heading-form">
+							<button class="btn btn-info" type="button">Button 1</button>
+							<button class="btn btn-info" type="button">Button 2</button>
+						</div>
+					</div>
+					<div class="panel-body">
+						Content 1
+					</div>
+					<div class="panel-body">
+						Content 2
+					</div>
+					<div class="panel-body">
+						Content 3
+					</div>
+				</div>
+				<div class="panel panel-warning">
+					<div class="panel-heading">
+						<h2>Warning (List style)</h2>
+					</div>
+					<ul class="panel-body">
+						<li>List item 1</li>
+						<li>List item 2</li>
+						<li>List item 3</li>
+					</ul>
+				</div>
+				<div class="panel panel-danger">
+					<div class="panel-heading">
+						<h2>Danger (List style)</h2>
+					</div>
+					<ul class="panel-body">
+						<li class="sub-head">
+							<h3>Subhead</h3>
+						</li>
+						<li class="row">
+							<div class="col-sm-6">List item 1 (Col 1)</div>
+							<div class="col-sm-4">Col 2</div>
+							<div class="col-sm-2 text-right">
+								<button class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+							</div>
+						</li>
+						<li class="row">
+							<div class="col-sm-6">List item 2 (Col 1)</div>
+							<div class="col-sm-4">Col 2</div>
+							<div class="col-sm-2 text-right">
+								<button class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+							</div>
+						</li>
+						<li class="row">
+							<div class="col-sm-6">List item 3 (Col 1)</div>
+							<div class="col-sm-4">Col 2</div>
+							<div class="col-sm-2 text-right">
+								<button class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</section>
+
+		</div>
+	</div>
+	<!-- end .panel -->
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h2 id="sg-CustomElements">Custom Elements</h2>
+		</div>
+		<div class="panel-body">
+			<section id="sg-avatars">
+				<h3 class="sub-title margtop"><i class="fa fa-bookmark"></i> Avatars</h3>
+				<p>Avatars can be used anywhere that you have access to an Entity's profile image or type. A conditional statement should be used to draw the image if available or a font icon if it's not.</p>
+				<div class="row">
+					<div class="col-md-3">
+						<h4>Image Only</h4>
+						<span class="user-icon img" ng-style="{'background-image': 'url(/assets/img/profile.png)'}"></span>
+					</div>
+					<div class="col-md-3">
+						<h4>Provider Icon w/ Text</h4>
+						<span class="user-icon"><i class="fa fa-user-md"></i></span> Username
+					</div>
+					<div class="col-md-3">
+						<h4>Org Icon w/ Username</h4>
+						<a href="#" class="user-link">
+							<span class="user-icon"><i class="fa fa-building-o"></i></span><span class="link-text">Username</span>
+						</a>
+					</div>
+					<div class="col-md-3">
+						<h4>Button</h4>
+						<a class="user-btn">
+							<span class="user-icon"><i class="fa fa-user-md"></i></span>
+							<span>Username</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section id="sg-dropzones">
+				<h3 class="sub-title"><i class="fa fa-bookmark"></i> Drop Zones</h3>
+				<p>Drop zones are intended to be used for drag and drop controls.</p>
+				<div class="row">
+					<div class="col-md-4">
+						<h4>Default Style</h4>
+						<div class="dropzone">
+							<i class="fa fa-cloud-upload dropicon"></i>
+							<div class="text">
+								<h2>Optional Text</h2>
+								<p>Add optional text here</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<h4>Loading</h4>
+						<div class="dropzone">
+							<div class="loading">
+								<i class="fa fa-spinner fa-pulse"></i>
+							</div>
+							<div class="dropicon">
+								<i class="fa fa-cloud-upload"></i>
+							</div>
+							<div class="text">
+								<h2>Optional Text</h2>
+								<p>Add optional text here</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<h4>Complete</h4>
+						<div class="dropzone complete">
+							<i class="fa fa-cloud-upload dropicon"></i>
+							<div class="text">
+								<h2>Optional Text</h2>
+								<p>Add optional text here</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section id="sg-linklists">
+				<h3 class="sub-title"><i class="fa fa-bookmark"></i> Link Lists</h3>
+				<p>Used on Profile for connections, etc.</p>
+				<ul class="link-list">
+					<li><a href="#">Link item 1</a></li>
+					<li><a href="#">Link item 2</a></li>
+					<li><a href="#">Link item 3</a></li>
+				</ul>
+			</section>
+		</div>
+	</div>
+	<!-- end .panel -->
+
+</div>
+<!-- end .container -->

@@ -1,0 +1,52 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-briefcase"></i> Projects</h1>
+
+    <button type="button" class="btn btn-primary header-action" ng-click="addProject()">
+        <i class="fa fa-plus"></i> Add Project
+    </button>
+</header>
+<div class="container-fluid" id="Projects">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="input-group">
+                <label class="input-group-addon" for="ProviderFilter"><i class="fa fa-search"></i></label>
+                <input type="text" class="form-control input-sm" ng-model="searchFilter" id="ProjectFilter" placeholder="Search for a project...">
+            </div>
+        </div>
+        <ul class="nav nav-tabs" ng-class="{'toggled': toggleMenu == true}">
+            <li ng-class="{'active': currentTab == 'open'}">
+                <a ng-click="currentTab = 'open'"><i class="fa fa-folder-open" aria-hidden="true"></i> Open Projects</a>
+            </li>
+            <li ng-class="{'active': currentTab == 'archive'}">
+                <a ng-show="(EntityProject | filter: {Archived: true}).length > 0" ng-click="currentTab = 'archive'"><i class="fa fa-archive" aria-hidden="true"></i> Archived Projects</a>
+                <span ng-show="(EntityProject | filter: {Archived: true}).length == 0"><i class="fa fa-archive"></i> Archived Projects</span>
+            </li>
+        </ul>
+        <div class="panel-body Projects">
+
+            <!-- Open Projects -->
+            <div class="row" ng-if="(EntityProject | filter: {Archived: false}).length > 0" ng-show="currentTab == 'open'">
+                <div class="col-md-6" ng-repeat="project in EntityProject | filter: {Archived: false} | filter: searchFilter">
+                    <zen-project project="project" show-archive="true" show-bookmark="true" admin-mode="true" reload-projects="reinit"></zen-project>
+                </div>
+            </div>
+
+            <!-- Archived Projects -->
+            <div class="row" ng-if="(EntityProject | filter: {Archived: true}).length > 0" ng-show="currentTab == 'archive'">
+                <div class="col-md-6" ng-repeat="project in EntityProject | filter: {Archived: true} | filter: searchFilter">
+                    <zen-project project="project" show-reactivate="true" show-bookmark="true" admin-mode="true" reload-projects="reinit"></zen-project>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end .panel -->
+
+</div>
+<!-- end .container -->
+
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

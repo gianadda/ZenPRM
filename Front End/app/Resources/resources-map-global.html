@@ -1,0 +1,22 @@
+<!-- Search Results -->
+<div id="GeoMap" class="loader">
+    <div class="unmapped" ng-show="UnmapableResourcesCount > 0">
+        <a ng-click="FindUnMapped()"><i class="fa fa-info-circle"></i> {{UnmapableResourcesCount}} resources were not mapped due to insufficient data</a>
+    </div>
+
+    <div id="LoadingStatus" ng-hide="RecordsLoadedSoFar == searchResultsTotal">
+        <div class="loading-bar" ng-hide="TotalNumberOfPagesNeeded <= TotalNumberOfPagesLoadedSoFar">
+            <div ng-style="{'width': drawComplete()}"> 
+                <b>{{drawComplete()}}</b> ({{RecordsLoadedSoFar}} of {{searchResultsTotal}} loaded) 
+                <a class="cancel-btn" ng-click="CancelSearch=true;"><i class="fa fa-times"></i> Stop Search</a>
+            </div>
+        </div>
+    </div>
+    
+    <div id="map" style="height: 500px"></div>
+    
+    <div class="loading" ng-show="loading">
+        <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+    </div>
+</div>
+<!-- end #SearchResults -->

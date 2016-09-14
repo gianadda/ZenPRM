@@ -1,0 +1,103 @@
+<div id="BrandBar">
+    <img src="assets/img/template/logo.png" height="60" alt="ZenPRM">
+</div>
+<div class="container" id="OpenRegistration">
+    
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h1>{{project.Name1}} Registration</h1>
+        </div>
+        <div class="panel-body">
+            
+            <div class="alert alert-info" ng-if="project">
+                <b>Thank you for participating in {{project.Customer}}'s {{project.Name1}}!</b> In order to participate, you are required to register or sign in.
+            </div>
+
+            <h2>Continue with social account</h2>
+            <p>If you are new to ZenPRM, you can register with a social account below. If you have previously registered with a social account, just click the appropriate button below to continue.</p>
+
+            <div class="row social-btns">
+                <div class="col-sm-6 col-lg-3">
+                    <a class="social-btn facebook" ng-href=".auth/login/facebook?post_login_redirect_url=/api/oauth/{{projectGUID}}/redirect"><i class="fa fa-facebook-official" aria-hidden="true"></i> Connect with Facebook</a>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <a class="social-btn google" ng-href=".auth/login/google?post_login_redirect_url=/api/oauth/{{projectGUID}}/redirect"><i class="fa fa-google" aria-hidden="true"></i> Connect with Google</a>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <a class="social-btn linkedin" ng-href=".auth/login/aad?post_login_redirect_url=/api/oauth/{{projectGUID}}/redirect"><i class="fa fa-linkedin" aria-hidden="true"></i> Connect with LinkedIn</a>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <a class="social-btn twitter" ng-href=".auth/login/twitter?post_login_redirect_url=/api/oauth/{{projectGUID}}/redirect"><i class="fa fa-twitter" aria-hidden="true"></i> Connect with Twitter</a>
+                </div>
+            </div>
+
+            <p>
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    <h2>Register for ZenPRM account</h2>
+                    <p>If you are new to ZenPRM and do not wish to register with a social account, you can fill out the following form to complete your registration and continue.</p>
+
+                    <form ng-submit="register()" name="registerForm">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label required" for="firstName">First Name</label>
+                                    <input id="firstName" ng-model="registration.FirstName" name="firstName" type="text" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label required" for="lastName">Last Name</label>
+                                    <input id="lastName" ng-model="registration.LastName" name="lastName" type="text" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label required" for="email">Email</label>
+                            <input id="email" ng-model="registration.Email" name="email" type="email" class="form-control" required>
+                        </div>
+                        <button class="btn btn-primary" type="submit" ng-disabled="registerForm.$invalid"><i class="fa fa-sign-in"></i> Register</button>
+                    </form>
+
+                </div>
+                <div class="col-md-6">
+
+                    <h2>Sign in with ZenPRM account</h2>
+                    <p>If you already have a ZenPRM account, you can simply enter your username and password to continue.</p>
+
+                    <form ng-submit="login()" name="loginForm">
+                        <zen-cookie-warning></zen-cookie-warning>
+
+                                <div class="form-group">
+                                    <label class="required" for="username">Username</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                        <input type="text" class="form-control" id="username" ng-model="username" ng-maxlength="75" placeholder="Username" required />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="required" for="password">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                        <input type="password" class="form-control" id="password" ng-model="password" placeholder="Password" required />
+                                    </div>
+                                </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit" ng-disabled="loginForm.$invalid"><i class="fa fa-sign-in"></i> Login</button>
+                            <a ui-sref="forgotPassword">Forgot Password</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+</div>
+<!-- end .container -->

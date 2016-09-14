@@ -1,0 +1,170 @@
+<script type="text/ng-template" id="providerTemplate.html">
+    <a>
+        <span bind-html-unsafe="match.label"></span>
+    </a>
+</script>
+
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-briefcase"></i> {{EntityProject.Name1}}</h1>
+    <button type="button" ng-if="EntityProject.PrivateProject === false" ng-click="showSendProjectEmailModal()" class="btn btn-primary header-action">
+        <i class="fa fa-envelope"></i> Email Participants
+    </button>
+    <ui-view name="projectnavigation"></ui-view>
+</header>
+
+<div id="ProjectParticipants" class="container-fluid">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Participants</h2>
+
+            <div class="form-inline heading-form heading-form-sm heading-form-full">
+                <div class="form-group" ng-if="!EntityProject.IncludeEntireNetwork">
+                    <label for="SelectParticipant">Add Participant:</label>
+                    <div class="input-group input-group-sm loader">
+                        <input type="text" required="" ng-model="newParticipant.provider" placeholder="Search by Name or NPI" typeahead="Provider as Provider.FullName for Provider in getProviders($viewValue)" typeahead-loading="loadingProviders" typeahead-no-results="noResults" typeahead-min-length="0" typeahead-wait-ms="600" class="form-control" typeahead-template-url="providerTemplate.html" typeahead-on-select="setProvider($item)" id="SelectParticipant">
+                        <div class="loading-sm" ng-show="loadingProviders">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </div>
+                        <span class="input-group-btn">
+                            <button type="button" ng-click="addProviderToProject()" class="btn btn-primary" ng-disabled="!newParticipant"><i class="fa fa-plus"></i> Add</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="!EntityProject.IncludeEntireNetwork">- OR -</div>
+                <div class="form-group">
+                    <label class="btn btn-primary btn-sm">
+                        <input type="checkbox" ng-model="EntityProject.IncludeEntireNetwork" ng-change="IncludeEntireNetwork()"> Include Entire Network
+                    </label>
+                </div>
+            </div>
+        </div>
+        <table ng-table="tableParams" class="table" show-filter="true" ng-show="EntityProjectEntity.length > 0">
+            <tr ng-repeat="entity in $data">
+                <td data-title="'% Complete'" sortable="'ProjectData'">
+                    <a class="progress" ng-click="loadAnswerModal($index)">
+                        <div class="progress-bar" ng-class="{'progress-bar-success': entity.ProjectData == 100, 'progress-bar-danger': entity.ProjectData == 0}" role="progressbar" aria-valuenow="{{entity.ProjectData}}" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': entity.ProjectData + '%'}">
+                            {{entity.ProjectData}}%
+                        </div>
+                    </a>
+                </td>
+                <td data-title="'Participant'" filter="{ DisplayName: 'text'}" sortable="'DisplayName'">
+                    <zen-resource-name name="entity.DisplayName" ident="entity.Ident" photo="entity.ProfilePhoto"></zen-resource-name>
+                </td>
+                <td data-title="'Phone Number'" filter="{ PrimaryPhone: 'text'}" sortable="'PrimaryPhone'">
+                    <span>{{entity.PrimaryPhone}}</span>
+                </td>
+                <td data-title="'Notify Email Address'" filter="{ Email: 'text'}" sortable="'Email'">
+                    <span>{{entity.Email}}</span>
+                </td>
+                <td data-title="'Registered'" sortable="'Registered'" class="text-center" header-class="'text-center'">
+                    <span ng-if="entity.Registered"><i class="fa fa-check-circle text-success"></i></span>
+                </td>
+                 <td data-title="'Last Notification'" sortable="'LastEmailNotificationSent'">
+                    <span>{{entity.LastEmailNotificationSent | date : 'MM/dd/yy hh:mm a' }}</span>
+                </td>
+                <td class="nowrap hidden-print" header-class="'hidden-print'" data-title="'Project Actions'">
+                    <button class="btn btn-primary btn-xs" type="button" ng-click="loadAnswerModal($index)"><i class="fa fa-asterisk"></i> Answers</button>
+                    <button type="button" ng-click="RemoveEntityFromProject(entity.Ident)" class="btn btn-warning btn-xs" ng-confirm-click="Are you sure?" ng-show="!EntityProject.IncludeEntireNetwork">
+                        <i class="fa fa-times"></i> Remove
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div class="panel-body" ng-if="EntityProjectEntity.length == 0">
+            <div class="alert alert-info">
+                <h3>Add Your First Participants</h3>
+                <p>In ZenPRM, we try to make things amazingly simple. As a result, there are many ways that Participants can be added to a Project. Here's a quick rundown.</p>
+                <ol>
+                    <li>On this screen, you can add Participants individually or add your entire network in the panel heading.</li>
+                    <li>On the <a ui-sref="site.ProjectImport({ident: currentProjectIdent})">Import/Export screen</a>, you may upload a CSV file that includes Participants along with Questions and even Answers.</li>
+                    <li>On <a ui-sref="site.Resources">My Resources</a>, you can select Resources from the Grid to be added to a Project.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- end .panel -->
+
+</div>
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>
+
+
+<!-- Quick Answer Modal -->
+
+<a class="wizard-btn prev" ng-click="prevProject(currentIndex)" ng-if="showPrevBtn == true" title="Previous Project"><i class="fa fa-arrow-left"></i></a>
+<a class="wizard-btn next" ng-click="nextProject(currentIndex)" ng-if="showNextBtn == true" title="Next Project"><i class="fa fa-arrow-right"></i></a>
+<button class="btn btn-success sticky-btn" type="submit" ng-if="AnswerMode == true" ng-click="saveAnswers()" title="Save Answers"><i class="fa fa-floppy-o"></i></button>
+
+<script type="text/ng-template" id="AnswerModal.html">
+    <div class="modal-header">
+        <a class="close" ng-click="closeAnswers()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">Project Answers for {{currentParticipant}}</h3>
+    </div>
+    <div class="modal-body loader" id="modAnswer" ng-style="modalHeight">
+        <div ui-view="answers@"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" type="submit" ng-click="saveAnswers()"><i class="fa fa-floppy-o"></i> Save Answers</button>
+        <button class="btn btn-default" ng-click="closeAnswers()"><i class="fa fa-times"></i> Close</button>
+    </div>
+</script>
+
+
+<!-- Email Modal -->
+
+<script type="text/ng-template" id="SendProjectEmailModal.html">
+    <div class="modal-header">
+        <a ng-click="SendProjectEmailModal.close()" class="close"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title" ng-if="!projectEmailSent">Email All Project Participants</h3>
+        <h3 class="modal-title" ng-if="projectEmailSent">Email Confirmation</h3>
+    </div>
+    <div class="modal-body">
+        <div ng-if="!projectEmailSent">
+            <p>This feature allows you to invite participants to answer project questions (some participants may not be notified&mdash;see below for details). You may also add a custom message to all emails.</p>
+            <div class="form-group">
+                <label for="emailCustomMessage">Optional Message</label>
+                <textarea class="form-control" rows="4" id="emailCustomMessage" name="emailCustomMessage" ng-model="SendProjectEmailModal.emailCustomMessage"></textarea>
+            </div>
+            <div class="well">
+                <h4>Notification Summary</h4>
+                <h5>Will Be Notified ({{EntityProjectEntityCounts.SendProjectNotification + EntityProjectEntityCounts.SendRegistrationEmail}})</h5>
+                <ul>
+                    <li><strong>{{EntityProjectEntityCounts.SendProjectNotification}}</strong> participants are registered users (have already accessed ZenPRM) and their email account(s) are marked as notify (haven't opted out).</li>
+                    <li><strong>{{EntityProjectEntityCounts.SendRegistrationEmail}}</strong> participants are not registered users, but have an email account(s) on file. These participants will be sent a new account registration email.</li>
+                </ul>
+                <h5>Will NOT Be Notified ({{EntityProjectEntityCounts.RegisteredByMarkedAsNonNotify + EntityProjectEntityCounts.NotRegisteredByNoEmail + EntityProjectEntityCounts.PrivateResources}})</h5>
+                <ul>
+                    <li><strong>{{EntityProjectEntityCounts.RegisteredByMarkedAsNonNotify}}</strong> participants are registered users, but have opted not to receive emails from ZenPRM. We cannot email these participants.</li>
+                    <li><strong>{{EntityProjectEntityCounts.NotRegisteredByNoEmail}}</strong> participants are not registered users and do not have an email account on file. We cannot email these participants.</li>
+                    <li><strong>{{EntityProjectEntityCounts.PrivateResources}}</strong> participants are private resources and cannot be contacted through ZenPRM.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div ng-if="projectEmailSent">
+            <p><strong>Your message has been emailed to {{SentNotificationCounts.SentProjectNotification + SentNotificationCounts.SentRegistrationEmail}} project participants!</strong></p>
+            <div class="well">
+                <h4>Notification Confirmation</h4>
+                <h5>Have Been Notified ({{SentNotificationCounts.SentProjectNotification + SentNotificationCounts.SentRegistrationEmail}})</h5>
+                <ul>
+                    <li><strong>{{SentNotificationCounts.SentProjectNotification}}</strong> participants are registered users (have already accessed ZenPRM) and their email account(s) are marked as notify (haven't opted out).</li>
+                    <li><strong>{{SentNotificationCounts.SentRegistrationEmail}}</strong> participants are not registered users, but have an email account(s) on file. These participants have been sent a new account registration email.</li>
+                </ul>
+                <h5>Have NOT Been Notified ({{SentNotificationCounts.RegisteredByMarkedAsNonNotify + SentNotificationCounts.NotRegisteredByNoEmail + EntityProjectEntityCounts.PrivateResources}})</h5>
+                <ul>
+                    <li><strong>{{SentNotificationCounts.RegisteredByMarkedAsNonNotify}}</strong> participants are registered users, but have opted not to receive emails from ZenPRM. We have not emailed these participants.</li>
+                    <li><strong>{{SentNotificationCounts.NotRegisteredByNoEmail}}</strong> participants are not registered users and do not have an email account on file. We have not emailed these participants.</li>
+                    <li><strong>{{EntityProjectEntityCounts.PrivateResources}}</strong> participants are private resources. We have not emailed these participants.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="SendProjectEmailModal.sendProjectNotificationEmail()" ng-if="!projectEmailSent"><i class="fa fa-envelope"></i> Send Email</button>
+        <button class="btn btn-default" ng-click="SendProjectEmailModal.close()"><i class="fa fa-times"></i> Close</button>
+    </div>
+ 
+</script>

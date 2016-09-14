@@ -1,0 +1,58 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-files-o"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        Files <small ng-bind="EntityDetails.FullName"></small>
+    </h1>
+
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+
+<div id="Profile" class="container-fluid" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+    
+    <div class="alert alert-info" ng-if="repoFiles.length == 0">
+        <h2><i class="fa fa-exclamation-triangle"></i> You do not have any files in your repository.</h2>
+        <p>The repository allows you to quickly access and reuse project files. Once you have attached a file to a project and have submitted the requirements, the file will appear here in your repository.
+        </p>
+    </div>
+    
+    <div class="panel panel-primary" ng-repeat="(project, files) in repoFiles | groupBy: 'ProjectName'">
+        <div class="panel-heading">
+            <h2>{{project}}</h2>
+            <div class="heading-form heading-form-sm">
+            <a class="btn btn-primary btn-sm" ng-if="isAddingFileToProject" ng-click="returnToProject()"><i class="fa fa-arrow-left"></i> Return to Project</a>
+            </div>
+            
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th width="40%">Name</th>
+                    <th width="15%">File Size</th>
+                    <th width="15%">Date Added</th>
+                    <th width="30%">Action </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="file in files">
+                    <td><i class="{{file.IconClass}}"></i> {{file.FileName}}</td>
+                    <td>{{file.FileSize}}</td>
+                    <td>{{file.AddDateTime}}</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" ng-if="isAddingFileToProject" ng-click="addFileToProject(file.AnswerIdent)"><i class="fa fa-plus"></i> Add File to Project</a>
+                        <a class="btn btn-primary btn-xs" target="_blank" ng-href="{{file.downloadLink}}"><i class="fa fa-download"></i> Download</a>
+                        <a class="btn btn-link btn-xs" ng-if="!entityIdent" ng-click="deleteFile(file.AnswerIdent)" ng-confirm-click="Are you sure you want to delete this file?"><i class="fa fa-trash-o"></i> Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+<div class="loading" ng-show="!Loaded()">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

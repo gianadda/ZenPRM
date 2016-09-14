@@ -1,0 +1,159 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-briefcase"></i> {{EntityProject.Name1}}</h1>
+    <ui-view name="projectnavigation"></ui-view>
+</header>
+<div id="ProjectDetail" class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2>Project Import</h2>
+                </div>
+                <div class="panel-body" ng-show="CurrentProjectImport.Started == true">
+                    <div class="alert alert-info">
+                        <h3>There is an import in progress</h3>
+                    </div>
+                </div>
+                <div class="panel-body" ng-show="!CurrentProjectImport.Started">
+                    <!-- Summary Notes -->
+                    <div ng-show="CurrentProjectImport.SuccessCount + CurrentProjectImport.FailureCount > 0">
+                        <h3 class="margtop">Import Summary</h3>
+                        <p class="alert alert-success" ng-if="CurrentProjectImport.SuccessCount > 0"><i class="fa fa-thumbs-up"></i> Imported: {{CurrentProjectImport.SuccessCount}}</p>
+                        <div class="alert alert-danger" ng-if="CurrentProjectImport.FailureCount > 0">
+                            <p><i class="fa fa-thumbs-down"></i> Failed: {{CurrentProjectImport.FailureCount}}</p>
+                            <ul>
+                                <li ng-repeat="error in CurrentProjectImport.Failures">
+                                    {{error.ErrorText}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Dropzone -->
+                    <div id="ImportHolder" class="dropzone" ng-class="{'active': dropImportActive}" ng-show="!HeadersProcessed || CurrentProjectImport.Started == false">
+                        <div class="loading" ng-show="ImportLoading">
+                            <i class="fa fa-spinner fa-pulse"></i>
+                        </div>
+                        <div class="dropicon"><i class="fa fa-cloud-upload"></i></div>
+                    </div>
+                    <!-- Upload notes -->
+                    <div ng-show="HeadersProcessed && CurrentProjectImport.Started !== false">
+                        <p ng-if="CurrentProjectImport.NPIFieldName">
+                            It looks like you have a column in the uploaded file called <code>'{{CurrentProjectImport.NPIFieldName }}'</code> that will map to the <code>'NPI'</code> field in ZenPRM. We will be using this column to match to your resources.
+                        </p>
+                        <p ng-if="CurrentProjectImport.FullNameFieldName">
+                            It looks like you have a column on the uploaded file called <code>'{{CurrentProjectImport.FullNameFieldName }}'</code> that will map to the <code>'Full Name'</code> field in ZenPRM. We will be using this column to match to your resources.
+                        </p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Question</th>
+                                    <th class="text-center">Mapped</th>
+                                    <th>Actions</th>
+                                    <th>Delimiter</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="header in CurrentProjectImport.MappedFileHeaders">
+                                    <td>{{header.label}}</td>
+                                    <td class="text-center">
+                                        <span ng-if="header.Ident > 0 "><i class="fa fa-check-circle text-success"></i></span>
+                                    </td>
+                                    <td>
+                                        <span ng-show="header.CanAdd == false"> This question type cannot be imported.</span>
+                                        <div class="form-inline" ng-show="header.Ident == 0">
+                                            <select class="form-control input-sm" ng-model="header.RequirementTypeIdent" ng-options="type.Ident as type.Name1 for type in RequirementTypes"></select>
+                                            <!-- <button class="btn btn-primary btn-sm" type="button" ng-click="createQuestion(header)"><i class="fa fa-plus"></i> Add</button> -->
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-inline" 
+                                            ng-show="(header.RequirementTypeIdent == 5 || header.RequirementTypeIdent == 11 || header.RequirementTypeIdent == 26)">
+                                            <input type="text" minlength="1" maxlength="1" class="form-control input-sm" ng-model="header.Delimiter" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="form-group">
+                            <label>Would you like to use blank fields to "clear" answers?</label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" ng-model="CurrentProjectImport.UseEmptyFieldsToClear" value="Yes"> Yes, if you find a blank value, clear the answer
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" ng-model="CurrentProjectImport.UseEmptyFieldsToClear" value="No"> No, if you find a blank value, ignore it in the import
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>If we find someone that isn't in your Network, but we find them in the Global List, should we add them?</label> <small>(Note: This only works via NPI.)</small>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" ng-model="CurrentProjectImport.AddEntities" value="Yes"> Yes
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" ng-model="CurrentProjectImport.AddEntities" value="No"> No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end .panel-body -->
+                <div class="panel-footer text-right" ng-show="HeadersProcessed && !CurrentProjectImport.Started">
+                    <button class="btn btn-primary" type="button" ng-click="processFile()"><i class="fa fa-upload" aria-hidden="true"></i> Import</button>
+                    <button class="btn btn-default" type="button" ng-click="LoadEntityProjectRequirements(true, false)"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                </div>
+            </div>
+            <!-- end .panel -->
+        </div>
+        <!-- end .col -->
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2>Template Files</h2>
+                </div>
+                <div class="panel-body">
+                    You can download one of the files (CSV) below to use as a template for your bulk data import.
+                </div>
+                <ul class="panel-body">
+                    <li><a ng-click="downloadStarterFile(false)"><i class="fa fa-download"></i> Questions Only</a></li>
+                    <li><a ng-click="downloadStarterFile(true)"><i class="fa fa-download"></i> Questions &amp; Participants</a></li>
+                    <li><a ng-click="downloadStarterFileWithData()"><i class="fa fa-download"></i> Questions, Answer Data &amp; Participants</a></li>
+                </ul>
+                <!-- end .panel-body -->
+            </div>
+            <!-- end .panel -->
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2>Project Export</h2>
+                </div>
+                <div class="panel-body">
+                    Press the <b>Generate Export File</b> button to get a ZIP file that includes a CSV with all project data, as well as all uploaded files. Once the file has been generated, you may download it. Note: you may navigate away from this screen while the ZIP is being generated.
+                </div>
+                <ul class="panel-body">
+                    <li ng-repeat="export in EntityProjectExports">
+                        {{export.ExportDateTime}} &bull; {{export.ProjectFileSize}}
+                        <br>
+                        <small ng-if="export.Status != 'Ready to Download'">{{export.Status}}<br></small>
+                        <a ng-if="export.ReadyToDownload" target="_blank" ng-href="{{ export.exportLink }}"><i class="fa fa-download"></i> Download ZIP</a>
+                        <span ng-if="export.Processing"><i class="fa fa-spinner fa-pulse"></i> {{export.PercentComplete}} % Done</span>
+                    </li>
+                </ul>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-primary" ng-click="ExportProject()">
+                        <i class="fa fa-file-archive-o"></i> Generate Export File
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- end .col -->
+    </div>
+    <!-- end .row -->
+</div>
+<!-- end .container -->
+<div class="loading" ng-show="loadingPage">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

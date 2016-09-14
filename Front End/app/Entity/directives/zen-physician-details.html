@@ -1,0 +1,94 @@
+<div class="panel panel-primary Insights" id="physician-details">
+    <div class="panel-heading">
+        <h2><i class="fa fa-bar-chart" aria-hidden="true"></i> Medicare Physician &amp; Other Supplier Details</h2>
+    </div>
+    <ul class="nav nav-tabs">
+        <li ng-class="{'active': CurrDataTab == 'charts'}"><a ng-click="CurrDataTab = 'charts'"><i class="fa fa-pie-chart" aria-hidden="true"></i> Insights</a></li>
+        <li ng-show="Loaded2014Data" ng-class="{'active': CurrDataTab == '2014'}"><a ng-click="CurrDataTab = '2014'"><i class="fa fa-table" aria-hidden="true"></i> 2014 Data</a></li>
+        <li ng-show="Loaded2013Data" ng-class="{'active': CurrDataTab == '2013'}"><a ng-click="CurrDataTab = '2013'"><i class="fa fa-table" aria-hidden="true"></i> 2013 Data</a></li>
+    </ul>
+
+    <!-- Sweet Charts -->
+    <div class="panel-body" ng-if="!ShowMessage && !LoadingData && CurrDataTab == 'charts'">
+        <h3 ng-if="Services2014Data.length > 0">Service Summary</h3>
+        <div class="row">
+            <div ng-if="Services2014Data.length > 0" class="col-sm-6 text-center data-viz">
+                <div class="well" popover-template="Services2014Popover.templateUrl" popover-placement="bottom" popover-popup-delay="500" popover-trigger="mouseenter">
+                    <h4>2014</h4>
+                    <canvas id="Services2014Chart" class="chart chart-pie" chart-data="Services2014Data" chart-labels="Services2014Labels"></canvas>
+                    <script type="text/ng-template" id="services-2014-popover.html">
+                        <strong>Legend:</strong>
+                        <ul>
+                            <li ng-repeat="label in Services2014Labels"><i class="fa fa-square" ng-style="{'color': PieColors[$index]}"></i> {{ label }} ({{PrettyNumber(Services2014Data[$index])}})</li>
+                        </ul>
+                    </script>
+                </div>
+            </div>
+            <div ng-if="Services2013Data.length > 0" class="col-sm-6 text-center data-viz">
+                <div class="well" popover-template="Services2013Popover.templateUrl" popover-placement="bottom" popover-popup-delay="500" popover-trigger="mouseenter">
+                    <h4>2013</h4>
+                    <canvas id="Services2013Chart" class="chart chart-pie" chart-data="Services2013Data" chart-labels="Services2013Labels"></canvas>
+                    <script type="text/ng-template" id="services-2013-popover.html">
+                        <strong>Legend:</strong>
+                        <ul>
+                            <li ng-repeat="label in Services2013Labels"><i class="fa fa-square" ng-style="{'color': PieColors[$index]}"></i> {{ label }} ({{PrettyNumber(Services2013Data[$index])}})</li>
+                        </ul>
+                    </script>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 2014 Data -->
+    <div class="panel-body" ng-if="!LoadingData && Loaded2014Data && CurrDataTab == '2014'">
+        <table ng-table="Provider2014Table" class="table table-bordered table-striped">
+            <tr ng-repeat="item in $data">
+                <td data-title="'HCPCS'" sortable="'hcpcs_code'">
+                    <b>{{ item.hcpcs_code }}</b>
+                    <i class="fa fa-info-circle text-muted" aria-hidden="true" tooltip="{{ item.hcpcs_description }}" tooltip-placement="right"></i>
+                </td>
+                <td data-title="'Number of Services'" sortable="'number_of_services'">{{ item.number_of_services }}</td>
+                <td data-title="'Number of Beneficiaries'" sortable="'number_of_medicare_beneficiaries'">{{ item.number_of_medicare_beneficiaries }}</td>
+                <td data-title="'Average Medicare Allowed Amount'" sortable="'average_medicare_allowed_amount'">{{ PrettyNumber(item.average_medicare_allowed_amount, true) }}</td>
+                <td data-title="'Average Medicare Submitted Charge Amount'" sortable="'average_submitted_charge_amount'">{{ PrettyNumber(item.average_submitted_charge_amount, true) }}</td>
+                <td data-title="'Average Medicare Payment Amount'" sortable="'average_medicare_payment_amount'">{{ PrettyNumber(item.average_medicare_payment_amount, true) }}</td>
+                <td data-title="'Average Medicare Standardized Amount'" sortable="'average_medicare_standardized_amount'">{{ PrettyNumber(item.average_medicare_standardized_amount, true) }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 2013 Data -->
+    <div class="panel-body" ng-if="!LoadingData && Loaded2013Data && CurrDataTab == '2013'">
+        <table ng-table="Provider2013Table" class="table table-bordered table-striped">
+            <tr ng-repeat="item in $data">
+                <td data-title="'HCPCS'" sortable="'hcpcs_code'">
+                    <b>{{ item.hcpcs_code }}</b>
+                    <i class="fa fa-info-circle text-muted" aria-hidden="true" tooltip="{{ item.hcpcs_description }}" tooltip-placement="right"></i>
+                </td>
+                <td data-title="'Number of Services'" sortable="'line_srvc_cnt'">{{ item.line_srvc_cnt }}</td>
+                <td data-title="'Number of Beneficiaries'" sortable="'bene_unique_cnt'">{{ PrettyNumber(item.bene_unique_cnt, true) }}</td>
+                <td data-title="'Average Medicare Allowed Amount'" sortable="'average_medicare_allowed_amt'">{{ PrettyNumber(item.average_medicare_allowed_amt, true) }}</td>
+                <td data-title="'Average Medicare Submitted Charge Amount'" sortable="'average_submitted_chrg_amt'">{{ PrettyNumber(item.average_submitted_chrg_amt, true) }}</td>
+                <td data-title="'Average Medicare Payment Amount'" sortable="'average_medicare_payment_amt'">{{ PrettyNumber(item.average_medicare_payment_amt, true) }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- No Data -->
+    <div class="panel-body" ng-if="!LoadingData && ShowMessage && CurrDataTab == 'charts'">
+        <div class="alert alert-info">
+            <h3 ng-if="!npi">Add an NPI to See Data</h3>
+            <h3 ng-if="npi">No Data Found for this Provider</h3>
+            <p>ZenPRM can display insights from the "Medicare Provider Utilization and Payment Data: Part D Prescriber" Detailed Data Table, which details the utilization and payments for prescriptions and refills prescribed to Medicare beneficiaries by specific inpatient and outpatient hospitals, physicians, and other suppliers. This information is provided by CMS for <a href="https://data.cms.gov/Public-Use-Files/Medicare-Provider-Utilization-and-Payment-Data-201/4uvc-gbfz" target="_blank">2013</a> and <a href="https://data.cms.gov/Public-Use-Files/Medicare-Provider-Utilization-and-Payment-Data-201/465c-49pb" target="_blank">2014</a>.</p>
+            <p ng-if="!npi">If you wish to see Prescriber Detailed data for this provider, <a ui-sref="site.EditProfile({ident: ident})">add his or her NPI</a>. Don't know the NPI? <a href="https://npiregistry.cms.hhs.gov/" target="_blank">Find it in the NPPES NPI Registry</a>.</p>
+        </div>
+    </div>
+
+    <!-- Loading Data -->
+    <div ng-show="LoadingData" class="panel-body loader">
+        <div class="loading">
+            <img src="assets/img/template/spinner_grey.png" width="90" alt="loading...">
+        </div>
+    </div>
+</div>

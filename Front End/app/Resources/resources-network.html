@@ -1,0 +1,30 @@
+<!-- Search Results -->
+<div id="NetworkMap" class="loader">
+
+    <div id="forceContainer"></div>
+
+    <!-- Tooltip -->
+    <div class="map-tooltip" ng-if="tooltipEntity.hasOwnProperty('name')">
+        <!-- Lines -->
+        <span ng-if="!tooltipEntity.hasOwnProperty('group')">
+                <span class="user-icon">
+                    <i class="fa fa-sitemap"></i>
+                </span> {{ tooltipEntity.name }}
+        </span>
+        <!-- Circles -->
+        <a class="user-link" ng-if="tooltipEntity.hasOwnProperty('group')" ui-sref="site.Profile({ident: tooltipEntity.NodeIdent})">
+            <span class="user-icon" ng-if="tooltipEntity.ProfilePhoto == ''">
+                    <i ng-if="tooltipEntity.group == 'Provider'" class="fa fa-user-md"></i>
+                    <i ng-if="tooltipEntity.group != 'Provider'" class="fa fa-building-o"></i>
+                </span>
+            <span class="user-icon img" ng-if="tooltipEntity.ProfilePhoto != ''" style="background-image: url({{tooltipEntity.ProfilePhoto}})"></span>
+            <span class="link-text">{{ tooltipEntity.name }} </span>
+        </a>
+    </div>
+   
+    <!-- Loading icon -->
+    <div class="loading" ng-show="loading">
+        <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+    </div>
+</div>
+<!-- end #SearchResults -->

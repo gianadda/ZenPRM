@@ -1,0 +1,42 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-sitemap"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        Org Structure <small ng-bind="EntityDetails.FullName"></small>
+    </h1>
+
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+
+<div id="Profile" class="container-fluid" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Organization Structure</h2>
+            <zen-hierarchy-add organization-ident="{{EntityIdent}}" reload-hierarchy="init"></zen-hierarchy-add>
+        </div>
+        <table ng-table="tableParams" class="table" show-filter="true">
+            <tr ng-repeat="entity in $data">
+                <td data-title="'Resource'" filter="{ DisplayName: 'text'}" sortable="'DisplayName'">
+                    <zen-resource-name name="entity.DisplayName" ident="entity.Ident" photo="entity.ProfilePhoto"></zen-resource-name>
+                </td>
+                <td data-title="'Relationship'" filter="{ HierarchyType: 'text'}" sortable="'HierarchyType'">
+                   {{ entity.HierarchyType }}
+                </td>
+                <td class="nowrap" data-title="'Actions'">
+                    <button type="button" ng-click="RemoveEntityFromHierarchy(entity.EntityHierarchyIdent)" class="btn btn-warning btn-xs" ng-confirm-click="Are you sure?">
+                        <i class="fa fa-times"></i> Remove
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- end .panel -->
+
+</div>
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

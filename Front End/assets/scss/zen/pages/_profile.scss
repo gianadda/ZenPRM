@@ -1,0 +1,209 @@
+//********************************************************//
+// Profile //
+
+//--------------------------------------------------------//
+// Basic Profile //
+
+#Profile {
+	max-width: 1200px;
+
+	#panel-Reports .panel-body {
+		h3 {
+			font-size: 15px;
+			margin-bottom: 2px;
+		}
+
+		p {
+			font-size: 14px;
+			color: #888;
+		}
+	}
+}
+
+// Theming! //
+// Class name is generated from EntityTypeIdent 
+
+#Profile[class *= "theme"] {
+	.panel-heading {
+		background-repeat: repeat;
+		background-position: left top;
+
+		h2 {
+			text-shadow: 0 0 5px rgba(0,0,0,.25);
+		}
+	}
+}
+
+// Organization
+.theme-2 .panel {
+	@include panel-theme($brand-purple, 2); 
+}
+
+// Provider
+.theme-3 .panel {
+	@include panel-theme($brand-teal, 3); 
+}
+
+// Facility
+.theme-4 .panel {
+	@include panel-theme($brand-lime, 4);
+}
+
+// Private Contact
+.theme-6 .panel {
+	@include panel-theme($brand-sky, 6);
+}
+
+// Committee
+.theme-7 .panel {
+	@include panel-theme($brand-green, 7);
+}
+
+// Other (Private)
+.theme-8 .panel {
+	@include panel-theme($brand-pink, 8);
+}
+
+// Public Contact
+.theme-9 .panel {
+	@include panel-theme($brand-burnt, 9);
+}
+
+//--------------------------------------------------------//
+// Insights //
+
+// Referrals //
+
+#referrals {
+	.col-xs-12 {
+		padding-bottom: 2px;
+
+		small {
+			font-size: 12px;
+			color: #888;
+			text-transform: uppercase;
+		}
+	}
+}
+
+#ReferralModal .table {
+	font-size: 13px;
+}
+
+// Open Data Insights //
+
+.Insights {
+	.insight-group {
+		padding-bottom: 15px;
+
+		h3 {
+			margin-top: 0;
+		}
+	}
+
+	.well .data-viz {
+		padding-bottom: 15px;
+	}
+
+	.well .row > .data-viz:last-of-type {
+		padding-bottom: 0;
+	}
+
+	.table tbody {
+		background-color: #fff;
+
+		th {
+			background-color: #f5f5f5;
+		}
+	}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+
+	#Profile .Insights .well .row {
+		> .data-viz:nth-of-type(3), > .data-viz:nth-of-type(4) {
+			padding-bottom: 0;
+		}
+	}
+
+}
+
+@media screen and (min-width: 1200px) {
+
+	#Profile .Insights .well .data-viz {
+		padding-bottom: 0;
+	}
+
+}
+
+//--------------------------------------------------------//
+// Edit Profile //
+
+.cropArea{
+	background: #E4E4E4;
+	overflow: hidden;
+	height:300px;
+}
+
+.photo-preview-thumb {
+	margin-top: 10px;
+}
+
+.photo-preview-full {
+	max-width: 100%;
+	height: auto;
+}
+
+//--------------------------------------------------------//
+// Audit History //
+
+#Audit {
+	.ng-table-group {
+		.fa {
+			float: left;
+			margin-top: 4px;
+			width: 16px;
+		}
+
+		.fa-pencil {
+			color: $brand-teal;
+		}
+
+		.fa-plus {
+			color: $brand-green;
+		}
+
+		.fa-trash-o {
+			color: $brand-red;
+		}
+
+		.fa + span {
+			margin-left: 23px;
+			display: block;
+		}
+
+		time {
+			margin-right: 10px;
+		}
+
+		small {
+			font-size: 13px;
+		}
+	}
+
+	.updated-data {
+		font-size: 13px;
+	}
+
+	.ng-table-pager {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 767px) {
+
+	#Audit .updated-data td {
+		padding-left: 31px;
+	}
+
+}

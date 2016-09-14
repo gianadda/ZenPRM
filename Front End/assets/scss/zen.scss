@@ -1,0 +1,43 @@
+//********************************************************//
+// ZenPRM Styles //
+
+// Branding and customized Boostrap variables
+@import "zen/variables";
+
+// Boostrap library
+@import "bootstrap";
+
+// Global styles
+@import "zen/global";
+@import "zen/mixins";
+@import "zen/overrides";
+@import "zen/classes";
+
+// Modules
+@import "zen/modules/bar-chart";
+@import "zen/modules/buttons";
+@import "zen/modules/card";
+@import "zen/modules/colors";
+@import "zen/modules/data-viz";
+@import "zen/modules/dials";
+@import "zen/modules/dropzone";
+@import "zen/modules/legend";
+@import "zen/modules/loading";
+@import "zen/modules/project";
+@import "zen/modules/super-list";
+@import "zen/modules/user-icons";
+
+// Base layout
+@import "zen/layout";
+
+// Pages
+@import "zen/pages/dashboard";
+@import "zen/pages/login";
+@import "zen/pages/profile";
+@import "zen/pages/projects";
+@import "zen/pages/reports";
+@import "zen/pages/resources";
+@import "zen/pages/tickets";
+
+// Print styles
+@import "zen/print";

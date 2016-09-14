@@ -1,0 +1,15 @@
+<form ng-submit="addDelegate()" name="delegateForm">
+	<div class="form-group">
+	    <label class="control-label required" for="firstName">First Name</label>
+	    <input id="firstName" ng-model="Delegate.firstName" name="firstName" ng-minlength="2" ng-maxlength="255" required="" type="text" placeholder="First Name" class="form-control input-md">
+	</div>
+	<div class="form-group">
+	    <label class="control-label required" for="lastName">Last Name</label>
+	    <input id="lastName" ng-model="Delegate.lastName" name="lastName" ng-minlength="2" ng-maxlength="255" required="" type="text" placeholder="Last Name" class="form-control input-md">
+	</div>
+	<div class="form-group">
+	    <label class="control-label required" for="email">Email Address</label>
+	    <input id="email" ng-model="Delegate.email" name="email" ng-minlength="2" ng-maxlength="255" required="" type="email" placeholder="Email Address" class="form-control input-md">
+	</div>
+	<button type="submit" class="btn btn-primary" ng-disabled="delegateForm.$invalid"><i class="fa fa-user-plus"></i> Add Delegate</button>
+</form>

@@ -1,0 +1,112 @@
+<script type="text/ng-template" id="connectionTypeTemplate.html">
+    <a ng-class="{ 'bg-info': match.model.IsInNetwork}">
+        <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+    </a>
+</script>
+
+
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-sitemap"></i> Connections for {{CurrentEntity.Entity[0].FullName}}</h1>
+    <ui-view name="profilenavigation"></ui-view>
+</header>
+
+<div id="Connections" class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-4 col-md-push-8">
+            <form ngform name="ConnectionForm" ng-submit="AddEntityConnection()">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2>Add Connection</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group" ng-class="{ 'has-error' : ConnectionForm.newInteractionText.$invalid && !ConnectionForm.newInteractionText.$pristine }">
+                            <input class="form-control" type="text" value="{{CurrentEntity.Entity[0].FullName}}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" required name="connectionType" id="connectionType" ng-model="newConnectionType" ng-options="option as getConnectionTypeDisplay(option) for option in ConnectionTypes">
+                            </select>
+                        </div>
+                        <div class="form-group loader">
+                            <input type="text" required ng-model="newConnectionToEntity" placeholder="Name of the connection" typeahead="Entity as Entity.DisplayName for Entity in getEntities($viewValue)" typeahead-loading="loadingEntities" typeahead-no-results="noResults" typeahead-min-length="0" typeahead-wait-ms="600" class="form-control" typeahead-template-url="connectionTypeTemplate.html">
+                            <div class="alert alert-warning" ng-show="noResults">
+                                No Results Found
+                            </div>
+                            <div class="loading-sm" ng-show="loadingEntities">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" ng-disabled="ConnectionForm.$invalid || !newConnectionToEntity.Ident || !newConnectionType" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Add Connection
+                        </button>
+                    </div>
+                </div>
+                <!-- end .panel -->
+            </form>
+
+        </div>
+        <!-- end .col -->
+
+        <div class="col-md-8 col-md-pull-4">
+            <div class="panel panel-primary hidden-xs hidden-sm">
+                <div class="panel-heading">
+                    <h2>Connection Map</h2>
+                </div>
+                <div id="NetworkMap">
+                    <!-- Force Chart -->
+                    <div id="forceContainer" style="height: 400px"></div>
+                    <!-- Tooltip -->
+                    <div class="map-tooltip" ng-if="tooltipEntity.hasOwnProperty('name')">
+                        <!-- Lines -->
+                        <span ng-if="!tooltipEntity.hasOwnProperty('group')">
+                            <span class="user-icon">
+                                <i class="fa fa-sitemap"></i>
+                            </span> {{ tooltipEntity.name }}
+                        </span>
+                        <!-- Circles -->
+                        <a class="user-link" ng-if="tooltipEntity.hasOwnProperty('group')" ui-sref="site.Profile({ident: tooltipEntity.NodeIdent})">
+                            <span class="user-icon" ng-if="tooltipEntity.ProfilePhoto == ''">
+                                <i ng-if="tooltipEntity.group == 'Provider'" class="fa fa-user-md"></i>
+                                <i ng-if="tooltipEntity.group != 'Provider'" class="fa fa-building-o"></i>
+                            </span>
+                            <span class="user-icon img" ng-if="tooltipEntity.ProfilePhoto != ''" style="background-image: url({{tooltipEntity.ProfilePhoto}})"></span>
+                            <span class="link-text">{{ tooltipEntity.name }}</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- end .panel-body -->
+            </div>
+            <!-- end .panel -->
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2>Connections</h2>
+                </div>
+                <ul class="panel-body" ng-repeat="(key, value) in CurrentEntity.EntityConnection | groupBy: 'EntityType'">
+                    <li class="sub-head">
+                        <h3 id="{{key.toLowerCase()}}"></a>{{ key }}</h3></li>
+                    <li ng-repeat="connection in value">
+                        <button type="button" title="Delete" ng-confirm-click="You are about to remove a connection in the system. Are you sure you want to do this?" ng-click="removeConnection(connection.Ident)" class="btn btn-danger pull-right btn-sm">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                        <a ui-sref="site.Profile({ident: connection.ToEntityIdent})">{{ connection.ToEntityFullName }}</a>
+                        <br/>
+                        <small>{{connection.FromEntityFullName}} {{connection.ConnectionTypeName}} {{connection.ToEntityFullName}}</small>
+                    </li>
+                </ul>
+            </div>
+            <!-- end .panel -->
+
+        </div>
+        <!-- end .col -->
+    </div>
+    <!-- end .row -->
+</div>
+<!-- end .container -->
+
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

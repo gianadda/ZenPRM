@@ -1,0 +1,61 @@
+//********************************************************//
+// Data Visualizations //
+
+// Shared across multiple types of data visualizations
+.data-viz {
+	position: relative;
+
+	.viz-metric {
+		.viz-num {
+			font-size: 60px;
+			line-height: 1;
+			margin: 0;
+
+			.fa {
+				font-size: 15px;
+				color: #888;
+				margin-left: 4px;
+			}
+		}
+		.viz-num.chars-5 {
+			font-size: 54px;
+		}
+		.viz-num.chars-6 {
+			font-size: 42px;
+		}
+		.viz-num.chars-7 {
+			font-size: 36px;
+		}
+		.viz-num.chars-8 {
+			font-size: 33px;
+		}
+		.viz-num.chars-9 {
+			font-size: 30px;
+		}
+		.viz-num.chars-10 {
+			font-size: 27px;
+		}
+		.viz-num.chars-11 {
+			font-size: 24px;
+		}
+		.viz-num.chars-12 {
+			font-size: 21px;
+		}
+
+		.viz-num.text-muted {
+			color: #bbb;
+		}
+
+		.viz-label {
+			@include data-label();
+			margin: 0;
+		}
+
+	}
+
+	// Legend
+	.popover {
+		@include popover-legend();
+	}
+
+}

@@ -1,0 +1,65 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-briefcase"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        Projects <small ng-bind="EntityDetails.FullName">Projects</small>
+    </h1>
+
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+
+<div id="Profile" class="container-fluid" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="input-group">
+                <label class="input-group-addon" for="ProviderFilter"><i class="fa fa-search"></i></label>
+                <input type="text" class="form-control input-sm" ng-model="searchFilter" id="ProjectFilter" placeholder="Search for a project...">
+            </div>
+        </div>
+        <ul class="nav nav-tabs">
+            <li ng-class="{'active': currentProject == 'openprojects'}">
+                <a ng-click="showTab('openprojects')"><i class="fa fa-folder-open" aria-hidden="true"></i> Open Projects</a>
+            </li>
+            <li ng-class="{'active': currentProject == 'archivedprojects'}">
+                <a ng-if="ArchivedProjects.length > 0" ng-click="showTab('archivedprojects')"><i class="fa fa-archive" aria-hidden="true"></i> Archived Projects</a>
+                <span ng-if="ArchivedProjects.length == 0"><i class="fa fa-archive" aria-hidden="true"></i> Archived Projects</span>
+            </li>
+        </ul>
+        <div class="panel-body Projects">
+
+            <div class="row" ng-if="OpenProjects.length > 0" ng-show="currentProject == 'openprojects'">
+                <div class="col-md-6" ng-repeat="project in OpenProjects | orderBy: 'EntityName' | filter: searchFilter">
+                    <zen-project project="project" show-org-label="!IsCustomer()" show-archive="IsCustomer()" show-bookmark="IsCustomer()"></zen-project>
+                </div>
+                <!-- end .col -->
+            </div>
+            <!-- end .row -->
+
+            <div class="alert alert-info" role="alert" ng-if="OpenProjects.length == 0"  ng-show="currentProject == 'openprojects'">
+                <b>No Open Projects</b>
+            </div>
+
+            <div class="row" ng-if="ArchivedProjects.length > 0" ng-show="currentProject == 'archivedprojects'">
+                <div class="col-md-6" ng-repeat="project in ArchivedProjects | filter: searchFilter">
+                    <zen-project project="project" show-org-label="!IsCustomer()" show-reactivate="IsCustomer()" show-bookmark="IsCustomer()"></zen-project>
+                </div>
+                <!-- end .col -->
+            </div>
+            <!-- end .row -->
+
+            <div class="alert alert-info" role="alert" ng-if="(EntityProject | filter: {Archived: true} | filter: !IsCustomer() && {PrivateProject: false}).length == 0" ng-show="currentProject == 'archivedprojects'">
+                <b>No Archived Projects</b>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- end .container -->
+
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

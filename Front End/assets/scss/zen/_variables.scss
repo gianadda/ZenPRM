@@ -1,0 +1,111 @@
+//********************************************************//
+// Variables //
+
+// Zen Brand Colors //
+
+$brand-purple:				#4d5177;
+$brand-blue:				#5d8ca9;
+$brand-sky:					#93d3ea;
+$brand-teal:				#67c0ce; 
+$brand-green:				#4ea66a;
+$brand-lime:				#94c371;
+$brand-yellow:				#e9cc33;
+$brand-orange:				#e29e0a;
+$brand-burnt:				#e97630;
+$brand-rust:				#af4723;
+$brand-red:					#ce605a;
+$brand-pink:				#d47ba7;
+
+// Bootstrap Resets //
+
+// Branding //
+$gray-dark:					#333;
+$brand-primary:				$brand-blue;
+$brand-success:				$brand-green;
+$brand-info:				$brand-sky;
+$brand-warning:				$brand-yellow;
+$brand-danger:				$brand-red;
+
+// Scaffolding //
+$text-color:				$gray-dark;
+$link-color:				$brand-purple;
+$link-hover-color:			$brand-blue;
+$link-hover-decoration:		none;
+
+// Typography //
+$font-family-sans-serif:	'Source Sans Pro', 'Helvetica', 'Arial', serif;
+$font-family-serif:			'Bitter', 'Georgia', san-serif;
+$font-size-base:			15px;
+$font-size-h1:				30px;
+$font-size-h2:				20px;
+$font-size-h3:				18px;
+$font-size-h4:				16px;
+$font-size-h6:				$font-size-base;
+$line-height-base:			1.4;
+$headings-font-weight:		700;
+
+// Iconography //
+$icon-font-path:			"/assets/fonts/";
+
+// Components //
+$border-radius-small:		4px;
+
+// Buttons //
+$btn-border-radius-base:	5px;
+$btn-primary-bg:			$brand-teal;
+$btn-info-bg:				$brand-primary;
+$btn-warning-bg:			$brand-burnt;
+
+// Inputs //
+$input-color:				$gray-dark;
+$input-border-focus:		$brand-sky;
+
+// Z-Index //
+$zindex-modal-background:	1900 !important;
+$zindex-modal:				1950 !important;
+
+// Grid System //
+$grid-gutter-width:			20px;
+
+// Pagination //
+$pagination-color:			$brand-blue;
+$pagination-hover-color:	$brand-purple;
+
+// States, Alerts //
+$state-success-text:		$brand-green;
+$state-success-bg:			lighten($brand-green, 45%);
+$state-success-border:		darken($state-success-bg, 10%);
+
+$state-info-text:			$brand-purple;
+$state-info-bg:				lighten($brand-teal, 33%);
+$state-info-border:			darken($state-info-bg, 10%);
+
+$state-warning-text:		$brand-purple;
+$state-warning-bg:			lighten($brand-yellow, 33%);
+$state-warning-border:		darken($state-warning-bg, 15%);
+
+$state-danger-text:			$brand-red;
+$state-danger-bg:			lighten($brand-red, 33%);
+$state-danger-border:		darken($state-danger-bg, 7%);
+
+// Progress Bar //
+$progress-bar-bg:			$brand-teal;
+$progress-bar-info-bg:		$brand-blue;
+$progress-bar-warning-bg:	$brand-burnt;
+
+// Panels //
+$panel-body-padding:		20px;
+$panel-heading-padding:		15px 20px;
+$panel-border-radius:		5px;
+$panel-footer-bg:			#fff;
+
+$panel-default-text:		$brand-purple;
+$panel-default-border:		#ccc;
+$panel-default-heading-bg:	$state-info-bg;
+
+$panel-primary-text:		#fff;
+$panel-primary-border:		$brand-purple;
+$panel-primary-heading-bg:	$brand-purple;
+
+// Code //
+$code-color:				$brand-rust;

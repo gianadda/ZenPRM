@@ -1,0 +1,430 @@
+<header id="Title" class="Resources clearfix">
+    <h1>
+        <i class="fa fa-user-md"></i> <span ng-if="Global">Global</span><span ng-if="!Global">My</span> Resources
+    </h1>
+    <div class="segment-menu">
+        <div class="btn-group" dropdown auto-close="disabled" is-open="toggleSavedSearchMenu">
+            <button class="segment-btn" type="button" data-toggle="dropdown" dropdown-toggle>
+                <span class="ellipsis" ng-if="CurrentSaveSearchName">{{ CurrentSaveSearchName }}</span><span class="ellipsis" ng-if="!CurrentSaveSearchName">All Resources</span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li class="segment-filter">
+                    <input type="text" class="form-control input-sm ng-pristine ng-valid ng-touched" id="SegmentFilter" ng-model="SegmentFilter" placeholder="Find a saved search...">
+                </li>
+                <li ng-if="SavedSearches.length > 0" class="manage-link"><a ng-click="OpenSegments()"><i class="fa fa-pencil" aria-hidden="true"></i> <b>Manage Segments</b></a></li>
+                <li ng-class="{active: !CurrentSaveSearchName}"><a ng-click="ClearFilters()"><i class="fa fa-user-md" aria-hidden="true"></i> All Resources</a></li>
+                <li ng-repeat="savedSearch in SavedSearches | orderBy: ['-BookmarkSearch', 'Name1'] | filter: SegmentFilter" ng-class="{'active': savedSearch.Name1 == CurrentSaveSearchName}"><a ng-click="LoadSavedSearch(savedSearch)"><i ng-if="savedSearch.BookmarkSearch" class="fa fa-bookmark" aria-hidden="true"></i> {{savedSearch.Name1}}</a></li>
+                <li ng-if="!SavedSearches || SavedSearches.length == 0"><a>No Segments</a></li>
+            </ul>
+        </div>
+        <div class="btn-group clearfix" dropdown>
+            <button class="segment-btn" type="button" data-toggle="dropdown" dropdown-toggle="" aria-haspopup="true" aria-expanded="false"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li ng-if="CurrentSaveSearchName"><a ng-click="SaveSearch(CurrentSavedSearchIdent)" ng-confirm-click="You are about to save the segment '{{CurrentSaveSearchName}}.' All changes will be automatically applied to any Measures or other features that make use of this segment. Are you sure you wish to continue?"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Segment "{{CurrentSaveSearchName}}"</a></li>
+                <li><a ng-click="showSaveSearchModal()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Segment As...</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="header-action">
+        <div class="btn-group clearfix" dropdown>
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdown-toggle>
+                <i class="fa fa-bars"></i> Actions <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+                <li><a ng-click="NavigateToAddEntity()"><i class="fa fa-plus"></i> Create New Resource</a></li>
+                <li><a ng-click="showAddByNPIModal()"><i class="fa fa-plus"></i> Add New Resouce to Network by NPI</a></li>
+                <li><a ui-sref="site.Import"><i class="fa fa-cloud-upload"></i> Import Resouces</a></li>
+                <li ng-if="!Global"><a ng-href="{{csvDownloadLink}}" download ng-click="displayDownloadMessage()"><i class="fa fa-download"></i> Export Resources To CSV</a></li>
+            </ul>
+        </div>
+    </div>
+    <a class="nav-toggle" ng-click="toggleMenu = !toggleMenu"><i class="fa fa-bars"></i> Toggle Navigation</a>
+    <ul class="nav nav-tabs" ng-if="!Global" ng-class="{'toggled': toggleMenu == true}">
+        <li><a ui-sref="site.Resources({Tab: 'grid'})" ng-class="{'active': currentTab == 'grid'}"><i class="fa fa-table"></i> Grid</a></li>
+        <li><a ui-sref="site.Resources({Tab: 'map'})" ng-class="{'active': currentTab == 'map'}"><i class="fa fa-map-marker"></i> Map</a></li>
+        <li><a ui-sref="site.Resources({Tab: 'insights'})" ng-class="{'active': currentTab == 'insights'}"><i class="fa fa-line-chart"></i> Correlations</a></li>
+        <li><a ui-sref="site.Resources({Tab: 'demographics'})" ng-class="{'active': currentTab == 'demographics'}"><i class="fa fa-pie-chart"></i> Demographics</a></li>
+        <li><a ui-sref="site.Resources({Tab: 'activity'})" ng-class="{'active': currentTab == 'activity'}"><i class="fa fa-history"></i> Activity</a></li>
+    </ul>
+    <ul class="nav nav-tabs" ng-if="Global" ng-class="{'toggled': toggleMenu == true}">
+        <li><a ui-sref="site.GlobalResources({Tab: 'grid'})" ng-class="{'active': currentTab == 'grid'}"><i class="fa fa-table"></i> Grid</a>
+        </li>
+        <li><a ui-sref="site.GlobalResources({Tab: 'map'})" ng-class="{'active': currentTab == 'map'}"><i class="fa fa-globe"></i> Map</a></li>
+    </ul>
+</header>
+<div class="container-fluid" id="Resources">
+    <div class="panel panel-primary">
+        <!-- Search Bar -->
+        <div id="SearchBar" class="panel-heading search-bar">
+            <div class="row">
+                <div class="col-sm-6 col-lg-4">
+                    <label class="sr-only" for="ProviderFilter">Search for a Resource </label>
+                    <input id="ProviderFilter" class="form-control input-sm" type="text" placeholder="Search by Name or NPI" ng-model="searchCriteria.keyword" search-on-enter="searchResources()" />
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <label class="sr-only" for="SearchLocation">Location</label>
+                    <div class="input-group input-group-sm">
+                        <input id="SearchLocation" class="form-control" type="text" placeholder="Search by location" ng-model="searchCriteria.location" search-on-enter="searchResources()">
+                        <div class="input-group-btn" dropdown>
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" dropdown-toggle><span ng-if="searchCriteria.radius == 0"> mi.</span><span ng-if="searchCriteria.radius !== 0 && searchCriteria.radius !== 'Unknown'">{{searchCriteria.radius}} mi.</span><span ng-if="searchCriteria.radius == 'Unknown'">Unmappable</span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a ng-click="SetRadius(1)">1 mi.</a></li>
+                                <li><a ng-click="SetRadius(5)">5 mi.</a></li>
+                                <li><a ng-click="SetRadius(10)">10 mi.</a></li>
+                                <li><a ng-click="SetRadius(25)">25 mi.</a></li>
+                                <li><a ng-click="SetRadius(50)">50 mi.</a></li>
+                                <li><a ng-click="SetRadius(100)">100 mi.</a></li>
+                                <li><a ng-click="SetRadius(250)">250 mi.</a></li>
+                                <li><a ng-click="SetRadius(500)">500 mi.</a></li>
+                                <li ng-show="Global == false"><a ng-click="SetRadius(1000)">1000 mi.</a></li>
+                                <li ng-show="Global == false"><a ng-click="SetRadius(5000)">5000 mi.</a></li>
+                                <li ng-show="Global == false"><a ng-click="SetRadius('Unknown')">Unmappable</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-5 btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-sm" type="button" ng-click="searchResources()">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                    </div>
+                    <div class="btn-group btn-group-sm" dropdown>
+                        <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" dropdown-toggle><i class="fa fa-filter"></i> Add Filter <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="FilterType in $storage.EntitySearchFilterTypes | filter : {Ident: 1} : true" ng-if="Global == false">
+                                <a ng-click="showFilterSearchResultsModal(FilterType)"><b>{{FilterType.Name1}}</b></a>
+                            </li>
+                            <li ng-repeat="FilterType in $storage.EntitySearchFilterTypes | filter : {Ident: 11} : true" ng-if="Global == false">
+                                <a ng-click="showFilterSearchResultsModal(FilterType)"><b>{{FilterType.Name1}}</b></a>
+                            </li>
+                            <li ng-repeat="FilterType in $storage.EntitySearchFilterTypes" ng-if="(Global == false || FilterType.Ident != 12) && FilterType.Ident != 1 && FilterType.Ident != 11">
+                                <a ng-click="showFilterSearchResultsModal(FilterType)">{{FilterType.Name1}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" dropdown-toggle ng-click="ClearFilters()"><i class="fa fa-ban"></i> Clear</button>
+                </div>
+            </div>
+            <!-- .row -->
+        </div>
+        <!-- .panel-heading -->
+        <div id="SearchCount" class="panel-body clearfix">
+            <strong class="count">{{ searchResultsTotal | number}} Resources</strong>
+            <div class="filters">
+                <span ng-repeat="filter in $storage.appliedFilters track by $index">
+                    <span class="label-group">
+                        <span class="label label-primary" tooltip="{{filter.FullText}}" tooltip-placement="bottom">{{filter.ShortText}}</span>
+                        <a class="label label-primary" ng-click="RemoveFilter(filter, true)"><i class="fa fa-times"></i></a>
+                    </span><span class="label label-default" ng-if="!$last">and</span>
+                </span>
+            </div>
+        </div>
+        <!-- .panel-heading -->
+        <resources-grid-global ng-if="currentTab == 'grid' && Global == true"></resources-grid-global>
+        <resources-map-global ng-if="currentTab == 'map' && Global == true"></resources-map-global>
+        <resources-grid ng-if="currentTab == 'grid' && Global == false"></resources-grid>
+        <resources-network ng-if="currentTab == 'network'"></resources-network>
+        <resources-map ng-if="currentTab == 'map' && Global == false"></resources-map>
+        <resources-insights ng-if="currentTab == 'insights'"></resources-insights>
+        <resources-demographics ng-if="currentTab == 'demographics'"></resources-demographics>
+        <resources-activity ng-if="currentTab == 'activity'"></resources-activity>
+    </div>
+    <!-- .panel -->
+</div>
+
+<!-- Standard Filters -->
+<script type="text/ng-template" id="FilterSearchResults.html">
+    <div class="modal-header">
+        <a class="close" ng-click="FilterSearchResultsModal.close()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">Filter Search Results - {{CurrentEntitySearchFilterType.Name1}}</h3>
+    </div>
+    <div class="modal-body" id="modFilters">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="btn-group" ng-if="CurrentEntitySearchFilterType.BitValue !== true">
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="changeAllFilterStates(CurrentEntitySearchFilterType.Ident, true, true)">
+                        <i class="fa fa-check-square-o"></i> Select All
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="changeAllFilterStates(CurrentEntitySearchFilterType.Ident, false, true)">
+                        <i class="fa fa-square-o"></i> Deselect All
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6 form-inline text-right" ng-show="CurrentEntitySearchFilterType.BitValue !== true">
+                <label for="FilterFilterKeyword">Search for a filter</label>
+                <div class="input-group input-group-sm">
+                    <input id="FilterFilterKeyword" class="form-control" type="text" ng-model="MyFilter.FilterFilterKeyword" />
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="row filter-options">
+            <div class="col-sm-6" ng-if="CurrentEntitySearchFilterType" ng-repeat="filter in $storage.searchFilters | filter : {FilterName1: MyFilter.FilterFilterKeyword, FilterTypeIdent: CurrentEntitySearchFilterType.Ident} | orderBy: 'FilterName1'">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-click="changeSingleFilterState(filter)" ng-checked="filter.Checked"> {{filter.FilterName1}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="FilterSearchResultsModal.ok()"><i class="fa fa-filter"></i> Apply Filter</button>
+        <button class="btn btn-default" ng-click="FilterSearchResultsModal.clear()"><i class="fa fa-ban"></i> Clear Filter</button>
+    </div>
+</script>
+
+<!-- Hierarchy Filters -->
+<script type="text/ng-template" id="FilterHierarchySearchResults.html">
+    <div class="modal-header">
+        <a class="close" ng-click="FilterHierarchySearchResultsModal.close()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">Filter Search Results - {{CurrentEntitySearchFilterType.Name1}}</h3>
+    </div>
+    <div class="modal-body clearfix" id="modFilters">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="cboHierarchyType">Type:</label>
+                <div class="col-md-8">
+                    <select class="form-control" id="cboHierarchyType" ng-model="NewHierarchySpecificFilter.HierarchyTypeIdent" ng-options="type as type.ReverseName1 for type in $storage.HierarchyTypeFilters">
+                        <option value="0">(All Types)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div ng-show="NewHierarchySpecificFilter.HierarchyTypeIdent">
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>My Organizations</h4>        
+                </div>
+                <div class="col-md-6 form-inline text-right">
+                <label for="FilterFilterKeyword">Search for a filter</label>
+                    <div class="input-group input-group-sm">
+                        <input id="FilterFilterKeyword" class="form-control" type="text" ng-model="MyFilter.FilterFilterKeyword" />
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row filter-options">
+                <div class="col-sm-6 " ng-repeat="org in NewHierarchySpecificFilter.Organizations | filter: MyFilter.FilterFilterKeyword">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-click="changeSingleFilterState(org, true)" ng-checked="org.Checked"> {{org.DisplayName}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="FilterHierarchySearchResultsModal.ok()"><i class="fa fa-filter"></i> Apply Filter</button>
+        <button class="btn btn-default" ng-click="FilterHierarchySearchResultsModal.clear()"><i class="fa fa-ban"></i> Clear Filter</button>
+    </div>
+</script>
+
+<!-- Email Filter -->
+<script type="text/ng-template" id="FilterEmailSearchResults.html">
+    <div class="modal-header">
+        <a class="close" ng-click="FilterEmailSearchResults.close()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">Filter Search Results - Email</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="cboAnswer">Filter: </label>
+                <div class="col-md-8">
+                    <select class="form-control" id="cboAnswer" ng-model="NewProjectSpecificFilter.EntitySearchOperator" ng-options="option as option.Name1 for option in $storage.EntitySearchOperators |  filter: {EntitySearchDataTypeIdent: 9}" ng-change="NewProjectSpecificFilter.EntitySearchOperator.value = undefined">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" ng-show="NewProjectSpecificFilter.EntitySearchOperator.ShowProjectQuestionFilter == true">
+                <label class="col-md-2 control-label" for="cboAnswer">Value: </label>
+                <div class="col-md-8">
+                    <input class="form-control" ng-model="NewProjectSpecificFilter.EntitySearchOperator.value" type="text">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="FilterEmailSearchResults.ok()" ng-disabled="!ValidEmailFilter()">
+            <i class="fa fa-filter"></i> Apply Filter
+        </button>
+        <button class="btn btn-default" ng-click="FilterEmailSearchResults.clear()"><i class="fa fa-ban"></i> Clear Filter</button>
+    </div>
+</script>
+
+<!-- Project Filter -->
+<script type="text/ng-template" id="FilterProjectSpecificSearchResults.html">
+    <div class="modal-header">
+        <a class="close" ng-click="FilterProjectSpecificSearchResults.close()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">Filter Search Results - {{CurrentEntitySearchFilterType.Name1}}</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="cboProjectList">Project:</label>
+                <div class="col-md-8">
+                    <select class="form-control" id="cboProjectList" ng-model="NewProjectSpecificFilter.Project" ng-options="option as option.Name1 for option in EntityProject">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" ng-show="NewProjectSpecificFilter.Project">
+                <label class="col-md-2 control-label" for="cboQuestionType">Question:</label>
+                <div class="col-md-8">
+                    <select class="form-control" id="cboQuestionType" ng-model="NewProjectSpecificFilter.EntityProjectRequirement" ng-options="option as option.label for option in EntityProjectQuestions |  filter: {RequiresAnswer: true}">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" ng-show="NewProjectSpecificFilter.EntityProjectRequirement.EntitySearchDataTypeIdent && NewProjectSpecificFilter.EntityProjectRequirement.Ident !== 0">
+                <label class="col-md-2 control-label" for="cboAnswer">Answer: </label>
+                <div class="col-md-8">
+                    <select class="form-control" id="cboAnswer" ng-model="NewProjectSpecificFilter.EntitySearchOperator" ng-options="option as option.Name1 for option in $storage.EntitySearchOperators |  filter: {EntitySearchDataTypeIdent: NewProjectSpecificFilter.EntityProjectRequirement.EntitySearchDataTypeIdent} | orderBy: Name1" ng-change="NewProjectSpecificFilter.EntitySearchOperator.value = undefined">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" ng-show="NewProjectSpecificFilter.EntitySearchOperator.ShowProjectQuestionFilter === true">
+                <label class="col-md-2 control-label" for="cboAnswer">Value: </label>
+                <div class="col-md-8" ng-if="NewProjectSpecificFilter.EntitySearchOperator && (NewProjectSpecificFilter.EntityProjectRequirement.EntitySearchDataTypeIdent == 1 ||
+                    NewProjectSpecificFilter.EntitySearchOperator.Ident == 54 || NewProjectSpecificFilter.EntitySearchOperator.Ident == 55)">
+                    <input class="form-control" ng-model="NewProjectSpecificFilter.EntitySearchOperator.value" type="number">
+                </div>
+                <div class="col-md-8" ng-if="NewProjectSpecificFilter.EntitySearchOperator && NewProjectSpecificFilter.EntityProjectRequirement.EntitySearchDataTypeIdent == 2">
+                    <input class="form-control" ng-model="NewProjectSpecificFilter.EntitySearchOperator.value" type="text">
+                </div>
+                <div class="col-md-8" ng-if="NewProjectSpecificFilter.EntitySearchOperator && NewProjectSpecificFilter.EntityProjectRequirement.EntitySearchDataTypeIdent == 3 &&
+                    NewProjectSpecificFilter.EntitySearchOperator.Ident != 54 && NewProjectSpecificFilter.EntitySearchOperator.Ident != 55">
+                    <zen-date-picker date-value="NewProjectSpecificFilter.EntitySearchOperator.value" id="NewProjectSpecificFilterDatePicker"></zen-date-picker>
+                </div>
+                <div class="col-md-8" ng-if="NewProjectSpecificFilter.EntitySearchOperator && NewProjectSpecificFilter.EntityProjectRequirement.EntitySearchDataTypeIdent == 4">
+                    <div class="checkbox" ng-repeat="option in NewProjectSpecificFilter.EntityProjectRequirement.options.split('|') track by $index">
+                        <label>
+                            <input type="checkbox" ng-model="NewProjectSpecificFilter.EntitySearchOperator.value[option]" ng-value="option"> {{option}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-8" ng-if="NewProjectSpecificFilter.EntitySearchOperator && NewProjectSpecificFilter.EntityProjectRequirement.EntitySearchDataTypeIdent == 7">
+                    <input class="form-control" ng-model="NewProjectSpecificFilter.EntitySearchOperator.value" type="datetime-local">
+                </div>
+                <div class="col-md-8" ng-if="NewProjectSpecificFilter.EntitySearchOperator && NewProjectSpecificFilter.EntityProjectRequirement.EntitySearchDataTypeIdent == 8">
+                    <input class="form-control" ng-model="NewProjectSpecificFilter.EntitySearchOperator.value" type="text">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-disabled="!ValidToAddFilter()" ng-click="FilterProjectSpecificSearchResults.ok()"><i class="fa fa-filter"></i> Apply Filter</button>
+        <button class="btn btn-default" ng-click="FilterProjectSpecificSearchResults.clear()"><i class="fa fa-ban"></i> Clear Filter</button>
+    </div>
+</script>
+
+<!-- Save Segment -->
+<script type="text/ng-template" id="SaveSearchModal.html">
+    <div class="modal-header">
+        <a class="close" ng-click="SaveSearchModal.close()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">New Segment</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="control-label required" for="NewSegmentName">Name:</label>
+            <input type="text" ng-model="NewSegment.Name1" class="form-control" id="NewSegmentName">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="NewSegmentDesc">Description:</label>
+            <textarea ng-model="NewSegment.Desc1" class="form-control" id="NewSegmentDesc" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="NewSegmentCategory">Category:</label>
+            <input type="text" ng-model="NewSegment.Category" class="form-control" id="NewSegmentCategory">
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="NewSegment.BookmarkSearch"> Bookmark this segment
+            </label>
+        </div> 
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" ng-disabled="!NewSegment.Name1" ng-click="SaveSearchModal.ok(NewSegment)"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Segment</button>
+        <button class="btn btn-default" ng-click="SaveSearchModal.cancel()"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+    </div>
+</script>
+
+<!-- Manage Segments -->
+<script type="text/ng-template" id="ManageSegments.html">
+    <div class="modal-header">
+        <a class="close" ng-click="ManageSegments.close()"><i class="fa fa-times"></i></a>
+        <h3 class="modal-title">Manage Segments</h3>
+    </div>
+    <div class="modal-body">
+        <table ng-table="SegmentsTable" show-filter="true" class="table table-bordered table-striped">
+            <tr ng-repeat="segment in $data" ng-class="{'info': segment.Name1 == CurrentSaveSearchName, 'warning': segment.EditMode}">
+                <td width="20%" data-title="'Name'" sortable="'Name1'" filter="{Name1: 'text'}">
+                    <span ng-if="!segment.EditMode">{{ segment.Name1 }}</span>
+                    <input ng-if="segment.EditMode" type="text" class="form-control input-xs" ng-model="segment.Name1">
+                </td>
+                <td width="20%" data-title="'Description'" sortable="'Desc1'" filter="{Desc1: 'text'}">
+                    <span ng-if="!segment.EditMode">{{ segment.Desc1 }}</span>
+                    <textarea ng-if="segment.EditMode" type="text" class="form-control textarea-xs" ng-model="segment.Desc1"></textarea>
+                </td>
+                <td data-title="'Category'" sortable="'Category'" filter="{Category: 
+                'text'}">
+                    <span ng-if="!segment.EditMode">{{ segment.Category }}</span>
+                    <input ng-if="segment.EditMode" type="text" class="form-control input-xs" ng-model="segment.Category">
+                </td>
+                <td data-title="'Bookmarked'" sortable="'BookmarkSearch'" class="text-center" header-class="'text-center'">
+                    <i ng-if="segment.BookmarkSearch && !segment.EditMode" class="fa fa-check-circle text-success"></i>
+                    <input ng-if="segment.EditMode" type="checkbox" ng-model="segment.BookmarkSearch">
+                </td>
+                <td data-title="'Search Criteria'">
+                    <ul class="list-unstyled margbot">
+                        <li ng-if="segment.Keyword != ''">Keyword: {{ segment.Keyword }}</li>
+                        <li ng-if="segment.Location != ''">Location: {{ segment.Location }}</li>
+                        <li ng-if="segment.DistanceInMiles > 0">Distance: {{ segment.DistanceInMiles }}</li>
+                        <li ng-if="segment.filters.length > 0">Filter Count: {{ segment.filters.length }}
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <button ng-if="!segment.EditMode" type="button" class="btn btn-primary btn-xs" ng-click="LoadSavedSearch(segment)" ng-disabled="segment.Name1 == CurrentSaveSearchName"><i class="fa fa-clone" aria-hidden="true"></i> Apply</button>
+                    <button ng-if="!segment.EditMode" type="button" class="btn btn-info btn-xs" ng-click="EditSegment(segment)"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
+                    
+                    <button ng-if="segment.EditMode" type="button" class="btn btn-success btn-xs" ng-click="SaveSegmentDetails(segment)"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+                    <button ng-if="segment.EditMode" type="button" class="btn btn-default btn-xs" ng-click="segment.EditMode = false"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+                    <button ng-if="segment.EditMode" type="button" class="btn btn-link btn-xs" ng-click="DeleteSearch(segment, $index)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="ManageSegments.close()"><i class="fa fa-times" aria-hidden="true"></i> Close</button>
+    </div>
+</script>
+
+<!-- Add to Network by NPI -->
+<script type="text/ng-template" id="AddToNetworkByNPIModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add to Network by NPI</h3>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger" role="alert" ng-show="DidntFindNPI">
+            <div class="btn-group pull-right">
+                <button type="button" class="btn" ng-click="NavigateToAddEntity()">
+                    <i class="fa fa-plus"></i> Add
+                </button>
+            </div>
+            <div class="input-group">
+                <h5>You have entered a NPI that does not exist in the system. Would you like to add it?</h5>
+            </div>
+        </div>
+        <div class="input-group">
+            <label class="input-group-addon" id="sizing-addon3">NPI</label>
+            <input type="text" ng-model="AddToNetworkByNPI" class="form-control" aria-describedby="sizing-addon3">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="AddToNetworkByNPIModal.ok(AddToNetworkByNPI)"><i class="fa fa-plus" aria-hidden="true"></i> Add Provider</button>
+        <button class="btn btn-default" ng-click="AddToNetworkByNPIModal.cancel()"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+    </div>
+</script>

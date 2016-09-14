@@ -1,0 +1,190 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(CurrentProfileEntityIdent) && CurrentEntity.Entity[0].Person && CurrentEntity.Entity[0].Registered}">
+            <i class="fa fa-user-md"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(CurrentProfileEntityIdent) && CurrentEntity.Entity[0].Person && CurrentEntity.Entity[0].Registered"></i>
+        </span>
+        Profile <small ng-bind="CurrentEntity.Entity[0].FullName"></small>
+    </h1>
+
+    <div ng-if="!IsMyProfile(CurrentEntity.Entity[0].Ident)" class="btn-group header-action" dropdown>
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdown-toggle>
+            <i class="fa fa-bars"></i> Actions <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+            <li ng-if="accountCanBeClaimed()"><a ng-click="claimResource()"><i class="fa fa-plus"></i> Claim This Account</a></li>
+            <li ng-if="IsCustomer() && !IsMyProfile(CurrentEntity.Entity[0].Ident) && CurrentEntity.Entity[0].Person && !CurrentEntity.Entity[0].Registered && CurrentEntity.Entity[0].EntityTypeIdent !== 6"><a ng-click="registerEntity()"><i class="fa fa-envelope"></i> Send Invitation to ZenPRM</a></li>
+            <li ng-if="!IsMyProfile(CurrentEntity.Entity[0].Ident) && !IsActiveDelegate()"><a ng-click="addAsDelegate()"><i class="fa fa-user-plus"></i> Add As Delegate</a></li>
+            <!-- If this isn't my account and they are already my delegate-->
+            <li ng-if="!IsMyProfile(CurrentEntity.Entity[0].Ident) && IsActiveDelegate()"><a ng-click="removeAsDelegate()" ng-confirm-click="You are about to remove this person as a delegate, are you sure you want to do this?"><i class="fa fa-user-times"></i> Remove As Delegate</a></li>
+            <!-- If this isn't my account and they aren't already in my network and the person viewing the screen is a customer-->
+            <li ng-if="!IsMyProfile(CurrentEntity.Entity[0].Ident) && !CurrentEntity.Entity[0].IsInNetwork && IsCustomer()"><a ng-click="addToNetwork(CurrentEntity.Entity[0].Ident)"><i class="fa fa-plus"></i> Add to Network</a></li>
+            <!-- If this isn't my account and they are already in my network and the person viewing the screen is a customer-->
+            <li ng-if="!IsMyProfile(CurrentEntity.Entity[0].Ident) && CurrentEntity.Entity[0].IsInNetwork && IsCustomer()" ng-click="removeFromNetwork(CurrentEntity.Entity[0].Ident)"><a ng-confirm-click="Are you sure?"><i class="fa fa-times"></i> Remove from Network</a></li>
+            <li ng-if="IsCustomer() && CurrentEntity.Entity[0].PrivateResource" 
+                ng-repeat="type in EntityTypes | filter: {IncludeInCNP: true, Person: CurrentEntity.Entity[0].Person} | orderBy: 'Name1'">
+                <a ng-click="changeEntityType(type.Ident)"><i class="fa fa-user"></i> Convert Resource to {{type.Name1}}</a>
+            </li>
+            <li ng-if="userIsSystemAdmin && CurrentEntity.Entity[0].SystemRoleIdent !== value  && value < 3" ng-repeat="(key, value) in SystemRoles">
+                <a ng-click="setEntityAsCustomer(value)"><i class="fa fa-money"></i> Set as {{key}}</a>
+            </li>
+        </ul>
+    </div>
+
+    <zen-entity-nav entity="CurrentEntity.Entity[0]" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+
+<div id="Profile" class="container-fluid" ng-if="EntityLoaded" ng-class="'theme-' + CurrentEntity.Entity[0].EntityTypeIdent">
+    <div class="row">
+        <div class="col-md-4 col-lg-3">
+            <!-- ### BASIC INFO ### -->
+            <!-- Person -->
+            <zen-resource-card entity="CurrentEntity" ng-if="CurrentEntity.Entity[0].Person"></zen-resource-card>
+            <!-- Non-person -->
+            <zen-org-card entity="CurrentEntity" ng-if="!CurrentEntity.Entity[0].Person"></zen-org-card>
+            
+            <!-- Reports -->
+            <div class="panel panel-primary" id="panel-Reports">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-file-text-o" aria-hidden="true"></i> Reports</h2>
+                </div>
+                <ul class="panel-body">
+                    <li ng-repeat="report in ReportData">
+                        <h3><a ui-sref="site.Report({reportident: report.Ident, entityident: EntityIdent})"><i class="fa fa-lock" aria-hidden="true" ng-if="report.PrivateReport"></i> {{report.Name1}}</a></h3>
+                        <p ng-if="report.Desc1">{{ report.Desc1 }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- end .col -->
+        <div class="col-md-8 col-lg-9">
+
+            <!-- ### MEASURES (CUSTOMER ONLY) ### -->
+            <div id="panel-Measures" class="panel panel-primary" ng-if="IsCustomer() && (OrgMeasuresData.length > 0 || ResourceMeasuresData.length > 0)">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-pie-chart"></i> Key Performance Measures</h2>
+                </div>
+                <ul class="nav nav-tabs" ng-if="!CurrentEntity.Entity[0].Person">
+                    <li ng-class="{'active': CurrentTab == 'organization'}" ng-if="OrgMeasuresData.length > 0">
+                        <a ng-click="GetMeasuresData('organization');">Organizational Measures</a>
+                    </li>
+                    <li ng-class="{'active': CurrentTab == 'resource'}" ng-if="ResourceMeasuresData.length > 0">
+                        <a ng-click="GetMeasuresData('resource')">My Measures</a>
+                    </li>
+                </ul>
+                <div class="panel-body">
+                    <div class="row">
+                        <zen-dial ng-show="CurrentTab == 'organization'" ng-if="OrgMeasuresData.length > 0" measure="measure" reload-dials="GetMeasuresData" allow-edit="{{true}}" dial-click="MeasureClick" dial-class="{{'col-sm-6 col-lg-4'}}" ng-repeat="measure in OrgMeasuresData"></zen-dial>
+                        <zen-dial ng-show="CurrentTab == 'resource'" ng-if="ResourceMeasuresData.length > 0" measure="measure" reload-dials="GetMeasuresData" allow-edit="{{true}}" dial-click="MeasureClick" dial-class="{{'col-sm-6 col-lg-4'}}" ng-repeat="measure in ResourceMeasuresData"></zen-dial>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ### RESOURCE PROJECTS ### -->
+            <div class="panel panel-primary" ng-if="(IsMyProfile(CurrentProfileEntityIdent) || IsCustomer()) && (ResourceProjects.length > 0 || CustomerProjects.length > 0)" ng-hide="IsCustomer() && IsMyProfile(CurrentProfileEntityIdent)">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-briefcase" aria-hidden="true"></i> Ongoing Projects</h2>
+                </div>
+                <div class="panel-body Projects" ng-if="ResourceProjects.length > 0">
+                    <zen-project project="project" show-org-label="!IsCustomer()" show-bookmark="IsCustomer()" ng-repeat="project in ResourceProjects"></zen-project>
+                </div>
+                <div class="panel-body" ng-if="CustomerProjects.length > 0">
+                    <h3>Add Resource to a Project</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select class="form-control" ng-model="AddToThisCustomerProject.Ident" ng-options="option.Ident as option.Name1 for option in CustomerProjects | filter:{Archived:false}">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-primary" type="button" ng-click="AddToProject()" ng-disabled="!AddToThisCustomerProject.Ident">
+                                <i class="fa fa-plus"></i> Add Resource to Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ### UPDATE PROFILE ### -->
+            <div class="panel panel-primary" ng-if="IsCustomer() && (OrgMeasuresData.length == 0 && ResourceMeasuresData.length == 0)">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-line-chart" aria-hidden="true"></i> Enhance Your Data!</h2>
+                </div>
+                <div class="panel-body">
+                    <p>Many of the fields on Resource Profiles are searchable or can be used as Filters on the My Resources screen. Update this Resource's Profile now to improve your ability to find them later!</p>
+                    <a ui-sref="site.EditProfile({ident: CurrentProfileEntityIdent})" class="btn btn-primary">
+                        <i class="fa fa-pencil"></i> Update Resource Profile Now!
+                    </a>
+                </div>
+            </div>
+            <div class="panel panel-primary" ng-if="IsMyProfile(CurrentProfileEntityIdent) && ResourceMeasuresData.length == 0">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-pencil" aria-hidden="true"></i> Keep Up to Date</h2>
+                </div>
+                <div class="panel-body">
+                    <p>ZenPRM - Provider &amp; Resource Management - is a CRM for Healthcare, providing administrators with tools to collect and analyze data, manage complex networks, and interact with contacts. <b>You can help improve health care administration by keeping your profile up to date!</b> Thanks for your support!</p>
+                    <a ui-sref="site.EditProfile({ident: CurrentProfileEntityIdent})" class="btn btn-primary">
+                        <i class="fa fa-pencil"></i> Update Your Profile Now!
+                    </a>
+                </div>
+            </div>
+
+            <!-- ### FAQS ### -->
+            <div class="panel panel-primary" ng-if="IsCustomer() && (OrgMeasuresData.length == 0 && ResourceMeasuresData.length == 0)">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-life-ring" aria-hidden="true"></i> Related Help Topics</h2>
+                </div>
+                <ul class="panel-body">
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/resource" target="_blank">Glossary: Resource</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/what-things-can-my-resources-see-on-their-end-and-what-cant-they-see" target="_blank">What things can other ZenPRM Customers see and what can’t they see?</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/how-do-i-add-a-resources-as-a-delegate" target="_blank">How do I add a resources as a Delegate?</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/how-do-i-remove-resources-from-my-network" target="_blank">How do I remove resources from my network?</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/organizing-individual-resources-by-organization" target="_blank">How to build out your organization structure</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/how-do-i-see-who-has-been-changing-data-in-my-basic-profile" target="_blank">How do I see who has been changing data in my personal profile?</a></li>
+                </ul>
+            </div>
+            <div class="panel panel-primary" ng-if="IsMyProfile(CurrentProfileEntityIdent)">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-life-ring" aria-hidden="true"></i> FAQ's</h2>
+                </div>
+                <ul class="panel-body">
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/how-do-i-see-who-has-been-changing-data-in-my-basic-profile" target="_blank">How do I see who has been changing data in my personal profile?</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/what-files-are-supported-zenprm" target="_blank">What Files are Supported ZenPRM?</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/browser-requirements-2">What browsers does ZenPRM support?</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/where-do-i-go-to-logout-of-the-system" target="_blank">How do I log out of ZenPRM?</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- end .col -->
+    </div>
+    <!-- end .row -->
+</div>
+<!-- end .container -->
+
+
+<div class="loading" ng-show="!EntityLoaded">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>
+
+<script type="text/ng-template" id="ChangeEntityTypeProvider.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Convert Private Contact to Provider</h3>
+    </div>
+    <div class="modal-body loader">
+        <p>
+            In order to convert a Private Contact to a Provider, you must provide an NPI. If the NPI is already mapped to a Resource in ZenPRM, the Resources will be merged and a record of changes will be kept in the Audit History. During the merge, customer data will be prioritized over ZenPRM sourced data.
+        </p>
+        <div class="input-group">
+            <label class="input-group-addon" id="sizing-addon3">NPI</label>
+            <input type="text" ng-model="ChangeEntityTypeProvider.NPI" class="form-control" aria-describedby="sizing-addon3" ui-validate="'ChangeEntityTypeProvider.ValidateNPI($value)'">
+        </div>
+        <span class="text-danger" ng-hide="ChangeEntityTypeProvider.NPIValid">You must enter a valid NPI.</span>
+
+        <div class="loading" ng-show="LoadingResourceChange">
+            <img src="assets/img/template/spinner_grey.png" width="90" alt="loading...">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-disabled="!ChangeEntityTypeProvider.NPIValid" ng-click="ChangeEntityTypeProvider.ok(ChangeEntityTypeProvider.NPI)"><i class="fa fa-user-md" aria-hidden="true"></i> Convert to Provider</button>
+        <button class="btn btn-default" ng-click="ChangeEntityTypeProvider.cancel()"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+    </div>
+</script>

@@ -1,0 +1,72 @@
+<div id="BrandBar">
+    <img src="assets/img/template/logo.png" height="60" alt="ZenPRM">
+</div>
+<div class="container-fluid" id="Login">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+            <!--[if lte IE 9]>
+            <div class="alert alert-warning">
+                <h2>Warning! You are using an unsupported browser</h2>
+                <p>Unfortunately, the browser you are using is not supported. We recommend upgrading to a modern browser before you log in. You can learn more at the following resources:</p>
+                <ul>
+                    <li><a href="https://whatbrowser.org/" target="_blank">What browser am I using?</a></li>
+                    <li><a href="http://browsehappy.com/" target="_blank">Learn more about modern browsers</a></li>
+                    <li><a href="https://zenprm.groovehq.com/knowledge_base/topics/browser-requirements-2" target="_blank">ZenPRM's browser requirements</a></li>
+                </ul>
+            </div>
+            <![endif]-->
+            <form ng-submit="login()" name="loginForm">
+                <div class="panel panel-primary">
+                    <div class="panel-heading text-center">
+                        <h2>Log In</h2>
+                    </div>
+                    <div class="panel-body">
+                        <h3>Log in with ZenPRM account</h3>
+                        <zen-cookie-warning></zen-cookie-warning>
+                        <div class="form-group">
+                            <label class="required" for="Username">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" class="form-control" id="username" ng-model="username" ng-maxlength="75" placeholder="Username" required autofocus />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="Password">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" ng-model="password" placeholder="Password" required />
+                            </div>
+                        </div>
+                        <div class="form-group text-right">
+                            <a ui-sref="forgotPassword">Forgot Password</a>
+                            <button class="btn btn-primary login-btn" type="submit" ng-disabled="loginForm.$invalid"><i class="fa fa-sign-in"></i> LOG IN</button>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-body">
+                        <h3>Log in with social account</h3>
+                        <p>You must previously have registered with the same account.</p>
+                        <div class="row social-btns">
+                            <div class="col-sm-6 col-md-3">
+                                <a class="social-btn facebook" ng-href=".auth/login/facebook?post_login_redirect_url=/api/oauth"><i class="fa fa-facebook-official" aria-hidden="true"></i> Facebook</a>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <a class="social-btn google" ng-href=".auth/login/google?post_login_redirect_url=/api/oauth"><i class="fa fa-google" aria-hidden="true"></i> Google</a>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <a class="social-btn linkedin" ng-href=".auth/login/aad?post_login_redirect_url=/api/oauth"><i class="fa fa-linkedin" aria-hidden="true"></i> LinkedIn</a>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <a class="social-btn twitter" ng-href=".auth/login/twitter?post_login_redirect_url=/api/oauth"><i class="fa fa-twitter" aria-hidden="true"></i> Twitter</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end .panel -->
+            </form>
+        </div>
+        <!-- end .col -->
+    </div>
+    <!-- end .row -->
+</div>
+<!-- end .container -->

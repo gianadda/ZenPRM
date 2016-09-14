@@ -1,0 +1,63 @@
+//********************************************************//
+// Mixins //
+
+// For displaying a legend within a popover
+// Used by .dial and .data-viz
+@mixin popover-legend() {
+	font-size: 13px;
+	text-align: left;
+	min-width: 180px;
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		li {
+			margin: 2px 0;
+		}
+	}
+
+	p, ul {
+		margin-bottom: 5px;
+	}
+
+	p:last-child {
+		margin: 0;
+	}
+}
+
+// For measures, etc.
+@mixin data-label() {
+	font-size: 13px;
+	color: #888;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin: 5px 0 0 0;
+	overflow: hidden;
+}
+
+// Theming
+@mixin panel-theme($color, $id) {
+	.panel-heading {
+		background-color: $color;
+		background-image: url('/assets/img/template/theme_' + $id + '.png'); 
+	}
+
+	.nav-tabs {
+		background-color: $color;
+
+		> li:not(.active) {
+			a:hover, a:focus {
+				background: darken($color, 10%);
+			}
+		}
+	}
+}
+
+@mixin modal-theme($color, $id) {
+	.modal-header {
+		background-color: $color;
+		background-image: url('/assets/img/template/theme_' + $id + '.png'); 
+	}
+}

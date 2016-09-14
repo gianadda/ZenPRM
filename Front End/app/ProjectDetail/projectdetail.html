@@ -1,0 +1,71 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-briefcase"></i> {{EntityProject.Name1}}</h1>
+    <ui-view name="projectnavigation"></ui-view>
+</header>
+
+<div id="ProjectDetail" class="container-fluid">
+
+    <div class="row">
+        <div ng-class="{'col-md-6': MeasuresData.length > 1, 'col-md-8': MeasuresData.length <= 1}">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2>Responses</h2>
+                </div>
+                <ul class="panel-body panel-nav h-bar-chart">
+                    <li ng-repeat="question in formControls">
+                        <a class="row" ui-sref="site.ProjectDetail.Question({questionident: question.Ident, tab: 'list'})">
+                            <div class="col-xs-12 bar-label">
+                                <h3>{{ question.label }} <small><i class="fa fa-external-link-square" aria-hidden="true"></i></small></h3> 
+                            </div>
+                            <div class="col-xs-8 hidden-print">
+                                <div class="h-bar">
+                                    <div class="fill" ng-class="{'full': question.PercentComplete >= 100}" ng-style="{width: question.PercentComplete+'%'}"></div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>{{question.PercentComplete}}%</strong> <small>({{question.TotalEntityProjectEntityEntityProjectAnswers}} Total)</small>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- end .panel-body -->
+            </div>
+            <!-- end .panel -->
+        </div>
+        <!-- end .col -->
+
+        <div ng-class="{'col-md-6': MeasuresData.length > 1, 'col-md-4': MeasuresData.length <= 1}">
+            <div id="panel-Measures" class="panel panel-primary" ng-if="MeasuresData.length > 0">
+                <div class="panel-heading">
+                    <h2><i class="fa fa-pie-chart"></i> Key Performance Measures</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <zen-dial measure="measure" reload-dials="GetMeasuresData" allow-edit="{{true}}" dial-click="MeasureClick" dial-class="{{colClass}}" ng-repeat="measure in MeasuresData"></zen-dial>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-primary" ng-if="MeasuresData.length == 0">
+                <div class="panel-heading">
+                    <h2>Project Contact</h2>
+                </div>
+                <div class="panel-body">
+                    <p><b>{{EntityProject.ProjectManager}}</b>
+                        <span ng-if="EntityProject.ProjectManagerPhone !== ''"><br><i class="fa fa-phone"></i> <a href="tel:{{EntityProject.ProjectManagerPhone}}">{{EntityProject.ProjectManagerPhone}}</a></span>
+                        <span ng-if="EntityProject.ProjectManagerEmail !== ''"><br><i class="fa fa-envelope-o"></i> <span ng-bind-html="TrustEmailHTML(EntityProject.ProjectManagerEmail)"></span></span>
+                    </p>
+                </div>
+            </div>
+            <!--  -->
+        </div>
+        <!-- end .col -->
+    </div>
+    <!-- end .row -->
+
+</div>
+<!-- end .container -->
+
+
+<div class="loading" ng-show="loadingPage">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

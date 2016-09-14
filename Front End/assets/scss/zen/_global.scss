@@ -1,0 +1,53 @@
+//********************************************************//
+// Generic Styles //
+
+body {
+	background: #f5f5f5 url(/assets/img/template/bg_default.png) repeat left top;
+	// Fix IE scrollbar overlap
+	-ms-overflow-style: scrollbar;
+}
+
+body.local {
+	background-image: url(/assets/img/template/bg_local.png);
+}
+body.dev {
+	background-image: url(/assets/img/template/bg_dev.png);
+}
+body.alpha {
+	background-image: url(/assets/img/template/bg_alpha.png);
+}
+
+h1, h2, h3 {
+	font-weight: 400;
+	color: $brand-purple;
+}
+
+h6 {
+	font-weight: 400;
+}
+
+a, a:link, a:visited {
+	cursor: pointer;
+}
+
+img {
+	-ms-interpolation-mode: bicubic;
+}
+
+iframe {
+	max-width: 100%;
+}
+
+time {
+	font-family: $font-family-monospace;
+	font-size: 12px;
+	color: $brand-rust;
+}
+
+@media screen and (max-width: 767px) {
+
+	h1 {
+		font-size: 24px;
+	}
+
+}

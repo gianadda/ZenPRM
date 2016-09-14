@@ -1,0 +1,203 @@
+<div id="Demographics" class="panel-body loader">
+    
+    <div class="panel panel-alt">
+        <div class="panel-heading">
+            <h2>I. Specialties</h2>
+        </div>
+        <div class="panel-body">
+            <h3 class="sub-title">Top Specialty Groups</h3>
+            <div class="row" ng-if="DemographicData.TopSpecialties.length > 0">
+                <div ng-class="{'col-md-6': DemographicData.TopSpecialties.length > 1, 'col-xs-12': DemographicData.TopSpecialties.length == 1}">
+                    <div class="top" ng-repeat="topspecialty in DemographicData.TopSpecialties | orderBy: '-ResultCount' | limitTo: 1">
+                        <h4>#1</h4>
+                        <h5><a ng-click="FilterBySpecialty(topspecialty.Ident, false)" title="View resources">{{topspecialty.Name1}} <i class="fa fa-external-link-square"></i></a></h5>
+                        <div class="h-bar">
+                            <div class="fill" ng-style="{width: topspecialty.Percentage+'%'}"></div>
+                        </div>
+                        <p><strong>{{topspecialty.Percentage}}%</strong> <small>({{topspecialty.ResultCount}} Total)</small></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <ol start="2" class="h-bar-chart secondary">
+                        <li class="row" ng-repeat="specialty in DemographicData.TopSpecialties | orderBy: '-ResultCount'" ng-show="!$first">
+                            <div class="col-sm-5 bar-label"><a ng-click="FilterBySpecialty(specialty.Ident, false)" title="View resources">{{specialty.Name1}} <i class="fa fa-external-link-square"></i></a></div>
+                            <div class="col-sm-3 hidden-print">
+                                <div class="h-bar">
+                                    <div class="fill" ng-style="{width: specialty.Percentage+'%'}"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong>{{specialty.Percentage}}%</strong> <small>({{specialty.ResultCount}} Total)</small>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!-- end .row -->
+            <div class="alert alert-info" ng-if="DemographicData.TopSpecialties.length == 0">
+                {{ NoDataMessage }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 report hidden-xs">
+                    <h3 class="sub-title">Top Specialties vs Sole Provider</h3>
+                    <canvas id="TopSpecialtiesSoleProviderChart" class="chart chart-radar" chart-data="TopSpecialtiesSoleProviderData" chart-labels="TopSpecialtiesSoleProviderLabels" ng-if="DisplayTopSpecialtiesSoleProvider"></canvas>
+                    <ol class="legend" ng-if="DisplayTopSpecialtiesSoleProvider">
+                        <li><span class="color"></span> No</li>
+                        <li><span class="color"></span> Yes</li>
+                        <li><span class="color"></span> N/A</li>
+                    </ol>
+                    <div class="alert alert-info" ng-if="!DisplayTopSpecialtiesSoleProvider">
+                        {{ NoDataMessage }}
+                    </div>
+                </div>
+                <div class="col-md-6 report">
+                    <h3 class="sub-title">Top Specialties - Gender Breakdown</h3>
+                    <ol class="h-bar-chart" ng-if="DemographicData.TopSpecialtiesGenderBreakdown.length > 0">
+                        <li class="row expand" ng-repeat="(key, value) in DemographicData.TopSpecialtiesGenderBreakdown | groupBy: 'Column1'" ng-click="show = !show">
+                            <div class="col-sm-5 bar-label">{{ key }} </div>
+                            <div class="col-sm-7 hidden-print">
+                                <div class="h-bar">
+                                    <div class="fill" ng-repeat="percentage in value | orderBy: 'Name1'" ng-style="{'width': percentage.Percentage + '%'}"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-7 visible-print-block">
+                                <span ng-repeat="percentage in value | orderBy: 'Name1'"><b>{{ percentage.Name1 }}</b>: {{ percentage.Percentage }} &nbsp;&nbsp;</span>
+                            </div>
+                            <div class="col-xs-12" ng-show="show" ng-hide="!show">
+                                <ol class="h-bar-chart">
+                                    <li class="row" ng-repeat="expando in value | orderBy: 'Name1'">
+                                        <div class="col-xs-5 bar-label">
+                                            <a ng-if="expando.Name1 !== 'N/A'" ng-click="FilterBySpecialtyAndGender(expando.SpecialtyIdent, expando.Ident);" title="View resources">{{ expando.Name1 }} ({{expando.Percentage}}%) <i class="fa fa-external-link-square"></i></a>
+                                            <span ng-if="expando.Name1 == 'N/A'">{{ expando.Name1 }} ({{expando.Percentage}}%)</span>
+                                        </div>
+                                        <div class="col-xs-7">
+                                            <div class="h-bar">
+                                                <div class="fill" ng-style="{'width': expando.Percentage + '%'}"></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </li>
+                    </ol>
+                    <ol class="legend" ng-if="DemographicData.TopSpecialtiesGenderBreakdown.length > 0">
+                        <li><span class="color"></span> Female</li>
+                        <li><span class="color"></span> Male</li>
+                        <li><span class="color"></span> N/A</li>
+                    </ol>
+                    <div class="alert alert-info" ng-if="DemographicData.TopSpecialtiesGenderBreakdown.length == 0">
+                        {{ NoDataMessage }}
+                    </div>
+                </div>
+            </div>
+            <!-- end .row -->
+        </div>
+        <!-- end .panel-body -->
+    </div>
+    <!-- .panel -->
+
+
+    <div class="panel panel-alt">
+        <div class="panel-heading">
+            <h2>II. Practices</h2>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="sub-title">Meaningful Use Totals</h3>
+                    <canvas id="MeaningfulUseChart" class="chart chart-pie" chart-data="MeaningfulUseData" chart-labels="MeaningfulUseLabels" ng-if="DisplayMeaningfulUse"></canvas>
+                    <ol class="legend" ng-if="DisplayMeaningfulUse">
+                        <li ng-repeat="label in MeaningfulUseLabels"><span class="color"></span> {{label}}</li>
+                    </ol>
+                    <div class="alert alert-info" ng-if="!DisplayMeaningfulUse">
+                        <span ng-if="MeaningfulUseMessage != ''">{{ MeaningfulUseMessage }}</span>
+                        <span ng-if="MeaningfulUseMessage == ''">{{ NoDataMessage }}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="sub-title">Top Payors</h3>
+                    <canvas id="TopPayorChart" class="chart chart-polar-area" chart-data="TopPayorData" chart-labels="TopPayorLabelsText" ng-if="DisplayTopPayor"></canvas>
+                    <ol class="legend" ng-if="DisplayTopPayor">
+                        <li ng-repeat="label in TopPayorLabels"><a ng-click="FilterByPayor(label.Ident, false)" title="View resources">
+                            <span class="color"></span> 
+                            {{label.text}} <i class="fa fa-external-link-square"></i></a>
+                        </li>
+                    </ol>
+                    <div class="alert alert-info" ng-if="!DisplayTopPayor">
+                        {{ NoDataMessage }}
+                    </div>
+                </div>
+            </div>
+            <!-- end .row -->
+        </div>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+
+
+    <div class="panel panel-alt">
+        <div class="panel-heading">
+            <h2>III. Demographics</h2>
+        </div>
+        <div class="panel-body">
+            <div class="row margbot">
+                <div class="col-md-6">
+                    <h3 class="sub-title">Geography</h3>
+                    <table class="table table-bordered" ng-if="DemographicData.Geography.length > 0">
+                        <thead>
+                            <tr>
+                                <th>Zip Code</th>
+                                <th># Resources</th>
+                                <th>Top Specialty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="locale in DemographicData.Geography | limitTo: 8" ng-if="locale.ZipCode != '' && locale.ZipCode != '0'">
+                                <td data-title="Zip Code">{{ locale.ZipCode }}</td>
+                                <td data-title="# Resources">{{ locale.ResultCount }}</td>
+                                <td data-title="Top Specialty">{{ locale.Specialty }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="alert alert-info" ng-if="DemographicData.Geography.length == 0">
+                        {{ NoDataMessage }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="sub-title">Gender</h3>
+                    <div class="gender" ng-repeat="gender in DemographicData.Gender | orderBy: '+Gender'">
+                        <div class="row">
+                            <div class="col-xs-6 text-right">
+                                <h4>
+                                    <a ng-if="gender.Gender !== 'N/A'" ng-click="FilterByGender(gender.Ident, false)" title="View resources"><i class="fa" ng-class="{'fa-venus': gender.Gender == 'Female', 'fa-mars': gender.Gender == 'Male', 'fa-neuter': gender.Gender == 'N/A'}"></i> {{ gender.Gender }} <i class="fa fa-external-link-square"></i></a>
+                                    <span ng-if="gender.Gender == 'N/A'"><i class="fa" ng-class="{'fa-venus': gender.Gender == 'Female', 'fa-mars': gender.Gender == 'Male', 'fa-neuter': gender.Gender == 'N/A'}"></i> {{ gender.Gender }}</span>
+                                </h4>
+                            </div>
+                            <div class="col-xs-6">
+                                <h5>{{ gender.Percentage }}%</h5>
+                            </div>
+                        </div>
+                        <p class="text-center" ng-if="gender.Specialty != ''"><strong>Top Specialty:</strong> 
+                            <a ng-if="gender.Gender !== 'N/A'" ng-click="FilterBySpecialtyAndGender(gender.SpecialtyIdent, gender.Ident);" title="View resources">{{ gender.Specialty }} <i class="fa fa-external-link-square"></i></a>
+                            <span ng-if="gender.Gender == 'N/A'">{{ gender.Specialty }}</span>
+                        </p>
+                        <div class="alert alert-info" ng-if="DemographicData.Gender.length == 0">
+                            {{ NoDataMessage }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end .row -->
+        </div>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+    
+
+    <!-- Loading icon -->
+    <div class="loading solid" ng-show="loading">
+        <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+    </div>
+</div>
+<!-- end #Demographics -->

@@ -1,0 +1,65 @@
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-paper-plane"></i> Reports</h1>
+
+    <button ng-if="ShowList" type="button" class="btn btn-primary header-action" ng-click="add()"><i class="fa fa-plus" aria-hidden="true"></i> Add Report</button>
+    <div class="header-action">
+        <button ng-if="!ShowList" type="button" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Report</button>
+        <button ng-if="!ShowList" type="button" class="btn btn-default" ng-click="cancel()""><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+    </div>
+</header>
+<div class="container-fluid" id="Reports">
+    <div class="panel panel-primary" ng-if="ShowList">
+        <div class="panel-heading">
+            <h2>Active Reports</h2>
+        </div>
+        <ul class="panel-body">
+            <li class="row" ng-repeat="report in Reports | orderBy: 'Name1'">
+                <div class="col-sm-8">
+                    <h3><a ng-click="selectReport(report)"><i class="fa fa-lock" aria-hidden="true" ng-if="report.PrivateReport"></i> {{report.Name1}}</a></h3>
+                    <p ng-if="report.Desc1">{{ report.Desc1 }}</p>
+                </div>
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-link btn-xs" ng-click="delete(report.Ident)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="panel panel-primary" ng-if="!ShowList">
+        <div class="panel-heading">
+            <h2>{{ CurrentReport.Name1 }}</h2>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="required">Name:</label>
+                <input class="form-control" ng-model="CurrentReport.Name1" id="Name1">
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="CurrentReport.PrivateReport" id="PrivateReport"> Private
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea class="form-control" ng-model="CurrentReport.Desc1" rows="4" maxlength="4000" id="Desc1"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Report Body:</label>
+                <textarea ui-tinymce="tinymceOptions" ng-model="CurrentReport.TemplateHTML"></textarea>
+                <!-- <text-angular ng-model="CurrentReport.TemplateHTML" ta-toolbar="CustomToolbar" ta-toolbar-button-class="btn btn-default btn-sm"></text-angular> -->
+            </div>
+            <button type="button" class="btn btn-success" ng-click="save()">
+                <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+            </button>
+            <button type="button" class="btn btn-default" ng-click="cancel()">
+                <i class="fa fa-times" aria-hidden="true"></i> Cancel
+            </button>
+        </div>
+    </div>
+    <!-- end .panel -->
+</div>
+<!-- end .container -->
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

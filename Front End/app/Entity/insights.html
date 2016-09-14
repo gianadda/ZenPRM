@@ -1,0 +1,42 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-bar-chart"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        Insights <small ng-bind="EntityDetails.FullName"></small>
+    </h1>
+
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+
+<!-- ### PROVIDER ### -->
+<div id="Profile" class="container-fluid theme-3" ng-if="EntityLoaded && EntityDetails.EntityTypeIdent == 3">
+
+    <!-- ### REFERRALS ### -->
+    <zen-referrals npi="EntityDetails.NPI" ident="EntityIdent"></zen-referrals>
+
+    <!-- ### PART D PAYMENT & UTILIZATION DATA ### -->
+    <zen-physician-summary npi="EntityDetails.NPI" ident="EntityIdent"></zen-physician-summary>
+    <zen-physician-details npi="EntityDetails.NPI" ident="EntityIdent"></zen-physician-details>
+
+    <!-- ### PART D PRESCRIBER DATA ### -->
+    <zen-prescriber-summary npi="EntityDetails.NPI" ident="EntityIdent"></zen-prescriber-summary>
+    <zen-prescriber-details npi="EntityDetails.NPI" ident="EntityIdent"></zen-prescriber-details>
+
+</div>
+<!-- end .container -->
+
+
+<!-- ### ORGANIZATION & FACILITIES ### -->
+<div id="Profile" class="container-fluid" ng-if="EntityLoaded && (EntityDetails.EntityTypeIdent == 2 || EntityDetails.EntityTypeIdent == 4)" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+
+    <!-- ### REFERRALS ### -->
+    <zen-referrals npi="{{EntityDetails.NPI}}"></zen-referrals>
+
+</div>
+<!-- end .container -->
+
+<div class="loading" ng-show="!EntityLoaded">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

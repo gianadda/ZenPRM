@@ -1,0 +1,455 @@
+<header id="Title" class="clearfix" ng-if="EntityProject" ng-hide="PreviewMode || AnswerMode">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-briefcase" aria-hidden="true"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        {{ EntityProject.Name1 }} <small ng-bind="EntityDetails.FullName"></small>
+    </h1>
+
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+<form id="Project" name="ProjectForm" class="container-fluid" novalidate>
+
+    <div class="well well-primary" ng-if="EntityProject" ng-hide="PreviewMode || AnswerMode">
+        <h2 class="margtop">Project Contact</h2>
+        <p><b>{{EntityProject.ProjectManager}}</b>
+            <span ng-if="EntityProject.ProjectManagerPhone !== ''"><br><i class="fa fa-phone"></i> <a href="tel:{{EntityProject.ProjectManagerPhone}}">{{EntityProject.ProjectManagerPhone}}</a></span>
+            <span ng-if="EntityProject.ProjectManagerEmail !== ''"><br><i class="fa fa-envelope-o"></i> <span ng-bind-html="TrustEmailHTML(EntityProject.ProjectManagerEmail)"></span></span>
+        </p>
+        <button type="button" class="btn btn-primary heading-form" ng-if="IsCustomer()" ui-sref="site.ProjectDetail({ident: EntityProject.Ident})">
+            <i class="fa fa-briefcase"></i> Review or Edit Project
+        </button>
+    </div>
+    <div class="panel panel-primary" ng-if="EntityProject && (formControls | orderBy: 'sortOrder').length > 0">
+        <div class="panel-body">
+            <div class="form-group" ng-repeat="formControl in formControls | orderBy: 'sortOrder' track by formControl.Ident">
+                <!-- Headings -->
+                <div class="question-group heading" ng-if="formControl.type.indexOf('ZenHeading') !== -1">
+                    <ng-include src="formControl.type"></ng-include>
+                    <div class="desc" ng-if="formControl.description != ''" ng-bind-html="formControl.description"></div>
+                </div>
+                <!-- Regular Questions -->
+                <div class="question-group" ng-class="{'complete': formControl.submitted}" ng-if="formControl.type.indexOf('ZenHeading') == -1">
+                    <!-- Buttons -->
+                    <a class="clear" ng-click="clearAnswer(formControl, $index)" ng-if="formControl.type.indexOf('ZenHeading') == -1"><i class="fa fa-ban"></i> Clear</a>
+                    <a ng-click="GetQuestionHistory(formControl)" ng-if="formControl.type.indexOf('ZenHeading') == -1"><i class="fa fa-history"></i> History</a>
+                    <!-- Label -->
+                    <label class="question" for="{{formControl.model}}">
+                        <i class="fa fa-check-circle-o" ng-if="formControl.submitted"></i> {{formControl.label}} <i ng-if="formControl.helpText" class="fa fa-question-circle" title="{{formControl.helpText}}"></i>
+                    </label>
+                    <!-- Description -->
+                    <div class="desc" ng-if="formControl.description != ''" ng-bind-html="formControl.description"></div>
+                    <!-- Field -->
+                    <div class="answer">
+                        <ng-include src="formControl.type"></ng-include>
+                    </div>
+                    <!-- History -->
+                    <div class="history" ng-hide="formControl.ShowingHistory == false">
+                        <table class="table table-bordered" ng-if="formControl.History.results.length > 0">
+                            <thead>
+                                <tr>
+                                    <th>Answer Date</th>
+                                    <th>Participant</th>
+                                    <th>Question</th>
+                                    <th>Answer</th>
+                                    <th>Answered By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="history in formControl.History.results">
+                                    <td data-title="Answer Date"><time>{{ FormatDateTime(history.AnswerDateTime) }}</time></td>
+                                    <td data-title="Participant"><a ui-sref="site.Profile({ident: history.EntityIdent})">{{ history.Entity }}</a></td>
+                                    <td data-title="Question">{{ history.Question }}</td>
+                                    <td data-title="Answer" ng-if="!formControl.IsFileUpload">{{ history.Answer }}</td>
+                                    <td data-title="Answer" ng-if="formControl.IsFileUpload"> 
+                                        <a class="ellipsis" target="_blank" ng-href="{{ getFileLink(history.AnswerIdent) }}"> {{ history.Answer }} </a> 
+                                    </td>
+                                    <td data-title="Answered By">{{ history.AnswerUser }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="alert alert-info" ng-if="formControl.History.results.length == 0">
+                            <i class="fa fa-info-circle"></i> There are no historical answers for this question.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" ng-hide="PreviewMode || AnswerMode">
+            <button class="btn btn-success" type="submit" ng-click="Save()" ng-disabled="!ProjectForm.$dirty || !AllowSave">
+                <i class="fa fa-floppy-o"></i> Save Answers
+            </button>
+            <span class="text-danger" ng-show="!AllowSave">Archived Projects cannot be edited!</span>
+        </div>
+    </div>
+
+    <button class="btn btn-success sticky-btn" type="submit" ng-click="Save()" ng-disabled="!ProjectForm.$dirty || !AllowSave" ng-hide="PreviewMode || AnswerMode"><i class="fa fa-floppy-o"></i></button>
+
+</form>
+
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>
+
+<!--Heading1-->
+<script type="text/ng-template" id="ZenHeading1">
+    <h1>{{formControl.label}}</h1>
+</script>
+<!--Heading2-->
+<script type="text/ng-template" id="ZenHeading2">
+    <h2>{{formControl.label}}</h2>
+</script>
+<!--Heading3-->
+<script type="text/ng-template" id="ZenHeading3">
+    <h3>{{formControl.label}}</h3>
+</script>
+<!--Heading4-->
+<script type="text/ng-template" id="ZenHeading4">
+    <h4>{{formControl.label}}</h4>
+</script>
+<!--Single Line TextBox-->
+<script type="text/ng-template" id="ZenSingleLineTextBox">
+    <input class="form-control" ng-model="formSchema[formControl.model]" placeholder="{{formControl.placeholder}}" type="text" id="{{formControl.model}}" autocomplete="off">
+</script>
+<!--Multi line Text box-->
+<script type="text/ng-template" id="ZenMultiLineTextBox">
+    <textarea class="form-control" ng-model="formSchema[formControl.model]" rows="{{formControl.rows}}" maxlength="4000" id="{{formControl.model}}" name="{{formControl.model}}" placeholder="{{formControl.placeholder}}">
+</script>
+<!--Date textbox-->
+<script type="text/ng-template" id="ZenSingleLineDateTextBox">
+    <zen-date-picker date-value="formSchema[formControl.model]" id="{{formControl.model}}" name="{{formControl.model}}"></zen-date-picker>
+</script>
+<!--DateTime textbox-->
+<script type="text/ng-template" id="ZenSingleLineDateTimeTextBox">
+    <input class="form-control date" ng-model="formSchema[formControl.model]" id="{{formControl.model}}" type="datetime-local">
+</script>
+<!--ZenAddress-->
+<script type="text/ng-template" id="ZenAddress">
+    <div class="address">
+        <div class="form-group">
+            <label class="control-label" for="{{formControl.model + 'Address1'}}">Address 1:</label>
+            <input id="{{formControl.model + 'Address1'}}" name="{{formControl.model + 'Address1'}}" ng-model="formSchema[formControl.model]['Address1']" ui-validate="'ZenValidation.ValidAlphaNumeric($value)'" ng-maxlength="255" type="text" class="form-control">
+            <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['Address1'], formControl.model + 'Address1', 'validator')">You must enter a valid Address 1.</span>
+            <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['Address1'], formControl.model + 'Address1', 'maxlength')">The Address 1 must be less than 255 characters.</span>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="{{formControl.model + 'Address2'}}">Address 2:</label>
+            <input id="{{formControl.model + 'Address2'}}" name="{{formControl.model + 'Address2'}}" ng-model="formSchema[formControl.model]['Address2']" ui-validate="'ZenValidation.ValidAlphaNumeric($value)'" ng-maxlength="255" type="text" class="form-control">
+            <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['Address2'], formControl.model + 'Address2', 'validator')">You must enter a valid Address 2.</span>
+            <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['Address2'], formControl.model + 'Address2', 'maxlength')">The Address 2 must be less than 255 characters.</span>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="{{formControl.model + 'Address3'}}">Address 3:</label>
+            <input id="{{formControl.model + 'Address3'}}" name="{{formControl.model + 'Address3'}}" ng-model="formSchema[formControl.model]['Address3']" ui-validate="'ZenValidation.ValidAlphaNumeric($value)'" ng-maxlength="255" type="text" class="form-control">
+            <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['Address3'], formControl.model + 'Address3', 'validator')">You must enter a valid Address 3.</span>
+            <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['Address3'], formControl.model + 'Address3', 'maxlength')">The Address 3 must be less than 255 characters.</span>
+        </div>
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label class="control-label" for="{{formControl.model + 'City'}}">City:</label>
+                    <input id="{{formControl.model + 'City'}}" name="{{formControl.model + 'City'}}" ng-model="formSchema[formControl.model]['City']" ui-validate="'ZenValidation.ValidAlphaNumeric($value)'" ng-maxlength="255" type="text" class="form-control">
+                    <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['City'], formControl.model + 'City', 'validator')">You must enter a valid City.</span>
+                    <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['City'], formControl.model + 'City', 'maxlength')">The City must be less than 255 characters.</span>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="control-label" for="{{formControl.model + 'State'}}">State:</label>
+                    <select class="form-control" id="{{formControl.model + 'State'}}" ng-model="formSchema[formControl.model]['StateName']" ng-options="option.Name1 as option.Name1 for option in LookupTables.States">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label" for="{{formControl.model + 'Zip'}}">Zip:</label>
+                    <input id="{{formControl.model + 'Zip'}}" name="{{formControl.model + 'Zip'}}" ng-model="formSchema[formControl.model]['Zip']" ui-validate="'ZenValidation.ValidAlphaNumeric($value)'" ng-maxlength="255" type="text" class="form-control">
+                    <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['Zip'], formControl.model + 'Zip', 'validator')">You must enter a valid Zip.</span>
+                    <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model]['Zip'], formControl.model + 'Zip', 'maxlength')">The Zip must be less than 255 characters.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!--ZenCheckboxList-->
+<script type="text/ng-template" id="ZenCheckboxList">
+    <button class="btn btn-primary btn-xs" ng-click="SelectAll(formControl.model, formControl.options, $parent.formSchema, true)" ng-hide="PreviewMode"><i class="fa fa-check-square-o"></i> Select All</button>
+    <button class="btn btn-primary btn-xs" ng-click="SelectAll(formControl.model, formControl.options, $parent.formSchema, false)" ng-hide="PreviewMode"><i class="fa fa-square-o"></i> Deselect All</button>
+    <div class="option-list">
+        <div class="checkbox" ng-repeat="option in formControl.options track by $index">
+            <label>
+                <input type="checkbox" ng-model="formSchema[formControl.model][option]" id="{{formControl.model + option}}"> {{option}}
+            </label>
+        </div>
+    </div>
+</script>
+<!--ZenCheckboxListHorizontal-->
+<script type="text/ng-template" id="ZenCheckboxListHorizontal">
+    <button class="btn btn-primary btn-xs" ng-click="SelectAll(formControl.model, formControl.options, $parent.formSchema, true)" ng-hide="PreviewMode"><i class="fa fa-check-square-o"></i> Select All</button>
+    <button class="btn btn-primary btn-xs" ng-click="SelectAll(formControl.model, formControl.options, $parent.formSchema, false)" ng-hide="PreviewMode"><i class="fa fa-square-o"></i> Deselect All</button>
+    <div class="option-list">
+        <label class="checkbox-inline" ng-repeat="option in formControl.options track by $index">
+            <input type="checkbox" ng-model="formSchema[formControl.model][option]" id="{{formControl.model + option}}"> {{option}}
+        </label>
+    </div>
+</script>
+<!--ZenOptionList-->
+<script type="text/ng-template" id="ZenOptionList">
+    <div class="radio" ng-repeat="option in formControl.options track by $index">
+        <label>
+            <input type="radio" ng-model="$parent.formSchema[formControl.model]" ng-value="option" id="{{formControl.model + option}}" name="{{formControl.model}}"> {{option}}
+        </label>
+    </div>
+</script>
+<!--ZenOptionListHorizontal-->
+<script type="text/ng-template" id="ZenOptionListHorizontal">
+    <div>
+        <label class="radio-inline" ng-repeat="option in formControl.options track by $index">
+            <input type="radio" ng-model="$parent.formSchema[formControl.model]" ng-value="option" id="{{formControl.model + option}}" name="{{formControl.model}}"> {{option}}
+        </label>
+    </div>
+</script>
+<!--ZenRating-->
+<script type="text/ng-template" id="ZenRating">
+    <div class="rating">
+        <label ng-repeat="option in formControl.options track by $index" ng-class="{'active': $parent.formSchema[formControl.model] == option}">
+            <input type="radio" ng-model="$parent.formSchema[formControl.model]" ng-value="option" id="{{formControl.model + option}}" name="{{formControl.model}}"><span class="rating-num">{{option}}</span><i class="fa fa-check rating-num" aria-hidden="true"></i>
+        </label>
+    </div>
+</script>
+<!-- ZenDropdown -->
+<script type="text/ng-template" id="ZenDropdown">
+    <select class="form-control" id="{{formControl.model}}" ng-model="formSchema[formControl.model]" ng-options="option for option in formControl.options">
+    </select>
+</script>
+<!--ZenTags-->
+<script type="text/ng-template" id="ZenTags">
+    <tags-input class="ti-input-sm" placeholder="{{formControl.placeholder}}" display-property="name" replace-spaces-with-dashes="false" ng-model="formSchema[formControl.model]" add-from-autocomplete-only="true" add-on-paste="true">
+        <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="formControl.options | filter: $query"></auto-complete>
+    </tags-input>
+</script>
+<!--ZenNumberPicker-->
+<script type="text/ng-template" id="ZenNumberPicker">
+    <input class="form-control number" ng-model="formSchema[formControl.model]" type="number" id="{{formControl.model}}" placeholder="{{formControl.placeholder}}">
+</script>
+<!--ZenWebsite-->
+<script type="text/ng-template" id="ZenWebsite">
+    <input class="form-control" ng-model="formSchema[formControl.model]" placeholder="{{formControl.placeholder}}" type="text" ui-validate="'ZenValidation.ValidURL($value)'" id="{{formControl.model}}" name="{{formControl.model}}">
+    <span class="text-danger" ng-show="HasError(ProjectForm, formSchema[formControl.model], formControl.model, 'validator')">You must enter a valid URL.</span>
+</script>
+<!--ZenSwitch-->
+<script type="text/ng-template" id="ZenSwitch">
+    <div class="btn-group switch">
+        <label class="btn" ng-class="{'btn-default': formSchema[formControl.model] !== 'Yes', 'btn-primary': formSchema[formControl.model] == 'Yes', 'btn-success': formControl.submitted && formSchema[formControl.model] == 'Yes'}">
+            <input type="radio" name="{{formControl.model}}" ng-model="formSchema[formControl.model]" value="Yes"> 
+            <i ng-if="formSchema[formControl.model] !== 'Yes'" class="fa fa-circle-o" aria-hidden="true"></i>
+            <i ng-if="formSchema[formControl.model] == 'Yes'" class="fa fa-check-circle" aria-hidden="true"></i> Yes
+        </label>
+
+        <label class="btn" ng-class="{'btn-default': formSchema[formControl.model] !== 'No', 'btn-primary': formSchema[formControl.model] == 'No', 'btn-success': formControl.submitted && formSchema[formControl.model] == 'No'}">
+            <input type="radio" name="{{formControl.model}}" ng-model="formSchema[formControl.model]" value="No"> 
+            <i ng-if="formSchema[formControl.model] !== 'No'" class="fa fa-circle-o" aria-hidden="true"></i>
+            <i ng-if="formSchema[formControl.model] == 'No'" class="fa fa-check-circle" aria-hidden="true"></i> No
+        </label>
+    </div>
+</script>
+<!--ZenEmail-->
+<script type="text/ng-template" id="ZenEmail">
+    <input class="form-control" ng-model="formSchema[formControl.model]" placeholder="{{formControl.placeholder}}" type="email" id="{{formControl.model}}">
+</script>
+<!--ZenTypeahead-->
+<script type="text/ng-template" id="ZenTypeahead">
+    <input class="form-control" type="text" ng-model="formSchema[formControl.model]" ng-keydown="removeTypeaheadValueOnBackspace($event, formControl)"
+        typeahead="option for option in formControl.options | filter:$viewValue | limitTo:8" typeahead-editable="false">
+</script>
+<!-- ZenCurrency -->
+<script type="text/ng-template" id="ZenCurrency">
+    <input class="form-control number" ng-model="formSchema[formControl.model]" step="0.01" type="number" id="{{formControl.model}}" placeholder="{{formControl.placeholder}}">
+</script>
+<!-- ZenSlider -->
+<script type="text/ng-template" id="ZenSlider">
+    <div class="range row">
+        <div class="col-xs-10 col-md-11">
+            <input class="range-slider" type="range" size="2" id="{{formControl.model}}" min="0" max="100" ng-model="formSchema[formControl.model]">
+        </div>
+        <div class="col-xs-2 col-md-1 text-right">
+            <span class="range-label" ng-if="formSchema[formControl.model]">{{formSchema[formControl.model]}}</span>
+        </div>
+    </div>
+</script>
+<!--ZenHours-->
+<script type="text/ng-template" id="ZenHours">
+    <div class="row hours">
+        <div class="col-sm-3 col-md-2">
+            <label for="{{formControl.model + 'SundayStartTime'}}">Sunday</label>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'SundayStartTime'}}" ng-model="formSchema[formControl.model]['SundayStartTime']">
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm text-center">&mdash;</div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'SundayEndTime'}}" ng-model="formSchema[formControl.model]['SundayEndTime']">
+        </div>
+        <div class="col-sm-3">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="{{formControl.model + 'SundayClosed'}}" ng-model="formSchema[formControl.model]['SundayClosed']"> Closed
+            </label>
+        </div>
+    </div>
+    <div class="row hours">
+        <div class="col-sm-3 col-md-2">
+            <label for="{{formControl.model + 'MondayStartTime'}}">Monday</label>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'MondayStartTime'}}" ng-model="formSchema[formControl.model]['MondayStartTime']">
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm text-center">&mdash;</div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'MondayEndTime'}}" ng-model="formSchema[formControl.model]['MondayEndTime']">
+        </div>
+        <div class="col-sm-3">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="{{formControl.model + 'MondayClosed'}}" ng-model="formSchema[formControl.model]['MondayClosed']"> Closed
+            </label>
+        </div>
+    </div>
+    <div class="row hours">
+        <div class="col-sm-3 col-md-2">
+            <label for="{{formControl.model + 'TuesdayStartTime'}}">Tuesday</label>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'TuesdayStartTime'}}" ng-model="formSchema[formControl.model]['TuesdayStartTime']">
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm text-center">&mdash;</div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'TuesdayEndTime'}}" ng-model="formSchema[formControl.model]['TuesdayEndTime']">
+        </div>
+        <div class="col-sm-3">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="{{formControl.model + 'TuesdayClosed'}}" ng-model="formSchema[formControl.model]['TuesdayClosed']"> Closed
+            </label>
+        </div>
+    </div>
+    <div class="row hours">
+        <div class="col-sm-3 col-md-2">
+            <label for="{{formControl.model + 'WednesdayStartTime'}}">Wednesday</label>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'WednesdayStartTime'}}" ng-model="formSchema[formControl.model]['WednesdayStartTime']">
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm text-center">&mdash;</div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'WednesdayEndTime'}}" ng-model="formSchema[formControl.model]['WednesdayEndTime']">
+        </div>
+        <div class="col-sm-3">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="{{formControl.model + 'WednesdayClosed'}}" ng-model="formSchema[formControl.model]['WednesdayClosed']"> Closed
+            </label>
+        </div>
+    </div>
+    <div class="row hours">
+        <div class="col-sm-3 col-md-2">
+            <label for="{{formControl.model + 'ThursdayStartTime'}}">Thursday</label>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'ThursdayStartTime'}}" ng-model="formSchema[formControl.model]['ThursdayStartTime']">
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm text-center">&mdash;</div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'ThursdayEndTime'}}" ng-model="formSchema[formControl.model]['ThursdayEndTime']">
+        </div>
+        <div class="col-sm-3">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="{{formControl.model + 'ThursdayClosed'}}" ng-model="formSchema[formControl.model]['ThursdayClosed']"> Closed
+            </label>
+        </div>
+    </div>
+    <div class="row hours">
+        <div class="col-sm-3 col-md-2">
+            <label for="{{formControl.model + 'FridayStartTime'}}">Friday</label>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'FridayStartTime'}}" ng-model="formSchema[formControl.model]['FridayStartTime']">
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm text-center">&mdash;</div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'FridayEndTime'}}" ng-model="formSchema[formControl.model]['FridayEndTime']">
+        </div>
+        <div class="col-sm-3">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="{{formControl.model + 'FridayClosed'}}" ng-model="formSchema[formControl.model]['FridayClosed']"> Closed
+            </label>
+        </div>
+    </div>
+    <div class="row hours">
+        <div class="col-sm-3 col-md-2">
+            <label for="{{formControl.model + 'SaturdayStartTime'}}">Saturday</label>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'SaturdayStartTime'}}" ng-model="formSchema[formControl.model]['SaturdayStartTime']">
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm text-center">&mdash;</div>
+        <div class="col-xs-6 col-sm-3">
+            <input class="form-control" type="time" id="{{formControl.model + 'SaturdayEndTime'}}" ng-model="formSchema[formControl.model]['SaturdayEndTime']">
+        </div>
+        <div class="col-sm-3">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="{{formControl.model + 'SaturdayClosed'}}" ng-model="formSchema[formControl.model]['SaturdayClosed']"> Closed
+            </label>
+        </div>
+    </div>
+</script>
+<!-- ZenImageUpload-->
+<script type="text/ng-template" id="ZenImageUpload">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="{{formControl.model}}" class="dropzone dropzone-sm" ng-class="{'active': formControl.dropImportActive, 'complete': formSchema[formControl.model]}">
+                <div class="loading" ng-show="formControl.ImportLoading">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                </div>
+                <div class="dropicon">
+                    <i class="fa fa-cloud-upload" ng-hide="formSchema[formControl.model]"></i>
+                    <i class="fa fa-check-circle-o" ng-show="formSchema[formControl.model]"></i>
+                </div>
+            </div>
+            <p class="text-muted"><small>Max file size: 10 MB. <a href="https://zenprm.groovehq.com/knowledge_base/topics/what-files-are-supported-zenprm" target="_blank">Accepted file types.</a></small></p>
+            <a class="btn btn-primary" ng-click="saveAndClose()" ng-disabled="!AllowSave"
+                ui-sref="site.RepositoryForProject({requirementIdent: formControl.Ident, projectIdent: projectIdent, entityIdent: CurrentProfileEntityIdent})">
+                Select from Files
+            </a>
+        </div>
+        <div class="col-md-6 upload-thumb" ng-if="formSchema[formControl.model]">
+            <b>Preview</b>
+            <br>
+            <img ng-if="formSchema[formControl.model]['FileContents']" ng-src="{{formSchema[formControl.model]['FileContents']}}" />
+            <img ng-if="formSchema[formControl.model]['FileName'] && !formSchema[formControl.model]['FileContents']" ng-src="{{ getFileLink(formControl.AnswerIdent, true) }}" />
+        </div>
+    </div>
+</script>
+<!-- ZenFileUpload -->
+<script type="text/ng-template" id="ZenFileUpload">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="{{formControl.model}}" class="dropzone dropzone-sm" ng-class="{'active': formControl.dropImportActive, 'complete': formSchema[formControl.model]['FileName']}">
+                <div class="loading" ng-show="formControl.ImportLoading">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                </div>
+                <div class="dropicon">
+                    <i class="fa fa-cloud-upload" ng-if="!formSchema[formControl.model]['FileName'] || formControl.dropImportActive"></i>
+                    <i class="fa fa-check-circle-o" ng-if="formSchema[formControl.model]['FileName'] && !formControl.dropImportActive"></i>
+                </div>
+            </div>
+            <p class="text-muted"><small>Max file size: 10 MB. <a href="https://zenprm.groovehq.com/knowledge_base/topics/what-files-are-supported-zenprm" target="_blank">Accepted file types.</a></small></p>
+            <a class="btn btn-primary" ng-click="saveAndClose()" ng-disabled="!AllowSave"
+                ui-sref="site.RepositoryForProject({requirementIdent: formControl.Ident, projectIdent: projectIdent, entityIdent: CurrentProfileEntityIdent})">
+                Select from Files
+            </a>
+        </div>
+        <div class="col-md-6" ng-if="formSchema[formControl.model]['FileName']">
+            <b>View File</b>
+            <br>
+            <a class="ellipsis" target="_blank" ng-href="{{ getFileLink(formControl.AnswerIdent) }}"><i class="fa fa-file-text"></i> {{formSchema[formControl.model]['FileName']}}</a>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,27 @@
+
+<input type="file" id="photoUpload" class="form-control">
+<div ng-if="photo">
+	<img ng-src="{{photo}}" class="photo-preview-thumb" height="80" width="80" alt="Profile Photo">
+</div>
+
+<script type="text/ng-template" id="ImgCrop.html">
+	<div class="modal-header">
+		<a class="close" ng-click="CropModal.close()"><i class="fa fa-times"></i></a>
+		<h3 class="modal-title">Crop Image</h3>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-md-6" ng-show="originalPhoto">
+				<div class="cropArea">
+					<img-crop area-type="square" image="originalPhoto" on-change="updatePhoto($dataURI)" result-image="croppedPhoto" result-image-format="image/jpeg" result-image-size="imageSize" result-image-quality="imageQuality" ></img-crop>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<img ng-if="photo" class="photo-preview-full" ng-src="{{photo}}" alt="Profile Photo">
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-primary" ng-click="CropModal.close()">Done Cropping</button>
+	</div>
+</script>

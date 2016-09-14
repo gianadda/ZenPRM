@@ -1,0 +1,49 @@
+<div ng-class="dialClass">
+    <div ng-if="measure != 'N/A'" class="dial" ng-class="{'selected': measure.Selected == true}">
+        <zen-dial-modal measure="measure" reload-dials="reloadDials" ng-if="allowEdit == 'true'"></zen-dial-modal>
+
+        <!-- Pie chart -->
+        <a ng-if="measure.Values.length > 0" ng-click="dialClick(measure)" class="pie" popover-template="PiePopover.templateUrl" popover-placement="bottom" popover-popup-delay="500" popover-trigger="mouseenter">
+            <canvas class="chart chart-pie" chart-data="measure.PieData" chart-labels="measure.PieData" chart-options="PieOptions">
+            </canvas>
+        </a>
+        <script type="text/ng-template" id="pie-popover.html">
+            <strong>Legend:</strong>
+            <ul ng-if="measure.Values.length > 0">
+                <li ng-repeat="value in measure.Values"><i class="fa fa-square" ng-style="{'color': PieColors[$index]}"></i> <strong>{{ value.ValueCount }}</strong> - {{ value.Value1 }}</li>
+            </ul>
+        </script>
+
+        <!-- Everything else -->
+        <a ng-if="measure.Values.length == 0" ng-click="dialClick(measure)" class="metric" ng-class="measure.Color" 
+        popover-template="Popover.templateUrl" popover-placement="bottom" popover-popup-delay="500" popover-trigger="mouseenter">
+            <h3 ng-class="SetCharCountClass(measure.PrettyValue)">
+                <span class="money" ng-if="measure.Question1RequirementTypeIdent == 16 && measure.MeasureTypeIdent != 6 && measure.DisplayValue != 'Not Answered'">$</span>{{ measure.DisplayValue }}<small ng-if="measure.DisplayValue != 'Not Answered'"><span ng-if="measure.IsPercentage">%</span></small>
+            </h3>
+            <div class="clip" ng-class="{'over-half': (measure.IsPercentage && measure.DisplayValue > 50) || (!measure.IsPercentage && measure.Percentage > 50)}">
+                <div class="left-side" ng-style="measure.Style"></div>
+                <div class="right-side"></div>
+            </div>
+            <div ng-if="measure.IsPercentage" class="range" ng-repeat="range in measure.Ranges" ng-style="{ 'transform': 'rotate(' + range.High * 3.6 + 'deg)' }"></div>
+            <div ng-if="!measure.IsPercentage" class="range" ng-repeat="range in measure.Ranges" ng-style="{ 'transform': 'rotate(' + range.PercentHigh * 3.6 + 'deg)' }"></div>
+        </a>
+        <script type="text/ng-template" id="popover.html">
+            <ul ng-if="measure.Ranges.length > 0">
+                <li ng-repeat="range in measure.Ranges"><i class="fa fa-square" ng-class="'text-' + range.Color"></i> {{ range.Label }} ({{ range.Low }} - {{ range.High }})</li>
+            </ul>
+            <p><b>Full Value:</b><br>{{ measure.FullValue }}</p>
+        </script>
+
+        <!-- All dials -->
+        <h4 class="dial-label" ng-bind="measure.MeasureName"></h4>
+        <p class="dial-label" ng-if="measure.TotalResourcesAvailable > 0">{{measure.TotalResourcesComplete}} out of {{measure.TotalResourcesAvailable}} reporting</p>
+    </div>
+    
+    <div ng-if="measure == 'N/A'" class="dial">
+        <div class="metric">
+            <h3 class="chars-3">N/A</h3>
+        </div>
+        <h4 class="dial-label">Not Applicable</h4>
+    </div>
+
+</div>

@@ -1,0 +1,79 @@
+<script type="text/ng-template" id="providerTemplate.html">
+    <a>
+        <span bind-html-unsafe="match.label"></span>
+    </a>
+</script>
+
+<header id="Title" class="clearfix">
+    <h1><i class="fa fa-user-md"></i> Add Resource</h1>
+</header>
+
+<div class="container-fluid">
+    <form name="AddEntityForm" ng-submit="AddEntity()" class="form-horizontal">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Add resource to my network</h2>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="control-label col-sm-4 col-md-3 required" for="EntityType">Resource Type</label>
+                    <div class="col-sm-8 col-md-6">
+                        <select class="form-control" name="EntityType" id="EntityType" ng-model="EntityToAdd.EntityTypeIdent" ui-validate="'IsValidEntityType($value) || AddEntityForm.EntityType.$pristine'" ng-options="option.Ident as option.Name1 group by option.PersonDesc for option in LookupTables.EntityType">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="IsPerson(EntityToAdd.EntityTypeIdent) && EntityToAdd.EntityTypeIdent > 0">
+                    <label class="control-label col-sm-4 col-md-3 required" for="NPI">First Name</label>
+                    <div class="col-sm-8 col-md-6">
+                        <input id="firstName" ng-model="EntityToAdd.FirstName" name="firstName" ng-minlength="2" ng-maxlength="255" type="text" class="form-control">
+                        <span class="text-danger" ng-show="(AddEntityForm.firstName.$error.validator || AddEntityForm.firstName.$error.minlength) && !AddEntityForm.firstName.$pristine">You must enter a valid First Name.</span>
+                        <span class="text-danger" ng-show="AddEntityForm.firstName.$error.maxlength">The First Name must be less than 255 characters.</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="IsPerson(EntityToAdd.EntityTypeIdent) && EntityToAdd.EntityTypeIdent > 0">
+                    <label class="control-label col-sm-4 col-md-3 required" for="lastName">Last Name</label>
+                    <div class="col-sm-8 col-md-6">
+                        <input id="lastName" ng-model="EntityToAdd.LastName" name="lastName" type="text" ng-minlength="2" ng-maxlength="255" class="form-control input-md">
+                        <span class="text-danger" ng-show="(AddEntityForm.lastName.$error.validator || AddEntityForm.lastName.$error.minlength || ProfileBasicInfoForm.lastName.$error.maxlength) && !AddEntityForm.lastName.$pristine">You must enter a valid Last Name.</span>
+                        <span class="text-danger" ng-show="AddEntityForm.lastName.$error.maxlength">The Last Name must be less than 255 characters.</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="!IsPerson(EntityToAdd.EntityTypeIdent) && EntityToAdd.EntityTypeIdent > 0">
+                    <label class="control-label col-sm-4 col-md-3 required" for="OrganizationName"> Name</label>
+                    <div class="col-sm-8 col-md-6">
+                        <input id="OrganizationName" ng-model="EntityToAdd.OrganizationName" name="OrganizationName" ng-maxlength="255" type="text" class="form-control input-md">
+                        <span class="text-danger" ng-show="AddEntityForm.organizationName.$error.validator && !AddEntityForm.organizationName.$pristine">You must enter a valid Organization Name.</span>
+                        <span class="text-danger" ng-show="AddEntityForm.organizationName.$error.maxlength">The Organization Name must be less than 255 characters.</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="EntityToAdd.EntityTypeIdent > 0 && EntityToAdd.EntityTypeIdent != 6  && EntityToAdd.EntityTypeIdent != 7  && EntityToAdd.EntityTypeIdent != 8">
+                    <label class="control-label col-sm-4 col-md-3" for="NPI">NPI</label>
+                    <div class="col-sm-8 col-md-6">
+                        <input type="text" ui-validate="'ValidateNPI($value)'" ng-required ng-model="EntityToAdd.NPI" class="form-control" name="npi" id="npi">
+                        <span class="text-danger" ng-show="AddEntityForm.npi.$error.validator && !AddEntityForm.npi.$pristine">You must enter a valid NPI.</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-show="!IsPerson(EntityToAdd.EntityTypeIdent) && EntityToAdd.EntityTypeIdent > 0">
+                    <label class="control-label col-sm-4 col-md-3" for="EntityDelegateIdent">Add Delegate</label>
+                    <div class="col-sm-8 col-md-6 loader">
+                        <input type="text" ng-model="EntityDelegate" placeholder="Search by Name or NPI" typeahead="Provider as Provider.FullName for Provider in getProviders($viewValue)" typeahead-loading="loadingProviders" typeahead-no-results="noResults" typeahead-min-length="0" typeahead-wait-ms="600" class="form-control" typeahead-template-url="providerTemplate.html" typeahead-on-select="setProvider($item)" id="EntityDelegateIdent" autocomplete="off">
+                        <div class="loading-sm" ng-show="loadingProviders">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+           <!-- <pre>{{AddEntityForm | json }}</pre> -->
+            <div class="panel-footer">
+                <button type="submit" ng-disabled="IsEntityFormInvalid()" class="btn btn-success">
+                    <i class="fa fa-floppy-o"></i> Save
+                </button>
+                <a ui-sref="site.Resources({Tab: 'grid'})" class="btn btn-default"><i class="fa fa-times"></i> Cancel</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+<!-- end .container -->

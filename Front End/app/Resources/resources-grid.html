@@ -1,0 +1,98 @@
+<div class="toolbar clearfix" ng-class="{'global': Global}">
+    <!-- Bulk Controls -->
+    <div class="bulk-controls form-inline" ng-if="!Global && searchResultsTotal > 0 && CurrentEntity.EntityProject.length > 0">
+        <button class="btn btn-default btn-xs" type="button" ng-click="SelectAllSearchResults()" ng-show="!AreAllShowingSearchResultsSelected()"><i class="fa fa-check-square-o"></i> Select Visible Resources
+        </button>
+        <button class="btn btn-default btn-xs" type="button" ng-click="DeselectAllSearchResults()" ng-show="AreAllShowingSearchResultsSelected()"><i class="fa fa-square-o"></i> Deselect All
+        </button>
+        <select class="form-control input-xs" ng-model="BulkAddToProjectEntityProject.Ident" ng-options="option.Ident as option.Name1 for option in CurrentEntity.EntityProject | filter:{Archived:false}">
+        </select>
+        <button class="btn btn-primary btn-xs" type="button" ng-click="BulkAddToProject()" ng-disabled="!BulkAddToProjectEntityProject.Ident">
+            <i class="fa fa-plus"></i> Add {{GetSelectedSearchResultsCount() | number}} Resources to Project
+        </button>
+    </div>
+    <!-- View Options -->
+    <div class="btn-group view-controls">
+        <button class="btn btn-xs" ng-class="{'btn-primary': view == 'compact', 'btn-default': view == 'full'}" type="button" ng-click="view = 'compact'">
+            <i class="fa fa-th"></i> Compact View
+        </button>
+        <button class="btn btn-xs" ng-class="{'btn-default': view == 'compact', 'btn-primary': view == 'full'}" type="button" ng-click="view = 'full'">
+            <i class="fa fa-th-large"></i> Full View
+        </button>
+    </div>
+</div>
+<!-- end .toolbar -->
+<!-- Search Results -->
+<div id="SearchResults" class="loader" ng-class="{'compact': view == 'compact'}">
+    <div class="panel panel-default" ng-repeat="result in searchResults">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-4 username">
+                    <input type="checkbox" class="bulk-check" ng-model="result.checked">
+                    <strong><zen-resource-name name="result.DisplayName" ident="result.Ident" photo="result.ProfilePhoto"></zen-resource-name></strong>
+                    <small ng-if="result.Distance && searchCriteria.radius !== 'Unknown'">{{result.Distance}} mi. away</small>
+                </div>
+                <div class="col-md-2">
+                    <span ng-if="result.NPI">NPI: {{result.NPI}}</span>
+                </div>
+                <div class="col-md-2 compact-only">
+                    {{ result.Email }}
+                </div>
+                <div class="col-md-4 compact-only">
+                    <span ng-if="result.PrimaryAddress1">{{result.PrimaryAddress1}}</span>
+                    <span ng-if="result.PrimaryAddress2">, {{result.PrimaryAddress2}}</span>
+                    <span ng-if="result.PrimaryAddress3">, {{result.PrimaryAddress3}}</span>
+                    <span ng-if="result.PrimaryCity">, {{result.PrimaryCity}}, {{result.PrimaryState}} {{result.PrimaryZip}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body details">
+            <div class="row">
+                <div class="col-sm-6 col-lg-4">
+                    <section ng-if="result.PrimaryAddress1">
+                        <p><span ng-if="result.PrimaryAddress1">{{result.PrimaryAddress1}}</span>
+                            <span ng-if="result.PrimaryAddress2"><br> {{result.PrimaryAddress2}}</span>
+                            <span ng-if="result.PrimaryAddress3"><br> {{result.PrimaryAddress3}}</span>
+                            <span ng-if="result.PrimaryCity"><br> {{result.PrimaryCity}}, {{result.PrimaryState}} {{result.PrimaryZip}}</span>
+                        </p>
+                        <span ng-if="result.Distance > 0.0">{{result.Distance}} mi. from search</span>
+                    </section>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <section>
+                        <p ng-if="result.Specialty"><b>Specialty:</b> {{result.Specialty}}</p>
+                        <p ng-if="result.Gender"><b>Gender:</b> {{result.Gender}}</p>
+                        <p ng-if="result.Languages"><b>Languages:</b> {{result.Languages}}</p>
+                        <p ng-if="result.Degree"><b>Degree:</b> {{result.Degree}}</p>
+                    </section>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                    <section>
+                        <p ng-if="result.Payors"><b>Payors:</b> {{result.Payors}}</p>
+                        <p ng-if="result.AcceptingNewPatients"><i class="fa fa-check-square-o"></i> Accepting New Patients</p>
+                        <p ng-if="result.SoleProvider"><i class="fa fa-check-square-o"></i> Sole Provider</p>
+                        <p ng-if="!result.AcceptingNewPatients"><i class="fa fa-ban"></i> Not Accepting New Patients</p>
+                        <p ng-if="!result.SoleProvider"><i class="fa fa-ban"></i> Not Sole Provider</p>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- end .panel-body -->
+        <div class="panel-body filter-matches" ng-if="ShouldTheSearchResultAttributeRowShow(result)">
+            <span ng-repeat="(key, value) in result">
+                        <span class="match" ng-if="ShouldThisSearchResultAttributeShow(key, value)"><i class="fa fa-filter"></i> <b>{{key}}:</b> {{ value }}</span>
+            </span>
+        </div>
+    </div>
+    <!-- More Button -->
+    <div class="more" ng-show="(searchCriteria.resultsShown < searchResultsTotal)">
+        <button type="button" class="btn btn-default btn-sm" ng-click="updateLimitTo()"><i class="fa fa-plus-square-o"></i> Show {{resultsPageSize}} more Resources</button>
+        <button type="button" class="btn btn-default btn-sm" ng-show="!Global" ng-click="updateLimitToAll()"><i class="fa fa-plus-square-o"></i> Show all {{searchResultsTotal}} Resources</button>
+    </div>
+    <!-- Loading icon -->
+    <div class="loading" ng-show="loading">
+        <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+    </div>
+</div>
+<!-- end #SearchResults -->
+

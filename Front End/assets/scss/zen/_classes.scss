@@ -1,0 +1,118 @@
+//********************************************************//
+// Simple Classes //
+
+//--------------------------------------------------------//
+// Email addresses //
+
+.emails {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	li {
+		.fa {
+			font-size: 12px;
+			color: #888;
+			text-align: center;
+			width: 14px;
+		}
+
+		.fa.text-success {
+			color: $brand-green;
+		}
+
+		a {
+			margin-left: 3px;
+		}
+	}
+}
+
+//--------------------------------------------------------//
+// Headings //
+
+// Generally intended for H3s within panels
+.sub-title {
+	font-family: $font-family-sans-serif;
+	font-weight: 700;
+	color: $brand-burnt;
+	text-transform: uppercase;
+	padding: 0 0 8px 0;
+	margin-bottom: 20px;
+	border: 0;
+	border-bottom: 1px solid #ccc;
+}
+
+//--------------------------------------------------------//
+// Heading Forms //
+
+// Primarily for use within .panel-heading //
+
+.heading-form {
+	margin-top: 10px;
+}
+
+@media screen and (min-width: 992px) {
+
+	.heading-form {
+		position: absolute;
+		top: 8px;
+		right: 10px;
+		margin: 0;
+		max-width: 50%;
+	}
+
+	.heading-form-sm {
+		top: 10px;
+	}
+
+	.heading-form-full {
+		max-width: 100%;
+	}
+
+	.panel-alt .heading-form {
+		top: 5px;
+		right: 0;
+	}
+
+}
+
+//--------------------------------------------------------//
+// Margins //
+
+.margbot {
+	margin-bottom: 0 !important;
+}
+
+.margtop {
+	margin-top: 0 !important;
+}
+
+//--------------------------------------------------------//
+// Required Fields //
+
+// Put this on the label to add an asterisk
+
+.required:before {
+	content: "* ";
+}
+
+//--------------------------------------------------------//
+// Text Manipulation //
+
+.ellipsis {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: block;
+}
+
+// Does not work in IE //
+.force-wrap {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	word-break: break-word;
+}
+
+.nowrap {
+	white-space: nowrap;
+}

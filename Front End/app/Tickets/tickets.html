@@ -1,0 +1,242 @@
+<script type="text/ng-template" id="connectionTypeTemplate.html">
+    <a>
+        <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+    </a>
+</script>
+<!-- Page Title -->
+<header id="Title" class="clearfix">
+    <h1 ng-show="Profile"><i class="fa fa-ticket"></i> Tickets <span class="badge">{{ (Profile.EntityToDo | filter: omniSearchFilter).length }}</span></h1>
+    <div class="btn-group header-action">
+        <button type="button" class="btn btn-primary" ng-click="AddToDo()">
+            <i class="fa fa-plus"></i> Add Ticket
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="ExportToCSV()">
+            <i class="fa fa-download"></i> Export ({{ (Profile.EntityToDo | filter: omniSearchFilter).length }})
+        </button>
+    </div>
+</header>
+<div class="container-fluid" id="Tickets">
+    <div class="panel panel-primary" id="SuperBuilder">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-8 col-md-4">
+                    <div class="input-group input-group-sm input-group-alt">
+                        <label for="ominSearch" class="input-group-addon" title="Search by task ID, title, tags, etc."><i class="fa fa-search"></i></label>
+                        <input class="form-control" type="text" id="omniSearch" ng-init="omniSearch=''" ng-model="omniSearch" placeholder="Search by anything...">
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <div class="input-group input-group-sm input-group-alt">
+                        <label for="Sort" class="input-group-addon" title="Sort tickets"><i class="fa fa-sort-amount-desc"></i></label>
+                        <select name="Sort" id="Sort" class="form-control" ng-model="CurrentGroupData.CurrentGrouping" ng-options="option.Value as option.Name for option in CurrentGroupData.GroupByOptions" ng-change="loading = true; init();">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-8 col-md-3">
+                    <div class="input-group input-group-sm input-group-alt" ng-show="ShowCompleted==true">
+                        <label for="DateRange" class="input-group-addon" title="Set date range"><i class="fa fa-calendar"></i></label>
+                        <select id="DateRange" class="form-control input-sm" ng-init="omniSearchDateRange='7'" ng-model="omniSearchDateRange" ng-change="getTickets()">
+                            <option value="0">Activity Today</option>
+                            <option value="1">Activity Yesterday</option>
+                            <option value="7">Activity within the last 7 days</option>
+                            <option value="14">Activity within the last 14 days</option>
+                            <option value="30">Activity within the last 30 days</option>
+                            <option value="-1">All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-2 text-right">
+                    <button type="button" class="btn btn-default btn-sm" ng-init="ShowCompleted=false" ng-show="ShowCompleted==false" ng-click="ShowCompleted=!ShowCompleted; init()"><i class="fa fa-eye-slash"></i> Show Completed</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-init="ShowCompleted=false" ng-show="ShowCompleted==true" ng-click="ShowCompleted=!ShowCompleted; init()"><i class="fa fa-check-circle-o"></i> Hide Completed</button>
+                </div>
+            </div>
+        </div>
+        <!-- end .panel-heading -->
+        <div class="alert alert-info" ng-if="ShowNoTicketsMessage">
+            <h2><i class="fa fa-ticket"></i> Create Your First Ticket!</h2>
+            <p>You can add <b>Tickets</b> to keep track of tasks, customer questions, or any of your responsibilities. You can add tags for easy reference, comments for recording history, and a due date to keep yourself motivated. Tickets can also be assigned to a user and associated with a resource in your network.</p>
+            <p><b>Check them out for yourself!</b></p>
+            <p>
+                <button type="button" class="btn btn-primary btn-lg" ng-click="AddToDo()">
+                    <i class="fa fa-plus"></i> Create New Ticket
+                </button>
+            </p>
+        </div>
+        <!-- end .alert alert-info -->
+        <div class="panel-body" id="SuperList" ng-show="!ShowNoTicketsMessage" ng-class="SuperListClass">
+            <div class="sl-group" ng-repeat="(key, val) in Profile.EntityToDo | filter: omniSearchFilter | groupBy: 'groupText' ">
+                <h3 ng-if="CurrentGroupData.CurrentGrouping !== 'DueDate'">{{val[0].groupText}}</h3>
+                <h3 ng-if="CurrentGroupData.CurrentGrouping == 'DueDate'" ng-class="{'text-danger': isOverdue(val[0])}"><span ng-if="isOverdue(val[0])">Overdue:</span> {{val[0].groupText}}</h3>
+                <div class="sl-item clearfix" ng-class="{active: isCurrentTicket(ToDo.Ident), complete: isCompleteTicket(ToDo)}" ng-repeat-start="ToDo in val | orderBy: 'groupColumn' | filter: filterByShowCompleted" ng-click="selectToDo(ToDo)">
+                    <div class="sl-label">
+                        <!-- Status -->
+                        <span class="label" ng-class="{'label-primary': ToDo.ToDoStatusIdent == 1, 'label-warning': ToDo.ToDoStatusIdent == 2, 'label-danger': ToDo.ToDoStatusIdent == 3}" title="Status: {{ToDo.ToDoStatus}}">{{ ToDo.ToDoStatus.substring(0,1) }}</span>
+                        <!-- Type -->
+                        <i class="fa" ng-class="{'fa-envelope-o': ToDo.ToDoType == 'Email', 'fa-phone': ToDo.ToDoType == 'Phone Call', 'fa-fax': ToDo.ToDoType == 'Fax', 'fa-male': ToDo.ToDoType == 'In Person', 'fa-rocket': ToDo.ToDoType == 'Other'}" title="Ticket Type: {{ToDo.ToDoType}}"></i>
+                        <!-- Ticket # - Title -->
+                        <b>{{PadTicketNumber(ToDo.Ident)}}</b> - {{ToDo.Title}}
+                    </div>
+                    <div class="sl-meta regarding-resource">
+                        <a ui-sref="site.Profile({ident: ToDo.RegardingEntityIdent})"><i class="fa fa-user-md"></i> {{ToDo.Regarding}}</a>
+                    </div>
+                    <div class="sl-meta">
+                        <!-- Due Date -->
+                        <time class="sl-date" ng-if="isCompleteTicket(ToDo)"><span class="nowrap">Closed on</span> {{getCleanedDate(ToDo.CompletedDateTime)}}</time>
+                        <time class="sl-date" ng-if="!isCompleteTicket(ToDo)" ng-class="{'text-danger': isOverdue(ToDo)}">{{getCleanedDate(ToDo.DueDate)}}</time>
+                        <!-- Assignee -->
+                        <span class="sl-assignee" title="Assigned to {{ToDo.Assignee}}">
+                            <span class="user-icon img" ng-if="ToDo.AssigneeProfilePhoto" style="background-image: url({{ToDo.AssigneeProfilePhoto}})"></span>
+                        <span class="user-icon" ng-if="!ToDo.AssigneeProfilePhoto">{{ToDo.Assignee.substring(0,1)}}</span>
+                        </span>
+                    </div>
+                </div>
+                <aside class="loader" id="SuperSidebar" ng-if="isCurrentTicket(ToDo.Ident)" ng-repeat-end>
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active': ShowTab == 'Details'}"><a ng-click="ShowTab = 'Details'">Details</a></li>
+                        <li ng-class="{'active': ShowTab == 'Comments'}"><a ng-click="ShowTab = 'Comments'">Comments <small ng-if="ToDo.Comments.length > 0">({{ ToDo.Comments.length }})</small></a></li>
+                    </ul>
+                    <div class="tab-content clearfix" ng-show="ShowTab == 'Details'">
+                        <div class="form-group">
+                            <label for="TodoTitle">Title:</label>
+                            <input class="form-control" type="text" id="TodoTitle" ng-model="ToDo.Title">
+                        </div>
+                        <div class="form-group">
+                            <label for="TodoDesc">Description:</label>
+                            <textarea class="form-control" rows="5" id="TodoDesc" ng-model="ToDo.Desc1"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Type:</label>
+                            <div>
+                                <label class="radio-inline" ng-repeat="option in LookupTables.ToDoType">
+                                    <input type="radio" ng-model="ToDo.ToDoTypeIdent" ng-value="option.Ident"> {{option.Name1}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Initiator:</label>
+                            <div>
+                                <label class="radio-inline" ng-repeat="option in LookupTables.ToDoInitiatorType">
+                                    <input type="radio" ng-model="ToDo.ToDoInitiatorTypeIdent" ng-value="option.Ident"> {{option.Name1}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Categories:</label>
+                            <tags-input class="ti-input-sm" spellcheck="true" placeholder="Categories" ng-model="ToDo.Tags" on-tag-adding="ValidateAndAddCategory($tag ,ToDo)" on-tag-added="EditToDo(ToDo, false, false, false)">
+                                <auto-complete min-length="1" highlight-matched-text="true" load-on-down-arrow="true" load-on-focus="true" source="Profile.EntityToDoCategory | filter: {Active: true} | filter: $query | orderBy: 'text'"></auto-complete>
+                            </tags-input>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6" ng-init="ToDo.ShowEditAssignee = false;">
+                                <div class="form-group">
+                                    <label>Assignee:</label>
+                                    <div ng-show="!ToDo.ShowEditAssignee" ng-click="ToDo.ShowEditAssignee = !ToDo.ShowEditAssignee">
+                                        <a class="user-btn">
+                                            <span class="user-icon img" ng-if="ToDo.AssigneeProfilePhoto" style="background-image: url({{ToDo.AssigneeProfilePhoto}})"></span>
+                                            <span class="user-icon" ng-if="!ToDo.AssigneeProfilePhoto">{{ToDo.Assignee.substring(0,1)}}</span>
+                                            <span>{{ToDo.Assignee}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="loader" ng-show="ToDo.ShowEditAssignee">
+                                        <div class="input-group">
+                                            <input type="text" required ng-model="ToDo.AssigneeEntity" placeholder="Assignee" typeahead="Entity as Entity.FullName for Entity in getEntities($viewValue)" typeahead-loading="loadingAssigneeEntities" typeahead-no-results="noResults" typeahead-min-length="0" typeahead-wait-ms="600" class="form-control" typeahead-template-url="connectionTypeTemplate.html" typeahead-on-select="setAssignee($item, ToDo)">
+                                            <div class="loading-sm" ng-show="loadingAssigneeEntities">
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                            </div>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="ToDo.ShowEditAssignee = !ToDo.ShowEditAssignee"><i class="fa fa-times"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" ng-init="ToDo.ShowEditResource = false;">
+                                <div class="form-group">
+                                    <label>Resource:</label>
+                                    <div ng-show="!ToDo.ShowEditResource" ng-click="ToDo.ShowEditResource = !ToDo.ShowEditResource">
+                                        <a class="user-btn">
+                                            <span class="user-icon img" ng-if="ToDo.RegardingEntityProfilePhoto" style="background-image: url({{ToDo.RegardingEntityProfilePhoto}})"></span>
+                                            <span class="user-icon" ng-if="!ToDo.RegardingEntityProfilePhoto">{{ToDo.Regarding.substring(0,1)}}</span>
+                                            <span>{{ToDo.Regarding}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="loader" ng-show="ToDo.ShowEditResource">
+                                        <div class="input-group">
+                                            <input type="text" required ng-model="ToDo.RegardingEntity" placeholder="Resource" typeahead="Entity as Entity.FullName for Entity in getEntities($viewValue)" typeahead-loading="loadingRegardingEntities" typeahead-no-results="noResults" typeahead-min-length="0" typeahead-wait-ms="600" class="form-control" typeahead-template-url="connectionTypeTemplate.html" typeahead-on-select="setRegarding($item, ToDo)">
+                                            <div class="loading-sm" ng-show="loadingRegardingEntities">
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                            </div>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="ToDo.ShowEditResource = !ToDo.ShowEditResource"><i class="fa fa-times"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="StartDate">Start Date:</label>
+                                    <zen-date-picker date-class="up" date-value="ToDo.StartDate" id="StartDate" name="StartDate"></zen-date-picker>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="DueDate">Due Date:</label>
+                                    <zen-date-picker date-class="up right" date-value="ToDo.DueDate" id="DueDate" name="DueDate"></zen-date-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-toolbar super-toolbar">
+                            <div class="btn-group dropup" dropdown>
+                                <button class="btn btn-success" type="button" ng-click="EditToDo(ToDo, false, true, true)"><i class="fa fa-floppy-o"></i> Save as <strong>{{ToDo.ToDoStatus}}</strong></button>
+                                <button type="button" class="btn btn-success dropdown-toggle" dropdown-toggle>
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" dropdown-menu>
+                                    <li ng-repeat="status in LookupTables.ToDoStatus">
+                                        <a ng-click="ToDo.ToDoStatusIdent = status.Ident; EditToDo(ToDo, false, true, true)"><i class="fa fa-square" ng-class="{'text-primary': status.Ident == 1, 'text-yellow': status.Ident == 2, 'text-danger': status.Ident == 3}"></i> {{ status.Name1 }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-default" type="button" ng-click="init();"><i class="fa fa-ban"></i> Cancel</button>
+                            <div class="pull-right">
+                                <button class="btn btn-link" type="button" ng-click="RemoveToDo(ToDo)" ng-confirm-click="Are you sure you want to remove this ticket?"><i class="fa fa-trash-o"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end Details -->
+                    <div class="tab-content" ng-show="ShowTab == 'Comments'">
+                        <div class="form-group">
+                            <label for="TodoNewComment">Comment:</label>
+                            <textarea class="form-control" rows="5" id="TodoNewComment" ng-model="ToDo.NewComment"></textarea>
+                        </div>
+                        <div class="text-right">
+                            <button class="btn btn-success btn-sm" ng-disabled="!ToDo.NewComment" type="button" ng-click="EditToDo(ToDo, false, true, true)"><i class="fa fa-comment-o"></i> Comment</button>
+                        </div>
+                        <ul class="comments">
+                            <li ng-repeat="comment in ToDo.Comments">
+                                <p class="comment-meta"><b>{{comment.Commenter}}</b>
+                                    <time>{{comment.AddDateTime}}</time> <a class="pull-right" ng-click="RemoveComment(comment.Ident, ToDo)"><i class="fa fa-times"></i> Delete</a></p>
+                                <p class="comment-content">{{comment.CommentText}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- end Comments -->
+                    <div class="loading" ng-show="ToDoLoading">
+                        <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+                    </div>
+                </aside>
+            </div>
+            <!-- end .sl-group -->
+        </div>
+        <!-- end .panel-body -->
+    </div>
+    <!-- end .panel -->
+</div>
+<!-- end .container -->
+<div class="loading" ng-show="loading">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>

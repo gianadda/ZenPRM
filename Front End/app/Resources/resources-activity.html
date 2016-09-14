@@ -1,0 +1,121 @@
+<div class="toolbar">
+    <div class="form-inline">
+        <div class="form-group">
+            <label for="ActivityDate">Date Range:</label>
+            <select class="form-control input-sm" id="ActivityDate" ng-model="$root.searchCriteria.activityDate" ng-change="ApplyFilter()">
+                <option value="0">Today</option>
+                <option value="1">Yesterday</option>
+                <option value="7">Last 7 days</option>
+                <option value="14">Last 14 days</option>
+                <option value="30">Last 30 days</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ActivityType">Activity Type:</label>
+            <select class="form-control input-sm" id="ActivityType" ng-model="$root.searchCriteria.activityTypeGroupIdent" ng-change="ApplyFilter()" ng-options="option.Ident as option.Name1 for option in LookupTables.ActivityTypeGroup">
+            </select>
+        </div>
+    </div>
+    <button type="button" class="view-controls btn btn-primary btn-sm" ng-click="HideChart = !HideChart">
+        <i class="fa fa-eye-slash"></i> <span ng-show="!HideChart">Collapse Chart</span><span ng-show="HideChart">Show Chart</span>
+    </button>
+</div>
+
+<div class="panel-body loader" id="Activity">
+
+    <div class="row" ng-hide="HideChart">
+        <div class="col-md-8">
+            <div class="panel panel-alt">
+                <div class="panel-heading">
+                    <h2>Activity Over Time</h2>
+                </div>
+                <div class="panel-body">
+                    <canvas id="line" class="chart chart-line" chart-data="ChartData" chart-labels="ChartLabels" chart-options="ChartOptions"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-alt">
+                <div class="panel-heading">
+                    <h2>Activity Summary</h2>
+                </div>
+                <ul class="panel-body">
+                    <li ng-repeat="total in AllResults.ActivityGroupCounts" class="row">
+                        <div class="col-sm-8">{{ total.Name1 }}</div>
+                        <div class="col-sm-4">{{ total.TotalCount }}</div>
+                    </li>
+                    <li class="row">
+                        <div class="col-sm-8"><strong>Total</strong></div>
+                        <div class="col-sm-4"><strong>{{ TotalActivity }}</strong></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-alt margbot">
+        <div class="panel-heading">
+            <h2>Activity Breakdown</h2>
+            <button class="btn btn-primary btn-xs heading-form" ng-click="ShowDetails()">
+                <i class="fa fa-eye-slash"></i> <span ng-show="ShowDetailRow">Hide Details</span><span ng-show="!ShowDetailRow">Show Details</span>
+            </button>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Activity Date</th>
+                    <th>Editing Resource</th>
+                    <th>Description</th>
+                    <th>Updated Resource</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="activity in ActivityResults">
+                    <td data-title="Activity Date"><time>{{ getMomentDate(activity.ActivityDateTime) }}</time></td>
+                    <td data-title="Editing Resource">
+                        <zen-resource-name name="activity.Entity" ident="activity.EntityIdent" photo="activity.EntityProfilePhoto"></zen-resource-name>
+                    </td>
+                    <td data-title="Description">{{activity.ActivityDescription}}</td>
+                    <td data-title="Updated Resource">
+                        <zen-resource-name ng-if="activity.UpdatedEntity !== ''" name="activity.UpdatedEntity" ident="activity.UpdatedEntityIdent" photo="activity.UpdatedEntityProfilePhoto"></zen-resource-name>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="ShowDetailRow == true && activity.Detail.length > 0" class="nested-data">
+                    <td colspan="4">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="33%">Field Name</th>
+                                    <th width="33%">Old Value</th>
+                                    <th>New Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="detail in activity.Detail">
+                                    <td data-title="Field Name">{{ detail.FieldName }}</td>
+                                    <td data-title="Old Value">{{ detail.OldValue }}</td>
+                                    <td data-title="New Value">{{ detail.NewValue }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="ng-table-pager">
+        <div class="ng-table-counts btn-group pull-right">
+            <button type="button" class="btn btn-default btn-sm" ng-click="ResultsPerPage(10)" ng-class="{'active': $root.searchCriteria.resultsShown == 10}">10</button>
+            <button type="button" class="btn btn-default btn-sm" ng-click="ResultsPerPage(25)" ng-class="{'active': $root.searchCriteria.resultsShown == 25}">25</button>
+            <button type="button" class="btn btn-default btn-sm" ng-click="ResultsPerPage(50)" ng-class="{'active': $root.searchCriteria.resultsShown == 50}">50</button>
+            <button type="button" class="btn btn-default btn-sm" ng-click="ResultsPerPage(100)" ng-class="{'active': $root.searchCriteria.resultsShown == 100}">100</button>
+        </div>
+
+        <pagination total-items="TotalActivity" ng-model="CurrentPage" ng-change="ChangePage()" items-per-page="$root.searchCriteria.resultsShown" max-size="6" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+    </div>
+
+    <div class="loading" ng-show="loading">
+        <img src="assets/img/template/spinner_grey.png" width="72" alt="loading...">
+    </div>
+</div>

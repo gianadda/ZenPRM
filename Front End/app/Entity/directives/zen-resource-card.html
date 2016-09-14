@@ -1,0 +1,70 @@
+<div class="panel panel-primary card">
+    <div class="panel-heading">
+        <div ng-if="entity.Entity[0].ProfilePhoto !== ''" class="user-icon img" ng-style="{'background-image': 'url(' + entity.Entity[0].ProfilePhoto + ')'}"></div>
+        <div class="user-icon" ng-if="entity.Entity[0].ProfilePhoto == ''">{{entity.Entity[0].FullName.substring(0,1)}}</div>
+        <h2>{{ entity.Entity[0].FullName }}</h2>
+        <zen-name-check entity="entity.Entity[0]"></zen-name-check>
+    </div>
+    <div class="panel-body">
+        <h3 class="card-title">{{entity.Entity[0].EntityType}}</h3>
+        <div class="card-body" ng-if="entity.Entity[0].NPI !== '' || entity.Speciality.length > 0">
+            <div class="row">
+                <section class="col-sm-4 col-md-12" ng-if="entity.Entity[0].NPI !== ''">
+                    <p><strong>NPI:</strong> {{ entity.Entity[0].NPI }}</p>
+                </section>
+                <section class="col-sm-4 col-md-12" ng-if="entity.Speciality.length > 0">
+                    <h4>Specialty</h4>
+                    <p ng-repeat="speciality in entity.Speciality" ng-show="speciality.Name1 !== '' && speciality.Active == true">
+                        <i class="fa fa-stethoscope"></i> {{speciality.Name1}}
+                    </p>
+                </section>
+            </div>
+        </div>
+        <!-- end .card-body -->
+        <!-- Addresses -->
+        <div id="Addresses" class="card-body" ng-if="entity.Entity[0].PrimaryAddress1 !== '' || entity.Entity[0].PrimaryPhone !== '' || entity.Entity[0].PrimaryFax !== '' || entity.Entity[0].Email !== ''">
+            <div class="row">
+                <address class="col-sm-6 col-md-12" ng-if="entity.Entity[0].PrimaryAddress1 !== ''">
+                    <h4>Primary Address</h4>
+                    <div ng-show="entity.Entity[0].PrimaryAddress1 !== ''">{{entity.Entity[0].PrimaryAddress1}}</div>
+                    <div ng-show="entity.Entity[0].PrimaryAddress2 !== ''">{{entity.Entity[0].PrimaryAddress2}}</div>
+                    <div ng-show="entity.Entity[0].PrimaryAddress3 !== ''">{{entity.Entity[0].PrimaryAddress3}}</div>
+                    <div ng-show="entity.Entity[0].PrimaryCounty !== ''">{{entity.Entity[0].PrimaryCounty}}</div>
+                    <div><span ng-show="entity.Entity[0].PrimaryCity !== ''">{{entity.Entity[0].PrimaryCity}}</span><span ng-show="entity.Entity[0].PrimaryCity !== '' && entity.Entity[0].PrimaryState !== ''">, {{entity.Entity[0].PrimaryState}}</span> <span ng-show="entity.Entity[0].PrimaryZip !== ''">{{entity.Entity[0].PrimaryZip}}</span></div>
+                </address>
+                <div class="col-sm-6 col-md-12" ng-if="entity.Entity[0].PrimaryPhone !== '' || entity.Entity[0].PrimaryFax !== '' || entity.EntityEmail.length > 0">
+                    <section ng-if="entity.Entity[0].PrimaryPhone !== ''">
+                        <h4>Phone</h4>
+                        <p ng-if="entity.Entity[0].PrimaryPhone !== ''">
+                            <i class="fa fa-phone" title="Primary Phone"></i> {{entity.Entity[0].PrimaryPhone}} <span ng-if="entity.Entity[0].PrimaryPhoneExtension !== ''">x{{entity.Entity[0].PrimaryPhoneExtension}}</span>
+                        </p>
+                    </section>
+                    <section ng-if="entity.Entity[0].PrimaryFax !== ''">
+                        <h4>Fax</h4>
+                        <p ng-if="entity.Entity[0].PrimaryFax !== ''">
+                            <i class="fa fa-fax" title="Primary Fax"></i> {{entity.Entity[0].PrimaryFax}}
+                        </p>
+                    </section>
+                    <section ng-if="entity.EntityEmail.length > 0">
+                        <h4>Email</h4>
+                        <ul class="emails">
+                            <li class="ellipsis" ng-repeat="email in entity.EntityEmail">
+                                <i ng-if="email.Verified" class="fa fa-check-circle text-success" aria-hidden="true" title="Verified"></i>
+                                <i ng-if="!email.Verified" class="fa fa-ban" aria-hidden="true" title="Not Verified"></i>
+                                <i ng-if="email.Notify" class="fa fa-paper-plane text-success" aria-hidden="true" title="Receives Notifications"></i>
+                                <i ng-if="!email.Notify" class="fa fa-ban" aria-hidden="true" title="Does Not Receive Notifications"></i>
+                                <a href="mailto:{{email.Email}}">{{email.Email}}</a>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- end .card-body -->
+    </div>
+    <!-- end .panel-body -->
+    <div class="panel-footer text-center">
+        <a ui-sref="site.EditProfile({ident: entity.Entity[0].Ident})"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Profile</a>
+    </div>
+</div>
+<!-- end .panel -->

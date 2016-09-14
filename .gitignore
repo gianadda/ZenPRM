@@ -1,0 +1,23 @@
+WebAPI/packages/
+WebAPI/WebAPI.sln
+WebAPI/WebAPI.v11.suo
+WebAPI/WebAPI/WebAPI.vbproj
+WebAPI/WebAPI/WebAPI.vbproj.user
+WebAPI/WebAPI/bin/WebAPI.dll
+WebAPI/WebAPI/bin/WebAPI.pdb
+WebAPI/WebAPI/bin/WebAPI.xml
+WebAPI/WebAPI/My Project/Application.Designer.vb
+WebAPI/WebAPI/My Project/Application.myapp
+WebAPI/WebAPI/My Project/AssemblyInfo.vb
+WebAPI/WebAPI/My Project/MyExtensions/MyWebExtension.vb
+WebAPI/WebAPI/My Project/Resources.Designer.vb
+WebAPI/WebAPI/My Project/Resources.resx
+WebAPI/WebAPI/My Project/Settings.Designer.vb
+WebAPI/WebAPI/My Project/Settings.settings
+WebAPI/WebAPI/obj/
+WebAPI/obj/
+WebAPI/My Project/
+Front End/node_modules/
+Front End/bower_components/
+Front End/build/
+Front End/dist/

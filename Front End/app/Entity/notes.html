@@ -1,0 +1,82 @@
+<header id="Title" class="clearfix">
+    <h1>
+        <span ng-class="{'registered': IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered}">
+            <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+            <i class="fa fa-check-circle" ng-if="IsCustomer() && !IsMyProfile(EntityIdent) && EntityDetails.Person && EntityDetails.Registered"></i>
+        </span>
+        Notes <small ng-bind="EntityDetails.FullName"></small>
+    </h1>
+
+    <zen-entity-nav entity="EntityDetails" ng-if="EntityLoaded"></zen-entity-nav>
+</header>
+<div id="Profile" class="container-fluid" ng-class="'theme-' + EntityDetails.EntityTypeIdent">
+    <div class="row">
+        <div class="col-md-4 col-md-push-8">
+            <form ngform name="InteractionForm" ng-submit="AddEntityInteraction()">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2>Add Note</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group" ng-class="{ 'has-error' : InteractionForm.newInteractionText.$invalid && !InteractionForm.newInteractionText.$pristine }">
+                            <textarea class="form-control" ng-model="newInteractionText" rows="5" name="newInteractionText" id="newInteractionText" required></textarea>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" ng-disabled="ProfileForm.$dirty" ng-disabled="userForm.$invalid" class="btn btn-success">
+                            <i class="fa fa-floppy-o"></i> Save Note
+                        </button>
+                    </div>
+                </div>
+                <!-- end .panel -->
+            </form>
+        </div>
+        <!-- end .col -->
+        <div class="col-md-8 col-md-pull-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2>Notes Timeline</h2>
+                </div>
+                <ul class="panel-body" ng-repeat="(key, value) in Interactions.EntityInteraction | groupBy: 'AddDateTime'">
+                    <li class="sub-head">
+                        <h3>{{key}}</h3></li>
+                    <li class="row" ng-repeat="interaction in value">
+                        <div class="col-sm-9">
+                            <h4 class="margtop">{{interaction.Username}} <small>({{getMomentDate(interaction.AddDateTimeFull)}})</small></h4>
+                            <div ng-hide="interaction.EditMode">
+                                <p>{{interaction.InteractionText}}</p>
+                                <p ng-if="interaction.EditUsername != ''" class="text-muted"><small>Edited by {{interaction.EditUsername}} ({{getMomentDate(interaction.EditDateTime)}})</small>
+                            </div>
+                            <div ng-show="interaction.EditMode">
+                                <p><textarea class="form-control" ng-model="interaction.InteractionText" rows="5" name="EditNoteText" id="EditNoteText"></textarea></p>
+                                <button type="button" class="btn btn-success btn-xs" ng-click="SaveExistingNote(interaction.Ident, interaction.InteractionText)"><i class="fa fa-floppy-o"></i> Save</button>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 text-right interaction-buttons">
+                            <button ng-hide="interaction.EditMode" type="button" class="btn btn-primary btn-xs" ng-click="EditNote(interaction.Ident)">
+                                <i class="fa fa-pencil"></i> Edit
+                            </button>
+                            <button ng-show="interaction.EditMode" type="button" class="btn btn-default btn-xs" ng-click="EditNote(interaction.Ident)">
+                                <i class="fa fa-times"></i> Cancel
+                            </button>
+                            <button type="button" ng-confirm-click="You are about to remove a note from the system. Are you sure you want to do this?" ng-click="removeEntityInteraction(interaction.Ident)" class="btn btn-danger btn-xs">
+                                <i class="fa fa-trash-o"></i> Delete
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+                <div class="panel-body" ng-if="Interactions.EntityInteraction.length == 0">
+                    <div class="alert alert-info">
+                        There are currently no Notes for this Resource.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end .row -->
+</div>
+<!-- end .container-fluid -->
+
+<div class="loading" ng-show="!Loaded()">
+    <img src="assets/img/template/spinner.png" width="90" alt="loading...">
+</div>
