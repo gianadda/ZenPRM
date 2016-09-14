@@ -33,15 +33,15 @@ gulp
 
 ## Database
 
-1.    Create new MS-SQL Database
-2.    Execute all scripts from the repository against the new database, in the following order
- a.    Tables
- b.    Views
- c.    Triggers
- d.    User Defined Types
- e.    User Defined Functions – GetIdent
- f.    User Defined Functions
- g.    Stored Procedures
+1. Create new MS-SQL Database
+2. Execute all scripts from the repository against the new database, in the following order
+  a. Tables
+  b. Views
+  c. Triggers
+  d. User Defined Types
+  e. User Defined Functions – GetIdent
+  f. User Defined Functions
+  g. Stored Procedures
 
 ## Web.API
 
