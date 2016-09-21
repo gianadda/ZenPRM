@@ -1,4 +1,4 @@
-# ZenPRM
+﻿# ZenPRM
 ZenPRM - Healthcare CRM extends beyond your four walls to include public datasets and industry information that helps you better measure and benchmark your organization.
 
 
@@ -45,4 +45,8 @@ gulp
 
 ## Web.API
 
-Load the Web.API project in Visual Studio, setup the connection strings in the Web.Config files and run the application.
+- Load the Web.API project in Visual Studio.
+- Add the DLLs found in the References folder to the bin of the WebAPI project (extract from the ZIP file).
+- For your solution file, ensure you click the option "Enable NuGet Package Restore" (Right click solution file in Solution Explorer) to pull in the referenced NuGet packages.
+- Setup the connection strings in the Web.Config files and run the application.
+
